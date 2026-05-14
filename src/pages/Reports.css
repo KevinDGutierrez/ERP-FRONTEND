@@ -1,0 +1,244 @@
+.reports-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.reports-nav-tabs {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  background: var(--bg-card);
+  padding: 8px;
+  border-radius: 16px;
+  border: 1px solid var(--border);
+}
+
+.report-tab {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 12px 20px;
+  background: transparent;
+  border: none;
+  border-radius: 12px;
+  color: var(--text-secondary);
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.report-tab:hover {
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--text-primary);
+}
+
+.report-tab.active {
+  background: var(--primary);
+  color: white;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+}
+
+/* Report Content Views */
+.report-viewport {
+  min-height: 400px;
+}
+
+.report-card-premium {
+  padding: 0 !important;
+  overflow: hidden;
+}
+
+.report-card-header {
+  padding: 1.5rem 2rem;
+  background: rgba(255, 255, 255, 0.02);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.report-card-header h3 {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.header-with-icon {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--primary);
+}
+
+.date-tag {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  background: var(--bg-subtle);
+  padding: 4px 10px;
+  border-radius: 6px;
+}
+
+.table-wrapper-scroll {
+  max-height: 60vh;
+  overflow-y: auto;
+  padding: 0 1.5rem 1.5rem;
+}
+
+.total-row td {
+  background: var(--primary-dim);
+  color: var(--primary);
+  font-weight: 800;
+  font-size: 0.95rem;
+  border-top: 2px solid var(--primary);
+}
+
+/* PnL Specific */
+.pnl-summary-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.pnl-stat-card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 1.5rem !important;
+}
+
+.pnl-stat-card .label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+}
+
+.pnl-stat-card .value {
+  font-size: 1.5rem;
+  font-weight: 800;
+}
+
+.pnl-stat-card.highlight {
+  background: linear-gradient(135deg, #3B82F6 0%, #2563EB 100%);
+  border: none;
+}
+
+.pnl-stat-card.highlight .label,
+.pnl-stat-card.highlight .value {
+  color: white;
+}
+
+.pnl-detail-view {
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.pnl-section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.section-title {
+  font-size: 0.8rem;
+  font-weight: 800;
+  color: var(--primary);
+  letter-spacing: 0.05em;
+  margin-bottom: 0.5rem;
+}
+
+.pnl-line {
+  display: flex;
+  justify-content: space-between;
+  font-size: 1rem;
+  color: var(--text-secondary);
+}
+
+.pnl-line.total {
+  margin-top: 8px;
+  padding-top: 12px;
+  border-top: 1px dashed var(--border);
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.pnl-line.subtotal {
+  font-weight: 700;
+  color: var(--primary);
+  font-size: 1.1rem;
+}
+
+.pnl-line.result {
+  padding: 1.5rem;
+  background: var(--bg-subtle);
+  border-radius: 14px;
+  font-weight: 800;
+  color: var(--text-primary);
+  font-size: 1.25rem;
+}
+
+.result-value {
+  color: #10b981;
+}
+
+.negative {
+  color: #ef4444;
+}
+
+/* Balance Sheet Specific */
+.balance-grid-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+}
+
+.bs-lines {
+  padding: 1.5rem 2rem 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.bs-group-label {
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  margin-top: 0.5rem;
+}
+
+.spin {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.report-loading, .report-error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 5rem 2rem;
+  text-align: center;
+  gap: 1.5rem;
+}
+
+@media (max-width: 900px) {
+  .pnl-summary-grid {
+    grid-template-columns: 1fr;
+  }
+  .balance-grid-layout {
+    grid-template-columns: 1fr;
+  }
+  .reports-nav-tabs {
+    flex-direction: column;
+  }
+}

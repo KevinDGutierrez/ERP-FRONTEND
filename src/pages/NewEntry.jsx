@@ -1,0 +1,275 @@
+import React, { useState, useEffect } from 'react';
+import Layout from '../components/layout/Layout';
+import api from '../api/client';
+import { 
+  Plus, 
+  Trash2, 
+  Save, 
+  FileText, 
+  Calendar, 
+  AlertTriangle,
+  CheckCircle2,
+  PlusCircle
+} from 'lucide-react';
+import './NewEntry.css';
+
+const NewEntry = () => {
+  const [accounts, setAccounts] = useState([]);
+  const [loading, setLoading]   = useState(false);
+  const [success, setSuccess]   = useState(false);
+  const [error, setError]       = useState(null);
+
+  const [formData, setFormData] = useState({
+    date: new Date().toISOString().split('T')[0],
+    description: '',
+    type: 'DIARIO',
+    details: [
+      { accountId: '', debit: 0, credit: 0 },
+      { accountId: '', debit: 0, credit: 0 }
+    ]
+  });
+
+  useEffect(() => {
+    const fetchAccounts = async () => {
+      try {
+        const res = await api.get('/accounts');
+        setAccounts(Array.isArray(res.data) ? res.data : []);
+      } catch (err) {
+        console.error('Error fetching accounts:', err);
+      }
+    };
+    fetchAccounts();
+  }, []);
+
+  const handleDetailChange = (index, field, value) => {
+    const newDetails = [...formData.details];
+    newDetails[index][field] = field === 'accountId' ? value : parseFloat(value || 0);
+    setFormData({ ...formData, details: newDetails });
+  };
+
+  const addRow = () => {
+    setFormData({
+      ...formData,
+      details: [...formData.details, { accountId: '', debit: 0, credit: 0 }]
+    });
+  };
+
+  const removeRow = (index) => {
+    if (formData.details.length <= 2) return;
+    const newDetails = formData.details.filter((_, i) => i !== index);
+    setFormData({ ...formData, details: newDetails });
+  };
+
+  const totalDebe = formData.details.reduce((acc, d) => acc + (d.debit || 0), 0);
+  const totalHaber = formData.details.reduce((acc, d) => acc + (d.credit || 0), 0);
+  const isSquared = Math.abs(totalDebe - totalHaber) < 0.01;
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!isSquared) {
+      setError('La partida no está cuadrada (Debe != Haber)');
+      return;
+    }
+    if (!formData.description.trim()) {
+      setError('La descripción es obligatoria');
+      return;
+    }
+
+    setLoading(true);
+    setError(null);
+    try {
+      await api.post('/entries', formData);
+      setSuccess(true);
+      setFormData({
+        date: new Date().toISOString().split('T')[0],
+        description: '',
+        type: 'DIARIO',
+        details: [
+          { accountId: '', debit: 0, credit: 0 },
+          { accountId: '', debit: 0, credit: 0 }
+        ]
+      });
+      setTimeout(() => setSuccess(false), 3000);
+    } catch (err) {
+      setError(err.response?.data?.message || 'Error al guardar la partida');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <Layout>
+      <div className="new-entry-container">
+        <header className="page-header-premium">
+          <div className="title-section">
+            <div className="icon-badge">
+              <PlusCircle size={24} />
+            </div>
+            <div>
+              <h1>Nueva Partida</h1>
+              <p>Registra un nuevo asiento contable en el sistema.</p>
+            </div>
+          </div>
+          
+          <div className={`square-indicator ${isSquared ? 'squared' : 'not-squared'}`}>
+            {isSquared ? <CheckCircle2 size={16} /> : <AlertTriangle size={16} />}
+            {isSquared ? 'Partida Cuadrada' : 'No Cuadrada'}
+          </div>
+        </header>
+
+        <form onSubmit={handleSubmit}>
+          <div className="form-main-card card">
+            <div className="form-header-grid">
+              <div className="form-group">
+                <label>Fecha Contable</label>
+                <div className="input-with-icon">
+                  <Calendar size={18} />
+                  <input 
+                    type="date" 
+                    value={formData.date}
+                    onChange={e => setFormData({...formData, date: e.target.value})}
+                    required
+                  />
+                </div>
+              </div>
+
+              <div className="form-group">
+                <label>Tipo de Comprobante</label>
+                <select 
+                  value={formData.type}
+                  onChange={e => setFormData({...formData, type: e.target.value})}
+                  required
+                >
+                  <option value="DIARIO">Libro Diario</option>
+                  <option value="AJUSTE">Ajuste Contable</option>
+                  <option value="APERTURA">Apertura</option>
+                  <option value="CIERRE">Cierre</option>
+                </select>
+              </div>
+            </div>
+
+            <div className="form-group">
+              <label>Descripción / Glosa</label>
+              <textarea 
+                placeholder="Escribe la descripción de la operación..."
+                value={formData.description}
+                onChange={e => setFormData({...formData, description: e.target.value})}
+                required
+              />
+            </div>
+          </div>
+
+          <section className="entry-details-section">
+            <div className="details-header">
+              <FileText size={18} className="text-primary" />
+              <h3>Detalle de Movimientos</h3>
+            </div>
+
+            <div className="details-table-container">
+              <table className="details-table">
+                <thead>
+                  <tr>
+                    <th>Cuenta Contable</th>
+                    <th className="text-right" style={{width: '200px'}}>Debe (Q)</th>
+                    <th className="text-right" style={{width: '200px'}}>Haber (Q)</th>
+                    <th className="action-col"></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {formData.details.map((detail, index) => (
+                    <tr key={index}>
+                      <td>
+                        <select 
+                          className="account-select"
+                          value={detail.accountId}
+                          onChange={e => handleDetailChange(index, 'accountId', e.target.value)}
+                          required
+                        >
+                          <option value="">Seleccionar cuenta...</option>
+                          {accounts.map(acc => (
+                            <option key={acc.id} value={acc.id}>
+                              [{acc.code}] {acc.name}
+                            </option>
+                          ))}
+                        </select>
+                      </td>
+                      <td>
+                        <input 
+                          type="number" 
+                          step="0.01"
+                          className="amount-input"
+                          placeholder="0.00"
+                          value={detail.debit || ''}
+                          onChange={e => handleDetailChange(index, 'debit', e.target.value)}
+                        />
+                      </td>
+                      <td>
+                        <input 
+                          type="number" 
+                          step="0.01"
+                          className="amount-input"
+                          placeholder="0.00"
+                          value={detail.credit || ''}
+                          onChange={e => handleDetailChange(index, 'credit', e.target.value)}
+                        />
+                      </td>
+                      <td className="action-col">
+                        <button 
+                          type="button" 
+                          className="remove-row-btn"
+                          onClick={() => removeRow(index)}
+                          disabled={formData.details.length <= 2}
+                        >
+                          <Trash2 size={16} />
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+                <tfoot>
+                  <tr className="totals-row">
+                    <td>
+                      <button type="button" className="btn-add-row" onClick={addRow}>
+                        <Plus size={16} /> Agregar línea
+                      </button>
+                    </td>
+                    <td className={`total-cell ${!isSquared ? 'error' : ''}`}>
+                      Q{totalDebe.toLocaleString(undefined, {minimumFractionDigits: 2})}
+                    </td>
+                    <td className={`total-cell ${!isSquared ? 'error' : ''}`}>
+                      Q{totalHaber.toLocaleString(undefined, {minimumFractionDigits: 2})}
+                    </td>
+                    <td></td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+          </section>
+
+          <footer className="form-footer">
+            {error && (
+              <div className="alert-box error-alert">
+                <AlertTriangle size={18} />
+                <span>{error}</span>
+              </div>
+            )}
+            {success && (
+              <div className="alert-box success-alert">
+                <CheckCircle2 size={18} />
+                <span>Partida guardada exitosamente</span>
+              </div>
+            )}
+            
+            <div className="action-buttons">
+              <button type="submit" className="btn-primary btn-save" disabled={loading}>
+                {loading ? <div className="spinner-small"></div> : <><Save size={20} /> Guardar Partida</>}
+              </button>
+            </div>
+          </footer>
+        </form>
+      </div>
+    </Layout>
+  );
+};
+
+export default NewEntry;

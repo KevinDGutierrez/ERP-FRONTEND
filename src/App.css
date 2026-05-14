@@ -1,0 +1,4 @@
+/* App.css — vacío intencionalmente.
+   Todo el sistema visual está en src/index.css (design tokens globales)
+   y en los CSS de cada componente/página.
+   NO agregar estilos globales aquí para mantener el sistema organizado. */
