@@ -14,8 +14,7 @@
   display: flex;
   flex-direction: column;
   flex-shrink: 0;
-  transition: none;
-  /* Instant collapse */
+  transition: none; /* Instant collapse */
   width: var(--sidebar-width);
   z-index: 1000;
   overflow: visible !important;
@@ -27,12 +26,13 @@
 
 .sidebar-header {
   height: 70px;
-  padding: 0 1.25rem;
+  padding: 0 1rem 0 1.25rem;
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
   border-bottom: 1px solid var(--border);
   position: relative;
+  overflow: hidden;
 }
 
 .brand-icon {
@@ -46,8 +46,7 @@
   justify-content: center;
   flex-shrink: 0;
   overflow: hidden;
-  padding: 4px;
-  /* Padding interno para que el logo no toque bordes */
+  padding: 4px; /* Padding interno para que el logo no toque bordes */
 }
 
 .brand-icon img {
@@ -59,10 +58,14 @@
 
 .brand-name {
   font-weight: 700;
-  font-size: 1.1rem;
+  font-size: 1rem;
   white-space: nowrap;
   overflow: hidden;
+  text-overflow: ellipsis;
   color: var(--text-primary);
+  flex: 1;
+  min-width: 0;
+  max-width: 140px;
 }
 
 .collapse-btn {
@@ -81,7 +84,7 @@
   color: white;
   cursor: pointer;
   z-index: 2000;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
   transition: all 0.2s ease;
 }
 
@@ -296,11 +299,11 @@
   .layout-root {
     flex-direction: column;
   }
-
+  
   .sidebar {
     display: none !important;
   }
-
+  
   .mobile-header {
     display: flex;
     position: sticky;
@@ -309,7 +312,7 @@
     background: var(--bg-card);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
   }
 
   .desktop-header {
@@ -340,9 +343,8 @@
   background: var(--bg-card);
   display: flex;
   flex-direction: column;
-  box-shadow: 10px 0 30px rgba(0, 0, 0, 0.2);
-  padding: 0;
-  /* Asegurar que no haya padding global para que los items lleguen al borde */
+  box-shadow: 10px 0 30px rgba(0,0,0,0.2);
+  padding: 0; /* Asegurar que no haya padding global para que los items lleguen al borde */
 }
 
 .mobile-menu-header {
@@ -394,68 +396,24 @@
   justify-content: center;
   font-weight: bold;
   font-size: 0.8rem;
-}
-
-
-/* ---- FIXES UI ---- */
-.brand-name {
-  max-width: 180px;
-  text-overflow: ellipsis;
-}
-
-.sidebar:not(.collapsed) .brand-name {
   overflow: hidden;
+  position: relative;
 }
 
-.user-profile-block {
-  max-width: 260px;
+.mobile-avatar-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
 }
 
-.user-details {
-  min-width: 0;
-}
-
-.display-name {
-  max-width: 140px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.content-inner {
-  overflow-x: auto;
-}
-
-input[type="date"] {
-  color-scheme: dark;
-}
-
-[data-theme='light'] input[type="date"] {
-  color-scheme: light;
-}
-
-input[type="date"]::-webkit-calendar-picker-indicator {
-  opacity: 1;
-  cursor: pointer;
-}
-
-[data-theme='dark'] input[type="date"]::-webkit-calendar-picker-indicator {
-  filter: invert(1);
-}
-
-[data-theme='light'] input[type="date"]::-webkit-calendar-picker-indicator {
-  filter: invert(0);
-}
-
-@media (max-width:768px) {
-  .mobile-brand {
-    max-width: 55%;
-  }
-
-  .user-avatar img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    border-radius: 50%;
-  }
+.mobile-avatar-initial {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 0.8rem;
+  color: white;
 }

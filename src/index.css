@@ -52,10 +52,10 @@
   --bg-subtle:       #f1f5f9;
   --surface:         #ffffff;
   --surface-raised:  #ffffff;
-  --surface-overlay: #fdfdfd;
-  --border:          rgba(0, 0, 0, 0.08);
-  --border-subtle:   rgba(0, 0, 0, 0.04);
-  --border-strong:   rgba(0, 0, 0, 0.15);
+  --surface-overlay: #f0f4f8;
+  --border:          rgba(0, 0, 0, 0.1);
+  --border-subtle:   rgba(0, 0, 0, 0.06);
+  --border-strong:   rgba(0, 0, 0, 0.18);
   --text-primary:    #0f172a;
   --text-secondary:  #475569;
   --text-muted:      #64748b;
@@ -65,6 +65,12 @@
   --glass-border:    rgba(0, 0, 0, 0.08);
   --shadow-xl:       0 20px 40px rgba(0, 0, 0, 0.08);
   --calendar-icon-filter: none;
+  /* Light mode overrides */
+  --primary-dim:     rgba(59, 130, 246, 0.12);
+  --success-dim:     rgba(16, 185, 129, 0.12);
+  --danger-dim:      rgba(239, 68, 68, 0.12);
+  --warning-dim:     rgba(245, 158, 11, 0.12);
+  --info-dim:        rgba(59, 130, 246, 0.12);
 }
 
 /* ── Reset y Tipografía ── */
@@ -263,12 +269,32 @@ select option {
 input[type="date"]::-webkit-calendar-picker-indicator {
   cursor: pointer;
   filter: var(--calendar-icon-filter);
-  opacity: 0.6;
+  opacity: 0.7;
   transition: opacity var(--dur-fast);
+  padding: 2px;
+  border-radius: 4px;
 }
 
 input[type="date"]::-webkit-calendar-picker-indicator:hover {
   opacity: 1;
+}
+
+/* Light mode: calendar icon needs more contrast */
+[data-theme='light'] input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(0.4) sepia(1) saturate(3) hue-rotate(195deg);
+  opacity: 0.8;
+}
+
+/* btn-primary: dark bg uses white text color (--text-primary is light in dark mode).
+   In light mode --text-primary is near-black so the button needs an explicit override */
+[data-theme='light'] .btn-primary {
+  background: #1e293b;
+  color: #ffffff;
+}
+
+[data-theme='light'] .btn-glass:hover {
+  background: rgba(0, 0, 0, 0.06);
+  border-color: var(--border-strong);
 }
 
 /* Badges */
