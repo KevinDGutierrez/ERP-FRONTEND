@@ -78,7 +78,7 @@ export const AuthProvider = ({ children }) => {
     const docRef = doc(db, 'users', res.user.uid);
     await setDoc(docRef, {
       email,
-      displayName: null,
+      displayName: companyData.displayName || null,
       provider: 'password',
       status: 'pending',
       role: 'usuario',

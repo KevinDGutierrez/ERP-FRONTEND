@@ -3,7 +3,8 @@ import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import api from '../api/client';
 import { motion } from 'framer-motion';
-import { Building2, User, Phone, Briefcase, ArrowRight, LogOut } from 'lucide-react';
+import { Building2, User, Phone, Briefcase, ArrowRight, LogOut, Camera, X } from 'lucide-react';
+import { storage } from '../config/firebase';
 import './Login.css';
 
 const CompleteProfile = () => {
@@ -38,9 +39,13 @@ const CompleteProfile = () => {
     
     setLoading(true);
     try {
+      // Photo upload removed per user request
+      const photoURL = profile?.photoURL || null;
+
       const success = await updateProfileData({
         displayName,
         email: user.email,
+        photoURL,
         provider: user.providerData[0]?.providerId || 'google',
         status: 'pending',
         role: 'usuario',
@@ -83,6 +88,8 @@ const CompleteProfile = () => {
             <h2 className="auth-panel-title">Completa tu perfil</h2>
             <p className="auth-panel-sub">Necesitamos estos datos para procesar tu solicitud de acceso</p>
           </div>
+
+          {/* Photo upload removed per user request */}
 
           {error && <div className="auth-error">{error}</div>}
 

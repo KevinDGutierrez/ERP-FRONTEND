@@ -2,21 +2,24 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { AlertCircle, ArrowRight, Building2 } from 'lucide-react';
+import { AlertCircle, ArrowRight, Building2, User, Camera, X } from 'lucide-react';
+import { doc, setDoc } from 'firebase/firestore';
+import { db } from '../config/firebase';
 import api from '../api/client';
 import './Login.css';
 
 const Register = () => {
-  const [email, setEmail]                   = useState('');
-  const [password, setPassword]             = useState('');
-  const [confirmPassword, setConfirmPass]   = useState('');
-  const [companyName, setCompanyName]       = useState('');
+  const [displayName, setDisplayName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPass] = useState('');
+  const [companyName, setCompanyName] = useState('');
   const [selectedCompanyId, setSelectedCompanyId] = useState('');
-  const [companies, setCompanies]           = useState([]);
-  const [error, setError]                   = useState('');
-  const [loading, setLoading]               = useState(false);
-  const { register, loginWithGoogle }       = useAuth();
-  const navigate                            = useNavigate();
+  const [companies, setCompanies] = useState([]);
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+  const { register, loginWithGoogle } = useAuth();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchCompanies = async () => {
@@ -33,21 +36,23 @@ const Register = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
-    
+
     if (password !== confirmPassword) return setError('Las contraseñas no coinciden.');
     if (password.length < 6) return setError('La contraseña debe tener al menos 6 caracteres.');
-    
+
     // Validación de empresa: debe seleccionar una o escribir una nueva
     if (!selectedCompanyId && !companyName.trim()) {
       return setError('Debes seleccionar una empresa o escribir el nombre de una nueva.');
     }
-    
+
     setLoading(true);
     try {
       await register(email, password, {
+        displayName,
         companyId: selectedCompanyId,
         companyName: selectedCompanyId ? null : companyName.trim()
       });
+
       navigate('/pending-approval');
     } catch (err) {
       setError(err.message || 'Error al crear la cuenta.');
@@ -116,6 +121,23 @@ const Register = () => {
             </AnimatePresence>
 
             <form onSubmit={handleSubmit} className="auth-form">
+              {/* Photo upload removed per user request */}
+
+              <div className="auth-field">
+                <label className="auth-label">Nombre Completo</label>
+                <div className="input-with-icon">
+                  <User size={16} />
+                  <input 
+                    className="auth-input" 
+                    type="text" 
+                    placeholder="Tu nombre"
+                    value={displayName} 
+                    onChange={e => setDisplayName(e.target.value)} 
+                    required 
+                  />
+                </div>
+              </div>
+
               <div className="auth-field">
                 <label className="auth-label">Correo electrónico</label>
                 <input className="auth-input" type="email" placeholder="usuario@empresa.com"
@@ -144,24 +166,22 @@ const Register = () => {
 
               {!selectedCompanyId && (
                 <motion.div 
-                  className="auth-field"
                   initial={{ opacity: 0, height: 0 }}
                   animate={{ opacity: 1, height: 'auto' }}
+                  className="auth-field"
                 >
-              <div className="auth-field">
-                <label className="auth-label">Nombre de tu Nueva Empresa</label>
-                <div className="input-with-icon">
-                  <Building2 size={16} />
-                  <input 
-                    className="auth-input" 
-                    type="text" 
-                    placeholder="Ej. Mi Empresa S.A."
-                    value={companyName} 
-                    onChange={e => setCompanyName(e.target.value)} 
-                    required={!selectedCompanyId} 
-                  />
-                </div>
-              </div>
+                  <label className="auth-label">Nombre de tu Nueva Empresa</label>
+                  <div className="input-with-icon">
+                    <Building2 size={16} />
+                    <input 
+                      className="auth-input" 
+                      type="text" 
+                      placeholder="Ej. Mi Empresa S.A."
+                      value={companyName} 
+                      onChange={e => setCompanyName(e.target.value)} 
+                      required={!selectedCompanyId} 
+                    />
+                  </div>
                 </motion.div>
               )}
 
