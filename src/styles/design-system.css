@@ -11,7 +11,7 @@
   --color-success: #10b981;
   --color-danger: #ef4444;
   --color-warning: #f59e0b;
-  
+
   --color-text-primary: #e4e2e4;
   --color-text-secondary: #c6c6cd;
   --color-border: rgba(255, 255, 255, 0.1);
@@ -68,7 +68,12 @@ body {
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   font-family: var(--font-headline);
 }
 
@@ -85,7 +90,9 @@ button {
   font-family: inherit;
 }
 
-input, select, textarea {
+input,
+select,
+textarea {
   font-family: inherit;
   outline: none;
 }
@@ -106,4 +113,20 @@ input, select, textarea {
 
 ::-webkit-scrollbar-thumb:hover {
   background: var(--color-text-secondary);
+}
+
+
+[data-theme='light'] .btn-primary {
+  background: #2563eb;
+  color: white;
+}
+
+[data-theme='light'] .btn-primary:hover {
+  box-shadow: 0 12px 32px rgba(37, 99, 235, 0.22);
+}
+
+[data-theme='light'] .card,
+[data-theme='light'] .form-main-card,
+[data-theme='light'] .entry-details-section {
+  background: #ffffff;
 }

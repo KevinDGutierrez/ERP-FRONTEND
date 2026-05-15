@@ -3,12 +3,12 @@ import { NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { useBrand } from '../../context/BrandContext';
 import { useTheme } from '../../context/ThemeContext';
-import { 
-  LayoutDashboard, 
-  BookOpen, 
-  FileText, 
-  PieChart, 
-  Users, 
+import {
+  LayoutDashboard,
+  BookOpen,
+  FileText,
+  PieChart,
+  Users,
   Wrench,
   Sun,
   Moon,
@@ -42,10 +42,10 @@ const Layout = ({ children }) => {
 
   // Añadir ítem de administrador si corresponde
   if (isAdmin) {
-    menuItems.splice(1, 0, { 
-      name: 'Solicitudes', 
-      icon: <ShieldCheck size={22} color="#f59e0b" />, 
-      path: '/admin/approvals' 
+    menuItems.splice(1, 0, {
+      name: 'Solicitudes',
+      icon: <ShieldCheck size={22} color="#f59e0b" />,
+      path: '/admin/approvals'
     });
   }
 
@@ -66,7 +66,7 @@ const Layout = ({ children }) => {
           </div>
           <AnimatePresence>
             {!isCollapsed && (
-              <motion.span 
+              <motion.span
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
@@ -83,15 +83,15 @@ const Layout = ({ children }) => {
 
         <nav className="sidebar-nav">
           {menuItems.map((item) => (
-            <NavLink 
-              key={item.path} 
-              to={item.path} 
+            <NavLink
+              key={item.path}
+              to={item.path}
               className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}
             >
               <div className="nav-icon">{item.icon}</div>
               <AnimatePresence>
                 {!isCollapsed && (
-                  <motion.span 
+                  <motion.span
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     className="nav-text"
@@ -116,7 +116,13 @@ const Layout = ({ children }) => {
       <header className="mobile-header">
         <button onClick={() => setIsMobileMenuOpen(true)}><Menu /></button>
         <span className="mobile-brand">{brand.name}</span>
-        <div className="user-avatar">{user?.email?.charAt(0).toUpperCase()}</div>
+        <div className="user-avatar">
+          {user?.photoURL ? (
+            <img src={user.photoURL} alt="Avatar" />
+          ) : (
+            user?.email?.charAt(0).toUpperCase()
+          )}
+        </div>
       </header>
 
       {/* Main Content */}
@@ -125,14 +131,14 @@ const Layout = ({ children }) => {
           <div className="header-left">
             {/* El título se maneja dentro de cada página para mayor flexibilidad */}
           </div>
-          
+
           <div className="header-right">
             <button className="theme-toggle-btn" onClick={toggleTheme} title="Cambiar Tema">
               {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
             </button>
-            
+
             <div className="v-divider"></div>
-            
+
             <div className="user-profile-block">
               <div className="user-details">
                 <span className="display-name">{profile?.displayName || user?.displayName || 'Usuario'}</span>
@@ -156,14 +162,14 @@ const Layout = ({ children }) => {
       {/* Mobile Menu Overlay */}
       <AnimatePresence>
         {isMobileMenuOpen && (
-          <motion.div 
+          <motion.div
             className="mobile-menu-overlay"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={() => setIsMobileMenuOpen(false)}
           >
-            <motion.div 
+            <motion.div
               className="mobile-menu"
               initial={{ x: -300 }}
               animate={{ x: 0 }}
@@ -172,21 +178,21 @@ const Layout = ({ children }) => {
             >
               {/* Contenido del menú móvil similar al sidebar */}
               <div className="mobile-menu-header">
-                  <div className="brand-section">
-                    <div className="brand-icon">
-                      {brand.logo ? <img src={brand.logo} alt="Logo" /> : <div className="placeholder-mini-logo">SS</div>}
-                    </div>
-                    <span className="brand-name">{brand.name}</span>
+                <div className="brand-section">
+                  <div className="brand-icon">
+                    {brand.logo ? <img src={brand.logo} alt="Logo" /> : <div className="placeholder-mini-logo">SS</div>}
                   </div>
-                  <button className="theme-toggle-btn mobile-theme-btn" onClick={toggleTheme}>
-                    {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
-                  </button>
+                  <span className="brand-name">{brand.name}</span>
+                </div>
+                <button className="theme-toggle-btn mobile-theme-btn" onClick={toggleTheme}>
+                  {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
+                </button>
               </div>
               <nav className="sidebar-nav mobile-nav">
                 {menuItems.map((item) => (
-                  <NavLink 
-                    key={item.path} 
-                    to={item.path} 
+                  <NavLink
+                    key={item.path}
+                    to={item.path}
                     className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}
                     onClick={() => setIsMobileMenuOpen(false)}
                   >
