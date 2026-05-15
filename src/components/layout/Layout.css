@@ -27,13 +27,13 @@
 
 .sidebar-header {
   height: 70px;
-  padding: 0 1rem 0 1.25rem;
+  padding: 0 2rem 0 1.25rem;
   display: flex;
   align-items: center;
   gap: 10px;
   border-bottom: 1px solid var(--border);
   position: relative;
-  overflow: hidden;
+  /* NO overflow:hidden — el collapse-btn sobresale a la derecha */
 }
 
 .brand-icon {
