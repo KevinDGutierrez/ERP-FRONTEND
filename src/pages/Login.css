@@ -426,8 +426,7 @@
   }
 
   .auth-hero {
-    flex: none;
-    padding: 30px 24px 10px;
+    padding: 15px 24px 5px;
     align-items: center;
     text-align: center;
   }
@@ -448,15 +447,15 @@
 
   .auth-panel-wrap {
     flex: 1;
-    padding: 10px 16px 30px;
+    padding: 0 16px 20px;
     background: none;
     display: flex;
-    align-items: flex-start;
+    align-items: center;
   }
 
   .auth-panel {
     max-width: 100%;
-    padding: 16px 20px;
+    padding: 14px 18px;
     border-radius: 20px;
     margin-bottom: 0;
   }
@@ -467,21 +466,42 @@
   }
 
   .auth-panel-header {
-    margin-bottom: 10px;
+    margin-bottom: 8px;
     text-align: center;
   }
   
   .auth-logo-mark {
-    margin: 0 auto 8px;
-    width: 32px;
-    height: 32px;
+    margin: 0 auto 6px;
+    width: 28px;
+    height: 28px;
+    font-size: 12px;
   }
 
   .auth-panel-title {
-    font-size: 20px;
+    font-size: 18px;
   }
 
   .auth-form {
-    gap: 8px;
+    gap: 6px;
+  }
+
+  .auth-field {
+    gap: 4px;
+  }
+
+  .auth-input {
+    padding: 10px 14px;
+  }
+
+  .auth-divider {
+    margin: 10px 0 6px;
+  }
+
+  .auth-btn-google {
+    padding: 10px 16px;
+  }
+
+  .auth-footer-link {
+    margin-top: 10px;
   }
 }
