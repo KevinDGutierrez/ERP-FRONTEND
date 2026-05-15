@@ -59,10 +59,7 @@ const Layout = ({ children }) => {
   return (
     <div className="layout-root">
       {/* Sidebar Desktop */}
-      <motion.aside 
-        className={`sidebar ${isCollapsed ? 'collapsed' : ''}`}
-        animate={{ width: isCollapsed ? 'var(--sidebar-collapsed)' : 'var(--sidebar-width)' }}
-      >
+      <aside className={`sidebar ${isCollapsed ? 'collapsed' : ''}`}>
         <div className="sidebar-header">
           <div className="brand-icon">
             {brand.logo ? <img src={brand.logo} alt="Logo" /> : <div className="placeholder-mini-logo">SS</div>}
@@ -113,7 +110,7 @@ const Layout = ({ children }) => {
             {!isCollapsed && <span>Cerrar Sesión</span>}
           </button>
         </div>
-      </motion.aside>
+      </aside>
 
       {/* Header Mobile */}
       <header className="mobile-header">

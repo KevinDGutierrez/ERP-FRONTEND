@@ -100,13 +100,14 @@ const NewEntry = () => {
   return (
     <Layout>
       <div className="new-entry-container">
-        <header className="page-header-premium compact">
+        <header className="page-header-premium">
           <div className="title-section">
-            <div className="icon-badge-mini">
-              <PlusCircle size={20} />
+            <div className="icon-badge">
+              <PlusCircle size={24} />
             </div>
             <div>
-              <h1 className="compact-title">Nueva Partida</h1>
+              <h1>Nueva Partida</h1>
+              <p>Registra un nuevo movimiento contable en el sistema</p>
             </div>
           </div>
           

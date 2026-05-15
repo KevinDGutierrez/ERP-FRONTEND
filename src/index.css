@@ -19,6 +19,32 @@
   --glass-border:    rgba(255, 255, 255, 0.06);
   --shadow-xl:       0 25px 50px -12px rgba(0, 0, 0, 0.5);
   --calendar-icon-filter: invert(1);
+
+  /* Design System Extra Tokens */
+  --font-display:    'Inter', sans-serif;
+  --font-body:       'Inter', sans-serif;
+  --r-md:            8px;
+  --r-lg:            12px;
+  --r-xl:            16px;
+  --r-2xl:           24px;
+  --r-full:          9999px;
+  --dur-fast:        150ms;
+  --dur-normal:      250ms;
+  --ease-out:        cubic-bezier(0.16, 1, 0.3, 1);
+  
+  /* Status Colors */
+  --success:         #10b981;
+  --success-dim:     rgba(16, 185, 129, 0.1);
+  --danger:          #ef4444;
+  --danger-dim:      rgba(239, 68, 68, 0.1);
+  --warning:         #f59e0b;
+  --warning-dim:     rgba(245, 158, 11, 0.1);
+  --info:            #3b82f6;
+  --info-dim:        rgba(59, 130, 246, 0.1);
+
+  /* Sidebar */
+  --sidebar-width:     260px;
+  --sidebar-collapsed: 80px;
 }
 
 [data-theme='light'] {
@@ -35,10 +61,10 @@
   --text-muted:      #64748b;
   --accent:          #475569;
   --bg-card:         #ffffff;
-  --glass-bg:        rgba(255, 255, 255, 0.8);
-  --glass-border:    rgba(0, 0, 0, 0.05);
-  --shadow-xl:       0 25px 50px -12px rgba(0, 0, 0, 0.1);
-  --calendar-icon-filter: invert(0);
+  --glass-bg:        rgba(0, 0, 0, 0.02);
+  --glass-border:    rgba(0, 0, 0, 0.08);
+  --shadow-xl:       0 20px 40px rgba(0, 0, 0, 0.08);
+  --calendar-icon-filter: none;
 }
 
 /* ── Reset y Tipografía ── */
@@ -53,7 +79,6 @@ body {
   font-family: 'Inter', -apple-system, sans-serif;
   background-color: var(--bg);
   color: var(--text-primary);
-  transition: background-color 0.3s ease, color 0.3s ease;
   -webkit-font-smoothing: antialiased;
 }
 
@@ -85,12 +110,6 @@ select, input {
   outline: none;
   background-color: var(--bg-subtle);
   color: var(--text-primary);
-  color-scheme: dark;
-}
-
-[data-theme='light'] select,
-[data-theme='light'] input {
-  color-scheme: light;
 }
 
 select option {
@@ -202,8 +221,8 @@ select option {
   padding: 16px 20px;
   border-radius: var(--r-md);
   color: var(--text-primary);
-  font-size: 15px;
-  transition: all var(--dur-fast);
+  font-size: 0.95rem;
+  transition: all 0.2s;
 }
 .field-input:focus {
   background: var(--surface);

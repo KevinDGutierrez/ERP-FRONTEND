@@ -31,8 +31,8 @@ const ProtectedRoute = ({ children, requireAdmin = false }) => {
     return children;
   }
 
-  // Caso: Perfil inexistente (ej. usuario nuevo con Google)
-  if (!profile) {
+  // Caso: Perfil inexistente o incompleto
+  if (!profile || (!profile.companyId && !profile.requestedCompany && !isAdmin)) {
     if (window.location.pathname === '/complete-profile') {
       return children;
     }

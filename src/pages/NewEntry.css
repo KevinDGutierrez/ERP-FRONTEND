@@ -14,10 +14,7 @@
   border-bottom: 1px solid var(--border);
 }
 
-.page-header-premium.compact {
-  margin-bottom: 1.5rem;
-  padding: 0.5rem 0;
-}
+/* Compact header removed */
 
 .icon-badge-mini {
   width: 36px;

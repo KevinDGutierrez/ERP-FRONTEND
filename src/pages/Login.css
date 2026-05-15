@@ -456,22 +456,32 @@
 
   .auth-panel {
     max-width: 100%;
-    padding: 20px;
+    padding: 16px 20px;
     border-radius: 20px;
-    margin-bottom: 20px;
+    margin-bottom: 0;
   }
 
   .auth-field-row {
     flex-direction: column;
-    gap: 12px;
+    gap: 8px;
   }
 
   .auth-panel-header {
-    margin-bottom: 15px;
+    margin-bottom: 10px;
     text-align: center;
   }
   
   .auth-logo-mark {
-    margin: 0 auto 12px;
+    margin: 0 auto 8px;
+    width: 32px;
+    height: 32px;
+  }
+
+  .auth-panel-title {
+    font-size: 20px;
+  }
+
+  .auth-form {
+    gap: 8px;
   }
 }
