@@ -147,7 +147,7 @@ const Register = () => {
                 >
                   <label className="auth-label">Nombre de tu Nueva Empresa</label>
                   <div className="input-with-icon">
-                    <Building2 size={16} style={{ position: 'absolute', left: '12px', color: 'rgba(255,255,255,0.4)' }} />
+                    <Building2 size={16} style={{ position: 'absolute', left: '12px', color: 'var(--text-muted)' }} />
                     <input 
                       className="auth-input" 
                       style={{ paddingLeft: '40px' }} 

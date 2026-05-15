@@ -7,15 +7,18 @@
   --surface-overlay: #1c1c1f;
   --border:          rgba(255, 255, 255, 0.08);
   --border-subtle:   rgba(255, 255, 255, 0.04);
+  --border-strong:   rgba(255, 255, 255, 0.16);
   --text-primary:    #f4f4f5;
   --text-secondary:  #a1a1aa;
   --text-muted:      #52525b;
   --primary:         #3B82F6;
   --primary-dim:     rgba(59, 130, 246, 0.1);
   --accent:          #bec6e0;
+  --bg-card:         #111113;
   --glass-bg:        rgba(255, 255, 255, 0.02);
   --glass-border:    rgba(255, 255, 255, 0.06);
   --shadow-xl:       0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  --calendar-icon-filter: invert(1);
 }
 
 [data-theme='light'] {
@@ -26,12 +29,16 @@
   --surface-overlay: #fdfdfd;
   --border:          rgba(0, 0, 0, 0.08);
   --border-subtle:   rgba(0, 0, 0, 0.04);
+  --border-strong:   rgba(0, 0, 0, 0.15);
   --text-primary:    #0f172a;
   --text-secondary:  #475569;
-  --text-muted:      #94a3b8;
+  --text-muted:      #64748b;
+  --accent:          #475569;
+  --bg-card:         #ffffff;
   --glass-bg:        rgba(255, 255, 255, 0.8);
   --glass-border:    rgba(0, 0, 0, 0.05);
   --shadow-xl:       0 25px 50px -12px rgba(0, 0, 0, 0.1);
+  --calendar-icon-filter: invert(0);
 }
 
 /* ── Reset y Tipografía ── */
@@ -73,12 +80,17 @@ button {
   outline: none;
 }
 
-select {
+select, input {
   font-family: inherit;
   outline: none;
   background-color: var(--bg-subtle);
   color: var(--text-primary);
   color-scheme: dark;
+}
+
+[data-theme='light'] select,
+[data-theme='light'] input {
+  color-scheme: light;
 }
 
 select option {
@@ -205,6 +217,45 @@ select option {
   outline: none;
 }
 .field-input::placeholder { color: var(--text-muted); }
+
+/* Input with Icon Container */
+.input-with-icon {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.input-with-icon svg {
+  position: absolute;
+  left: 14px;
+  color: var(--text-muted);
+  pointer-events: none;
+  z-index: 2;
+  transition: color var(--dur-fast);
+}
+
+.input-with-icon input,
+.input-with-icon select {
+  padding-left: 42px !important;
+}
+
+.input-with-icon input:focus + svg,
+.input-with-icon select:focus + svg {
+  color: var(--primary);
+}
+
+/* Native Calendar Icon Fix */
+input[type="date"]::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+  filter: var(--calendar-icon-filter);
+  opacity: 0.6;
+  transition: opacity var(--dur-fast);
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator:hover {
+  opacity: 1;
+}
 
 /* Badges */
 .badge {

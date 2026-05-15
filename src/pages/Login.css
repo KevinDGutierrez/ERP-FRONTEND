@@ -37,6 +37,10 @@
   animation: orb-drift 22s ease-in-out infinite alternate;
 }
 
+[data-theme='light'] .auth-orb-1 {
+  background: radial-gradient(circle, #e2e8f0 0%, transparent 70%);
+}
+
 .auth-orb-2 {
   width: 35vw;
   height: 35vw;
@@ -44,6 +48,10 @@
   left: -5%;
   background: radial-gradient(circle, #0f1825 0%, transparent 70%);
   animation: orb-drift 18s ease-in-out infinite alternate-reverse;
+}
+
+[data-theme='light'] .auth-orb-2 {
+  background: radial-gradient(circle, #f1f5f9 0%, transparent 70%);
 }
 
 @keyframes orb-drift {
@@ -81,8 +89,8 @@
   letter-spacing: 0.5em;
   text-transform: uppercase;
   color: var(--accent);
-  opacity: 0.7;
-  margin-bottom: 20px;
+  opacity: 0.9;
+  margin-bottom: 24px;
   display: block;
 }
 
@@ -110,9 +118,9 @@
 .auth-lead {
   font-size: 15px;
   line-height: 1.6;
-  color: var(--text-muted);
+  color: var(--text-secondary);
   max-width: 360px;
-  font-weight: 300;
+  font-weight: 400;
 }
 
 /* ── Panel derecho ── */
@@ -133,10 +141,9 @@
   -webkit-backdrop-filter: blur(60px);
   border-radius: 24px;
   padding: 32px 36px;
-  box-shadow:
-    0 0 0 1px var(--border),
-    0 60px 120px rgba(0, 0, 0, 0.2),
-    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  box-shadow: 
+    0 40px 100px rgba(0, 0, 0, 0.1),
+    0 10px 40px rgba(0, 0, 0, 0.05);
   border: 1px solid var(--border);
 }
 
@@ -325,7 +332,7 @@
   content: '';
   flex: 1;
   height: 1px;
-  background: var(--border);
+  background: var(--border-strong);
 }
 
 /* ── Botón Google (logo original SVG) ── */
