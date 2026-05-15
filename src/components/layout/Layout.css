@@ -291,8 +291,12 @@
 }
 
 @media (max-width: 768px) {
+  .layout-root {
+    flex-direction: column;
+  }
+  
   .sidebar {
-    display: none;
+    display: none !important;
   }
   
   .mobile-header {
@@ -368,8 +372,12 @@
 
 .mobile-brand {
   font-weight: 800;
-  font-size: 1.1rem;
+  font-size: 1rem;
   color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 60%;
 }
 
 .user-avatar {
