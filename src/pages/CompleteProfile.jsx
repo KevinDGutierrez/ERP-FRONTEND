@@ -38,12 +38,17 @@ const CompleteProfile = () => {
     
     setLoading(true);
     try {
-      const success = await updateProfileData(user.uid, {
+      const success = await updateProfileData({
         displayName,
+        email: user.email,
+        provider: user.providerData[0]?.providerId || 'google',
+        status: 'pending',
+        role: 'usuario',
         requestedCompany: companyId ? null : requestedCompany,
         companyId: companyId || null,
         phone,
         position,
+        createdAt: profile?.createdAt || new Date().toISOString(),
         updatedAt: new Date().toISOString()
       });
       

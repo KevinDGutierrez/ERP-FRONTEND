@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { AlertCircle, ArrowRight } from 'lucide-react';
+import { AlertCircle, ArrowRight, Building2 } from 'lucide-react';
+import api from '../api/client';
 import './Login.css';
 
 const Register = () => {
@@ -10,20 +11,43 @@ const Register = () => {
   const [password, setPassword]             = useState('');
   const [confirmPassword, setConfirmPass]   = useState('');
   const [companyName, setCompanyName]       = useState('');
+  const [selectedCompanyId, setSelectedCompanyId] = useState('');
+  const [companies, setCompanies]           = useState([]);
   const [error, setError]                   = useState('');
   const [loading, setLoading]               = useState(false);
   const { register, loginWithGoogle }       = useAuth();
   const navigate                            = useNavigate();
 
+  useEffect(() => {
+    const fetchCompanies = async () => {
+      try {
+        const res = await api.get('/companies');
+        setCompanies(res.data.companies || []);
+      } catch (err) {
+        console.error('Error fetching companies:', err);
+      }
+    };
+    fetchCompanies();
+  }, []);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
+    
     if (password !== confirmPassword) return setError('Las contraseñas no coinciden.');
     if (password.length < 6) return setError('La contraseña debe tener al menos 6 caracteres.');
-    if (!companyName.trim()) return setError('Debes indicar el nombre de tu empresa.');
     
+    // Validación de empresa: debe seleccionar una o escribir una nueva
+    if (!selectedCompanyId && !companyName.trim()) {
+      return setError('Debes seleccionar una empresa o escribir el nombre de una nueva.');
+    }
+    
+    setLoading(true);
     try {
-      await register(email, password, companyName);
+      await register(email, password, {
+        companyId: selectedCompanyId,
+        companyName: selectedCompanyId ? null : companyName.trim()
+      });
       navigate('/pending-approval');
     } catch (err) {
       setError(err.message || 'Error al crear la cuenta.');
@@ -36,7 +60,7 @@ const Register = () => {
     setError('');
     try {
       await loginWithGoogle();
-      // AuthContext se encargará de redirigir según el estado del perfil
+      // AuthContext y App.jsx se encargarán de redirigir según el estado del perfil
     } catch {
       setError('No se pudo registrar con Google.');
     }
@@ -99,10 +123,43 @@ const Register = () => {
               </div>
               
               <div className="auth-field">
-                <label className="auth-label">Nombre de tu Empresa</label>
-                <input className="auth-input" type="text" placeholder="Ej. Mi Empresa S.A."
-                  value={companyName} onChange={e => setCompanyName(e.target.value)} required />
+                <label className="auth-label">Empresa</label>
+                <select 
+                  className="auth-input" 
+                  value={selectedCompanyId} 
+                  onChange={e => {
+                    setSelectedCompanyId(e.target.value);
+                    if (e.target.value) setCompanyName('');
+                  }}
+                >
+                  <option value="">-- Solicitar nueva empresa --</option>
+                  {companies.map(c => (
+                    <option key={c.id} value={c.id}>{c.name}</option>
+                  ))}
+                </select>
               </div>
+
+              {!selectedCompanyId && (
+                <motion.div 
+                  className="auth-field"
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: 'auto' }}
+                >
+                  <label className="auth-label">Nombre de tu Nueva Empresa</label>
+                  <div className="input-with-icon">
+                    <Building2 size={16} style={{ position: 'absolute', left: '12px', color: 'rgba(255,255,255,0.4)' }} />
+                    <input 
+                      className="auth-input" 
+                      style={{ paddingLeft: '40px' }} 
+                      type="text" 
+                      placeholder="Ej. Mi Empresa S.A."
+                      value={companyName} 
+                      onChange={e => setCompanyName(e.target.value)} 
+                      required={!selectedCompanyId} 
+                    />
+                  </div>
+                </motion.div>
+              )}
 
               <div className="auth-field">
                 <label className="auth-label">Contraseña</label>
@@ -122,7 +179,7 @@ const Register = () => {
 
             <div className="auth-divider"><span>o regístrate con</span></div>
 
-            <button className="auth-btn-google" onClick={handleGoogle}>
+            <button className="auth-btn-google" onClick={handleGoogle} type="button">
               <svg width="18" height="18" viewBox="0 0 48 48">
                 <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
                 <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>

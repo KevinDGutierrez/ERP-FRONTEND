@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { useBrand } from '../../context/BrandContext';
+import { useTheme } from '../../context/ThemeContext';
 import { 
   LayoutDashboard, 
   BookOpen, 
@@ -48,14 +49,7 @@ const Layout = ({ children }) => {
     });
   }
 
-  const [theme, setTheme] = useState(localStorage.getItem('theme') || 'dark');
-
-  const toggleTheme = () => {
-    const newTheme = theme === 'dark' ? 'light' : 'dark';
-    setTheme(newTheme);
-    localStorage.setItem('theme', newTheme);
-    document.documentElement.setAttribute('data-theme', newTheme);
-  };
+  const { theme, toggleTheme } = useTheme();
 
   const handleLogout = async () => {
     await logout();
@@ -182,23 +176,36 @@ const Layout = ({ children }) => {
               onClick={e => e.stopPropagation()}
             >
               {/* Contenido del menú móvil similar al sidebar */}
-              <div className="sidebar-header">
-                 <div className="brand-icon">SS</div>
-                 <span className="brand-name">{brand.name}</span>
+              <div className="mobile-menu-header">
+                  <div className="brand-section">
+                    <div className="brand-icon">
+                      {brand.logo ? <img src={brand.logo} alt="Logo" /> : <div className="placeholder-mini-logo">SS</div>}
+                    </div>
+                    <span className="brand-name">{brand.name}</span>
+                  </div>
+                  <button className="theme-toggle-btn mobile-theme-btn" onClick={toggleTheme}>
+                    {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
+                  </button>
               </div>
-              <nav className="sidebar-nav">
+              <nav className="sidebar-nav mobile-nav">
                 {menuItems.map((item) => (
                   <NavLink 
                     key={item.path} 
                     to={item.path} 
-                    className="nav-item"
+                    className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}
                     onClick={() => setIsMobileMenuOpen(false)}
                   >
-                    {item.icon}
-                    <span>{item.name}</span>
+                    <div className="nav-icon">{item.icon}</div>
+                    <span className="nav-text">{item.name}</span>
                   </NavLink>
                 ))}
               </nav>
+              <div className="mobile-menu-footer">
+                <button className="logout-btn" onClick={handleLogout}>
+                  <LogOut size={22} />
+                  <span>Cerrar Sesión</span>
+                </button>
+              </div>
             </motion.div>
           </motion.div>
         )}

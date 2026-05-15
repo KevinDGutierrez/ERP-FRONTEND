@@ -2,6 +2,7 @@ import React, { Suspense, lazy } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { BrandProvider } from './context/BrandContext';
+import { ThemeProvider } from './context/ThemeContext';
 import './index.css';
 
 // Lazy loading pages
@@ -37,6 +38,15 @@ const ProtectedRoute = ({ children, requireAdmin = false }) => {
     return children;
   }
 
+  // Si el perfil no existe aún, es un usuario nuevo (posiblemente Google)
+  if (!profile) {
+    // Si ya estamos en la página de completar perfil, no redirigir de nuevo
+    if (window.location.pathname === '/complete-profile') {
+      return children;
+    }
+    return <Navigate to="/complete-profile" />;
+  }
+
   // Usuarios normales deben estar activos
   if (!isActive) {
     return <Navigate to="/pending-approval" />;
@@ -50,7 +60,7 @@ const ProtectedRoute = ({ children, requireAdmin = false }) => {
 };
 
 const AppContent = () => {
-  const { user, profile, isActive, isAdmin } = useAuth();
+  const { user, profile, isActive, isAdmin, loading } = useAuth();
 
   return (
     <Suspense fallback={<div className="loading-screen">Cargando...</div>}>
@@ -61,6 +71,7 @@ const AppContent = () => {
         <Route path="/complete-profile" element={user ? <CompleteProfile /> : <Navigate to="/login" />} />
         <Route path="/pending-approval" element={
           !user ? <Navigate to="/login" /> : 
+          loading ? <div className="loading-screen">Verificando...</div> :
           (isActive || isAdmin) ? <Navigate to="/" /> : 
           <StatusScreen />
         } />
@@ -88,15 +99,18 @@ const AppContent = () => {
   );
 };
 
+
 function App() {
   return (
-    <Router>
-      <AuthProvider>
-        <BrandProvider>
-          <AppContent />
-        </BrandProvider>
-      </AuthProvider>
-    </Router>
+    <ThemeProvider>
+      <Router>
+        <AuthProvider>
+          <BrandProvider>
+            <AppContent />
+          </BrandProvider>
+        </AuthProvider>
+      </Router>
+    </ThemeProvider>
   );
 }
 

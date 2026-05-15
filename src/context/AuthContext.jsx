@@ -70,9 +70,8 @@ export const AuthProvider = ({ children }) => {
 
   const login = (email, password) => signInWithEmailAndPassword(auth, email, password);
   
-  const register = async (email, password, companyName) => {
+  const register = async (email, password, companyData) => {
     const res = await createUserWithEmailAndPassword(auth, email, password);
-    // Crear el perfil inmediatamente
     const docRef = doc(db, 'users', res.user.uid);
     await setDoc(docRef, {
       email,
@@ -80,8 +79,8 @@ export const AuthProvider = ({ children }) => {
       provider: 'password',
       status: 'pending',
       role: 'usuario',
-      companyId: null,
-      requestedCompany: companyName,
+      companyId: companyData.companyId || null,
+      requestedCompany: companyData.companyId ? null : companyData.companyName,
       createdAt: serverTimestamp()
     });
     return res;
@@ -90,21 +89,7 @@ export const AuthProvider = ({ children }) => {
   const loginWithGoogle = async () => {
     const provider = new GoogleAuthProvider();
     const res = await signInWithPopup(auth, provider);
-    const docRef = doc(db, 'users', res.user.uid);
-    const docSnap = await getDoc(docRef);
-    
-    if (!docSnap.exists()) {
-      await setDoc(docRef, {
-        email: res.user.email,
-        displayName: res.user.displayName,
-        provider: 'google',
-        status: 'pending',
-        role: 'usuario',
-        companyId: null,
-        requestedCompany: null,
-        createdAt: serverTimestamp()
-      });
-    }
+    // Ya no creamos el perfil aquí para obligar al usuario a elegir empresa en /complete-profile
     return res;
   };
 
@@ -118,7 +103,7 @@ export const AuthProvider = ({ children }) => {
     register,
     loginWithGoogle,
     logout,
-    updateProfile,
+    updateProfileData: updateProfile,
     isAdmin: profile?.role === 'super_admin',
     isActive: profile?.status === 'active'
   };
