@@ -1,7 +1,7 @@
 .layout-root {
   display: flex;
   min-height: 100vh;
-  background: var(--bg-main);
+  background: var(--bg);
   color: var(--text-primary);
 }
 
