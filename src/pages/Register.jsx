@@ -161,15 +161,17 @@ const Register = () => {
                 </motion.div>
               )}
 
-              <div className="auth-field">
-                <label className="auth-label">Contraseña</label>
-                <input className="auth-input" type="password" placeholder="Mínimo 6 caracteres"
-                  value={password} onChange={e => setPassword(e.target.value)} required />
-              </div>
-              <div className="auth-field">
-                <label className="auth-label">Confirmar contraseña</label>
-                <input className="auth-input" type="password" placeholder="••••••••"
-                  value={confirmPassword} onChange={e => setConfirmPass(e.target.value)} required />
+              <div className="auth-field-row">
+                <div className="auth-field">
+                  <label className="auth-label">Contraseña</label>
+                  <input className="auth-input" type="password" placeholder="Mínimo 6"
+                    value={password} onChange={e => setPassword(e.target.value)} required />
+                </div>
+                <div className="auth-field">
+                  <label className="auth-label">Confirmar</label>
+                  <input className="auth-input" type="password" placeholder="••••••••"
+                    value={confirmPassword} onChange={e => setConfirmPass(e.target.value)} required />
+                </div>
               </div>
 
               <button type="submit" className="auth-btn-primary" disabled={loading}>
