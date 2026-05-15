@@ -40,6 +40,7 @@
   letter-spacing: -0.02em;
 }
 
+
 .page-header-premium p {
   margin: 4px 0 0;
   color: var(--text-muted);
@@ -202,6 +203,12 @@
   color: white;
 }
 
+.pnl-details-table-container {
+  padding: 0;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
 .pnl-detail-view {
   padding: 2rem;
   display: flex;
@@ -310,5 +317,36 @@
   }
   .reports-nav-tabs {
     flex-direction: column;
+    padding: 1rem;
+  }
+  .report-tab {
+    width: 100%;
+    justify-content: flex-start;
+  }
+}
+
+@media (max-width: 600px) {
+  .page-header-premium {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.5rem;
+    padding: 1.5rem;
+  }
+  
+  .header-actions {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .report-card-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 1.5rem;
+  }
+
+  .table-wrapper-scroll {
+    padding: 0 1rem 1rem;
+    overflow-x: auto;
   }
 }

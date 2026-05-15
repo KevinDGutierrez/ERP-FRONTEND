@@ -394,3 +394,25 @@
   color: var(--text-muted);
   font-style: italic;
 }
+
+@media (max-width: 768px) {
+  .table-controls {
+    flex-direction: column;
+  }
+  
+  .search-bar {
+    max-width: none;
+  }
+  
+  .table-card {
+    overflow-x: auto;
+  }
+  
+  .account-table {
+    min-width: 800px; /* Force scroll instead of squishing */
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+}
