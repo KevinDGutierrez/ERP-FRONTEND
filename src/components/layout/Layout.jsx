@@ -122,15 +122,12 @@ const Layout = ({ children }) => {
               src={profile?.photoURL || user?.photoURL}
               alt="Avatar"
               className="mobile-avatar-img"
-              onError={(e) => {
-                e.target.style.display = 'none';
-                e.target.nextSibling.style.display = 'flex';
-              }}
+              onError={(e) => { e.currentTarget.style.display='none'; e.currentTarget.nextSibling.style.display='flex'; }}
             />
           ) : null}
           <span
             className="mobile-avatar-initial"
-            style={{ display: (profile?.photoURL || user?.photoURL) ? 'none' : 'flex' }}
+            style={{ display: (profile?.photoURL || user?.photoURL) ? 'none' : undefined }}
           >
             {user?.email?.charAt(0).toUpperCase()}
           </span>
@@ -162,15 +159,12 @@ const Layout = ({ children }) => {
                     src={profile?.photoURL || user?.photoURL}
                     alt="Avatar"
                     className="avatar-img"
-                    onError={(e) => {
-                      e.target.style.display = 'none';
-                      e.target.nextSibling.style.display = 'flex';
-                    }}
+                    onError={(e) => { e.currentTarget.style.display='none'; e.currentTarget.nextSibling.style.display='flex'; }}
                   />
                 ) : null}
                 <div
                   className="avatar-initials"
-                  style={{ display: (profile?.photoURL || user?.photoURL) ? 'none' : 'flex' }}
+                  style={{ display: (profile?.photoURL || user?.photoURL) ? 'none' : undefined }}
                 >
                   {user?.email?.charAt(0).toUpperCase()}
                 </div>

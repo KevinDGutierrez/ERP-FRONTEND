@@ -31,8 +31,13 @@ const ProtectedRoute = ({ children, requireAdmin = false }) => {
     return children;
   }
 
-  // Caso: Perfil inexistente o incompleto
-  if (!profile || (!profile.companyId && !profile.requestedCompany && !isAdmin)) {
+  // Si el perfil aún no ha llegado de Firestore, esperar (evita redirect prematuro)
+  if (profile === null) {
+    return <div className="loading-screen">Cargando perfil...</div>;
+  }
+
+  // Caso: Perfil incompleto (no eligió empresa)
+  if (!profile.companyId && !profile.requestedCompany) {
     if (window.location.pathname === '/complete-profile') {
       return children;
     }
@@ -41,14 +46,12 @@ const ProtectedRoute = ({ children, requireAdmin = false }) => {
 
   // Usuarios normales deben estar activos
   if (!isActive) {
-    // Si ya envió solicitud, va a la pantalla de espera
     if (profile.requestedCompany || profile.companyId) {
       if (window.location.pathname === '/pending-approval') {
         return children;
       }
       return <Navigate to="/pending-approval" replace />;
     }
-    // Si no tiene nada, debe completar el perfil
     return <Navigate to="/complete-profile" replace />;
   }
 

@@ -18,7 +18,6 @@
   --glass-bg:        rgba(255, 255, 255, 0.02);
   --glass-border:    rgba(255, 255, 255, 0.06);
   --shadow-xl:       0 25px 50px -12px rgba(0, 0, 0, 0.5);
-  --calendar-icon-filter: invert(1);
 
   /* Design System Extra Tokens */
   --font-display:    'Inter', sans-serif;
@@ -48,29 +47,29 @@
 }
 
 [data-theme='light'] {
-  --bg:              #f8fafc;
-  --bg-subtle:       #f1f5f9;
+  --bg:              #f0f4f8;
+  --bg-subtle:       #e8edf3;
   --surface:         #ffffff;
   --surface-raised:  #ffffff;
-  --surface-overlay: #f0f4f8;
-  --border:          rgba(0, 0, 0, 0.1);
-  --border-subtle:   rgba(0, 0, 0, 0.06);
+  --surface-overlay: #edf2f7;
+  --border:          rgba(0, 0, 0, 0.10);
+  --border-subtle:   rgba(0, 0, 0, 0.05);
   --border-strong:   rgba(0, 0, 0, 0.18);
   --text-primary:    #0f172a;
-  --text-secondary:  #475569;
+  --text-secondary:  #334155;
   --text-muted:      #64748b;
   --accent:          #475569;
   --bg-card:         #ffffff;
-  --glass-bg:        rgba(0, 0, 0, 0.02);
+  --glass-bg:        rgba(0, 0, 0, 0.015);
   --glass-border:    rgba(0, 0, 0, 0.08);
-  --shadow-xl:       0 20px 40px rgba(0, 0, 0, 0.08);
-  --calendar-icon-filter: none;
-  /* Light mode overrides */
+  --shadow-xl:       0 20px 40px rgba(0, 0, 0, 0.10);
   --primary-dim:     rgba(59, 130, 246, 0.12);
   --success-dim:     rgba(16, 185, 129, 0.12);
   --danger-dim:      rgba(239, 68, 68, 0.12);
   --warning-dim:     rgba(245, 158, 11, 0.12);
   --info-dim:        rgba(59, 130, 246, 0.12);
+  /* En light mode el btn-primary usa --text-primary (#0f172a) como bg → texto negro sobre negro.
+     Override para que siempre sea legible: */
 }
 
 /* ── Reset y Tipografía ── */
@@ -188,8 +187,17 @@ select option {
 }
 
 .btn-glass:hover {
-  background: rgba(255,255,255,0.08);
+  background: var(--surface-overlay);
   border-color: var(--border-strong);
+}
+
+/* En light mode btn-primary: fondo oscuro con texto blanco para legibilidad */
+[data-theme='light'] .btn-primary {
+  background: #1e293b;
+  color: #ffffff;
+}
+[data-theme='light'] .btn-primary:hover {
+  background: #0f172a;
 }
 
 /* Botón Danger */
@@ -266,35 +274,26 @@ select option {
 }
 
 /* Native Calendar Icon Fix */
+/* En dark mode el ícono nativo es negro → invisible. Lo invertimos a blanco. */
 input[type="date"]::-webkit-calendar-picker-indicator {
   cursor: pointer;
-  filter: var(--calendar-icon-filter);
-  opacity: 0.7;
-  transition: opacity var(--dur-fast);
-  padding: 2px;
+  filter: invert(1) opacity(0.6);
+  transition: filter var(--dur-fast), opacity var(--dur-fast);
   border-radius: 4px;
+  padding: 2px;
 }
 
 input[type="date"]::-webkit-calendar-picker-indicator:hover {
-  opacity: 1;
+  filter: invert(1) opacity(1);
 }
 
-/* Light mode: calendar icon needs more contrast */
+/* En light mode ya es oscuro sobre fondo claro → solo ajustamos opacidad */
 [data-theme='light'] input[type="date"]::-webkit-calendar-picker-indicator {
-  filter: invert(0.4) sepia(1) saturate(3) hue-rotate(195deg);
-  opacity: 0.8;
+  filter: invert(0) opacity(0.55);
 }
 
-/* btn-primary: dark bg uses white text color (--text-primary is light in dark mode).
-   In light mode --text-primary is near-black so the button needs an explicit override */
-[data-theme='light'] .btn-primary {
-  background: #1e293b;
-  color: #ffffff;
-}
-
-[data-theme='light'] .btn-glass:hover {
-  background: rgba(0, 0, 0, 0.06);
-  border-color: var(--border-strong);
+[data-theme='light'] input[type="date"]::-webkit-calendar-picker-indicator:hover {
+  filter: invert(0) opacity(0.9);
 }
 
 /* Badges */
