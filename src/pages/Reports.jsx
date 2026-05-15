@@ -59,7 +59,7 @@ const Reports = () => {
             </div>
           </div>
           <div className="header-actions">
-            <button className="btn-glass" onClick={fetchData} title="Refrescar">
+            <button className="btn-glass-icon" onClick={fetchData} title="Refrescar">
               <RefreshCw size={20} className={loading ? 'spin' : ''} />
             </button>
             <button className="btn-primary">
