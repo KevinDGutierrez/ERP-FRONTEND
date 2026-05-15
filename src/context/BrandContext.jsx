@@ -37,7 +37,8 @@ export const BrandProvider = ({ children }) => {
       }
       setLoading(false);
     }, (error) => {
-      console.error("Error loading brand from Firestore:", error);
+      // Si no hay permisos (ej. usuario no aprobado), simplemente no cargamos la marca
+      console.warn("Permisos insuficientes para cargar marca de empresa:", error);
       setLoading(false);
     });
 

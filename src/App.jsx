@@ -38,12 +38,13 @@ const ProtectedRoute = ({ children, requireAdmin = false }) => {
     return children;
   }
 
-  // Si el perfil no existe aún, es un usuario nuevo (posiblemente Google)
+  // Si el perfil no existe aún, podría ser un usuario nuevo (Google)
   if (!profile) {
-    // Si ya estamos en la página de completar perfil, no redirigir de nuevo
+    // Si ya estamos en la página de completar perfil, permitir renderizado
     if (window.location.pathname === '/complete-profile') {
       return children;
     }
+    // IMPORTANTE: Solo redirigir si no estamos en una ruta de error o carga
     return <Navigate to="/complete-profile" />;
   }
 
