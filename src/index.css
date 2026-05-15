@@ -152,12 +152,6 @@ select option {
   justify-content: center;
   gap: 8px;
   padding: 13px 24px;
-.btn-glass {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  padding: 13px 24px;
   background: var(--bg-subtle);
   border: 1px solid var(--border);
   color: var(--text-primary);
@@ -167,6 +161,7 @@ select option {
   font-family: var(--font-body);
   transition: all var(--dur-normal) var(--ease-out);
 }
+
 .btn-glass:hover {
   background: rgba(255,255,255,0.08);
   border-color: var(--border-strong);

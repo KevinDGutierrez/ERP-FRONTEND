@@ -415,52 +415,63 @@
 
 @media (max-width: 768px) {
   .auth-page {
-    height: auto;
-    min-height: 100vh;
-    overflow-y: auto;
+    height: 100vh;
+    height: 100dvh;
+    overflow: hidden;
   }
 
   .auth-layout {
     flex-direction: column;
+    overflow-y: auto;
   }
 
   .auth-hero {
     flex: none;
-    padding: 40px 24px 20px;
+    padding: 30px 24px 10px;
     align-items: center;
     text-align: center;
   }
 
   .auth-eyebrow {
-    margin-bottom: 12px;
+    margin-bottom: 8px;
     font-size: 8px;
   }
 
   .auth-headline {
-    font-size: clamp(36px, 12vw, 54px);
-    margin-bottom: 16px;
+    font-size: clamp(32px, 10vw, 42px);
+    margin-bottom: 8px;
   }
 
   .auth-lead {
-    font-size: 13px;
-    max-width: 280px;
-    margin: 0 auto;
+    display: none; /* Ocultamos el lead en móvil para ahorrar espacio */
   }
 
   .auth-panel-wrap {
-    flex: none;
-    padding: 20px 16px 40px;
+    flex: 1;
+    padding: 10px 16px 30px;
     background: none;
+    display: flex;
+    align-items: flex-start;
   }
 
   .auth-panel {
     max-width: 100%;
-    padding: 30px 20px;
+    padding: 20px;
     border-radius: 20px;
+    margin-bottom: 20px;
   }
 
   .auth-field-row {
     flex-direction: column;
     gap: 12px;
+  }
+
+  .auth-panel-header {
+    margin-bottom: 15px;
+    text-align: center;
+  }
+  
+  .auth-logo-mark {
+    margin: 0 auto 12px;
   }
 }

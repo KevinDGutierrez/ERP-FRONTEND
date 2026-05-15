@@ -90,34 +90,37 @@ const CompleteProfile = () => {
             <div className="auth-field">
               <label className="auth-label">Nombre Completo</label>
               <div className="input-with-icon">
-                <User size={16} style={{ position: 'absolute', left: '12px', color: 'rgba(255,255,255,0.4)' }} />
-                <input className="auth-input" style={{ paddingLeft: '40px' }} value={displayName} onChange={e => setDisplayName(e.target.value)} required />
+                <User size={16} />
+                <input className="auth-input" value={displayName} onChange={e => setDisplayName(e.target.value)} required />
               </div>
             </div>
 
             <div className="auth-field">
               <label className="auth-label">Empresa</label>
-              <select 
-                className="auth-input" 
-                value={companyId} 
-                onChange={e => {
-                  setCompanyId(e.target.value);
-                  if (e.target.value) setRequestedCompany('');
-                }}
-              >
-                <option value="">-- Solicitar nueva empresa --</option>
-                {companies.map(c => (
-                  <option key={c.id} value={c.id}>{c.name}</option>
-                ))}
-              </select>
+              <div className="input-with-icon">
+                <Building2 size={16} />
+                <select 
+                  className="auth-input" 
+                  value={companyId} 
+                  onChange={e => {
+                    setCompanyId(e.target.value);
+                    if (e.target.value) setRequestedCompany('');
+                  }}
+                >
+                  <option value="">-- Solicitar nueva empresa --</option>
+                  {companies.map(c => (
+                    <option key={c.id} value={c.id}>{c.name}</option>
+                  ))}
+                </select>
+              </div>
             </div>
 
             {!companyId && (
               <div className="auth-field">
                 <label className="auth-label">Nombre de la nueva empresa</label>
                 <div className="input-with-icon">
-                  <Building2 size={16} style={{ position: 'absolute', left: '12px', color: 'rgba(255,255,255,0.4)' }} />
-                  <input className="auth-input" style={{ paddingLeft: '40px' }} value={requestedCompany} onChange={e => setRequestedCompany(e.target.value)} placeholder="Ej. Tech Solutions S.A." required={!companyId} />
+                  <Building2 size={16} />
+                  <input className="auth-input" value={requestedCompany} onChange={e => setRequestedCompany(e.target.value)} placeholder="Ej. Tech Solutions S.A." required={!companyId} />
                 </div>
               </div>
             )}

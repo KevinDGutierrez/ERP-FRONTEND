@@ -100,20 +100,19 @@ const NewEntry = () => {
   return (
     <Layout>
       <div className="new-entry-container">
-        <header className="page-header-premium">
+        <header className="page-header-premium compact">
           <div className="title-section">
-            <div className="icon-badge">
-              <PlusCircle size={24} />
+            <div className="icon-badge-mini">
+              <PlusCircle size={20} />
             </div>
             <div>
-              <h1>Nueva Partida</h1>
-              <p>Registra un nuevo asiento contable en el sistema.</p>
+              <h1 className="compact-title">Nueva Partida</h1>
             </div>
           </div>
           
           <div className={`square-indicator ${isSquared ? 'squared' : 'not-squared'}`}>
-            {isSquared ? <CheckCircle2 size={16} /> : <AlertTriangle size={16} />}
-            {isSquared ? 'Partida Cuadrada' : 'No Cuadrada'}
+            {isSquared ? <CheckCircle2 size={14} /> : <AlertTriangle size={14} />}
+            <span>{isSquared ? 'Partida Cuadrada' : 'No Cuadrada'}</span>
           </div>
         </header>
 

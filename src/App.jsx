@@ -24,37 +24,36 @@ const ProtectedRoute = ({ children, requireAdmin = false }) => {
   const { user, profile, loading, isActive, isAdmin } = useAuth();
 
   if (loading) return <div className="loading-screen">Cargando ERP...</div>;
-  if (!user) return <Navigate to="/login" />;
+  if (!user) return <Navigate to="/login" replace />;
 
-  // Caso: Perfil incompleto (Login Google sin empresa)
-  if (!isActive && profile?.status === 'pending') {
-    if (!profile.requestedCompany && !profile.companyId) {
-      return <Navigate to="/complete-profile" />;
-    }
-  }
-
-  // Si es Super Admin, tiene acceso total
+  // Si es Super Admin, tiene acceso total e inmediato
   if (isAdmin) {
     return children;
   }
 
-  // Si el perfil no existe aún, podría ser un usuario nuevo (Google)
+  // Caso: Perfil inexistente (ej. usuario nuevo con Google)
   if (!profile) {
-    // Si ya estamos en la página de completar perfil, permitir renderizado
     if (window.location.pathname === '/complete-profile') {
       return children;
     }
-    // IMPORTANTE: Solo redirigir si no estamos en una ruta de error o carga
-    return <Navigate to="/complete-profile" />;
+    return <Navigate to="/complete-profile" replace />;
   }
 
   // Usuarios normales deben estar activos
   if (!isActive) {
-    return <Navigate to="/pending-approval" />;
+    // Si ya envió solicitud, va a la pantalla de espera
+    if (profile.requestedCompany || profile.companyId) {
+      if (window.location.pathname === '/pending-approval') {
+        return children;
+      }
+      return <Navigate to="/pending-approval" replace />;
+    }
+    // Si no tiene nada, debe completar el perfil
+    return <Navigate to="/complete-profile" replace />;
   }
 
   if (requireAdmin && !isAdmin) {
-    return <Navigate to="/" />;
+    return <Navigate to="/" replace />;
   }
 
   return children;
@@ -67,8 +66,8 @@ const AppContent = () => {
     <Suspense fallback={<div className="loading-screen">Cargando...</div>}>
       <Routes>
         {/* Rutas Públicas */}
-        <Route path="/login" element={!user ? <Login /> : (isAdmin ? <Navigate to="/admin/approvals" /> : <Navigate to="/" />)} />
-        <Route path="/register" element={!user ? <Register /> : <Navigate to="/" />} />
+        <Route path="/login" element={!user ? <Login /> : (isAdmin ? <Navigate to="/admin/approvals" replace /> : <Navigate to="/" replace />)} />
+        <Route path="/register" element={!user ? <Register /> : (isAdmin ? <Navigate to="/admin/approvals" replace /> : <Navigate to="/" replace />)} />
         <Route path="/complete-profile" element={user ? <CompleteProfile /> : <Navigate to="/login" />} />
         <Route path="/pending-approval" element={
           !user ? <Navigate to="/login" /> : 

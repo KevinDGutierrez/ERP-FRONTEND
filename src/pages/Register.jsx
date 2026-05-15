@@ -124,19 +124,22 @@ const Register = () => {
               
               <div className="auth-field">
                 <label className="auth-label">Empresa</label>
-                <select 
-                  className="auth-input" 
-                  value={selectedCompanyId} 
-                  onChange={e => {
-                    setSelectedCompanyId(e.target.value);
-                    if (e.target.value) setCompanyName('');
-                  }}
-                >
-                  <option value="">-- Solicitar nueva empresa --</option>
-                  {companies.map(c => (
-                    <option key={c.id} value={c.id}>{c.name}</option>
-                  ))}
-                </select>
+                <div className="input-with-icon">
+                  <Building2 size={16} />
+                  <select 
+                    className="auth-input" 
+                    value={selectedCompanyId} 
+                    onChange={e => {
+                      setSelectedCompanyId(e.target.value);
+                      if (e.target.value) setCompanyName('');
+                    }}
+                  >
+                    <option value="">-- Solicitar nueva empresa --</option>
+                    {companies.map(c => (
+                      <option key={c.id} value={c.id}>{c.name}</option>
+                    ))}
+                  </select>
+                </div>
               </div>
 
               {!selectedCompanyId && (
@@ -145,19 +148,20 @@ const Register = () => {
                   initial={{ opacity: 0, height: 0 }}
                   animate={{ opacity: 1, height: 'auto' }}
                 >
-                  <label className="auth-label">Nombre de tu Nueva Empresa</label>
-                  <div className="input-with-icon">
-                    <Building2 size={16} style={{ position: 'absolute', left: '12px', color: 'var(--text-muted)' }} />
-                    <input 
-                      className="auth-input" 
-                      style={{ paddingLeft: '40px' }} 
-                      type="text" 
-                      placeholder="Ej. Mi Empresa S.A."
-                      value={companyName} 
-                      onChange={e => setCompanyName(e.target.value)} 
-                      required={!selectedCompanyId} 
-                    />
-                  </div>
+              <div className="auth-field">
+                <label className="auth-label">Nombre de tu Nueva Empresa</label>
+                <div className="input-with-icon">
+                  <Building2 size={16} />
+                  <input 
+                    className="auth-input" 
+                    type="text" 
+                    placeholder="Ej. Mi Empresa S.A."
+                    value={companyName} 
+                    onChange={e => setCompanyName(e.target.value)} 
+                    required={!selectedCompanyId} 
+                  />
+                </div>
+              </div>
                 </motion.div>
               )}
 

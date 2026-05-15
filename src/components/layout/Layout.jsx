@@ -126,9 +126,7 @@ const Layout = ({ children }) => {
       <main className="main-content">
         <header className="desktop-header">
           <div className="header-left">
-            <h2 className="page-title">
-              {menuItems.find(item => window.location.pathname === item.path)?.name || 'ERP System'}
-            </h2>
+            {/* El título se maneja dentro de cada página para mayor flexibilidad */}
           </div>
           
           <div className="header-right">

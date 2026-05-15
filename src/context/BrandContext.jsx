@@ -38,7 +38,10 @@ export const BrandProvider = ({ children }) => {
       setLoading(false);
     }, (error) => {
       // Si no hay permisos (ej. usuario no aprobado), simplemente no cargamos la marca
-      console.warn("Permisos insuficientes para cargar marca de empresa:", error);
+      // Silenciamos el error si es por permisos para no confundir al usuario
+      if (error.code !== 'permission-denied') {
+        console.error("Error al cargar la marca:", error);
+      }
       setLoading(false);
     });
 

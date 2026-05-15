@@ -46,7 +46,7 @@ export const AuthProvider = ({ children }) => {
           if (docSnap.exists()) {
             setProfile(docSnap.data());
           } else {
-            setProfile(null); // No existe perfil aún
+            setProfile(null);
           }
           setLoading(false);
         }, (err) => {
@@ -57,7 +57,10 @@ export const AuthProvider = ({ children }) => {
         setUser(null);
         setProfile(null);
         localStorage.removeItem('auth_token');
-        if (unsubscribeProfile) unsubscribeProfile();
+        if (unsubscribeProfile) {
+          unsubscribeProfile();
+          unsubscribeProfile = null;
+        }
         setLoading(false);
       }
     });
