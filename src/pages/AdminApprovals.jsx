@@ -173,7 +173,7 @@ const AdminApprovals = () => {
                           )}
                         </td>
                         <td>
-                          <span className="provider-badge">{u.provider === 'google' ? 'Google' : 'Email'}</span>
+                          <span className="provider-badge">{(u.provider === 'google' || u.provider === 'google.com') ? 'Google' : 'Email'}</span>
                         </td>
                         <td>
                           <span className={`badge ${badge.class}`}>

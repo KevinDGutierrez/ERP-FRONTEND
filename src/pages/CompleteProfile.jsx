@@ -46,7 +46,7 @@ const CompleteProfile = () => {
         displayName,
         email: user.email,
         photoURL,
-        provider: user.providerData[0]?.providerId || 'google',
+        provider: user.providerData[0]?.providerId === 'google.com' ? 'google' : (user.providerData[0]?.providerId || 'password'),
         status: 'pending',
         role: 'usuario',
         requestedCompany: companyId ? null : requestedCompany,
