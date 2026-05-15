@@ -47,14 +47,21 @@ const StatusScreen = () => {
         <h1 className="status-title">{current.title}</h1>
         <p className="status-message">{current.message}</p>
 
-        {profile?.email && (
-          <div className="status-email">{profile.email}</div>
-        )}
+        <div className="status-footer">
+          {profile?.email && (
+            <div className="status-user-info">
+              <div className="user-avatar-mini">
+                {profile.displayName?.charAt(0) || profile.email.charAt(0).toUpperCase()}
+              </div>
+              <span className="user-email-text">{profile.email}</span>
+            </div>
+          )}
 
-        <button className="status-logout" onClick={logout}>
-          <LogOut size={16} />
-          Cerrar sesión
-        </button>
+          <button className="status-logout-btn" onClick={logout} title="Cerrar sesión">
+            <LogOut size={16} />
+            <span>Cerrar sesión</span>
+          </button>
+        </div>
       </motion.div>
     </div>
   );

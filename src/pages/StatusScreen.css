@@ -96,40 +96,87 @@
   margin-bottom: 28px;
 }
 
-.status-email {
-  display: inline-block;
-  padding: 8px 20px;
+.status-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
   background: var(--bg-subtle);
   border: 1px solid var(--border);
-  border-radius: var(--r-full);
-  font-size: 13px;
-  color: var(--text-secondary);
-  margin-bottom: 36px;
+  padding: 8px 8px 8px 16px;
+  border-radius: var(--r-xl);
+  margin-top: 32px;
 }
 
-.status-logout {
-  display: inline-flex;
+.status-user-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  overflow: hidden;
+}
+
+.user-avatar-mini {
+  width: 28px;
+  height: 28px;
+  background: var(--primary);
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 800;
+  flex-shrink: 0;
+}
+
+.user-email-text {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.status-logout-btn {
+  display: flex;
   align-items: center;
   gap: 8px;
-  padding: 12px 24px;
-  background: transparent;
+  padding: 8px 16px;
+  background: var(--surface-raised);
   border: 1px solid var(--border);
-  border-radius: var(--r-md);
+  border-radius: var(--r-lg);
   color: var(--text-muted);
-  font-size: 14px;
-  font-weight: 600;
+  font-size: 13px;
+  font-weight: 700;
   font-family: var(--font-body);
   cursor: pointer;
   transition: all var(--dur-fast);
 }
 
-.status-logout:hover {
+.status-logout-btn:hover {
   background: var(--danger-dim);
   border-color: rgba(239,68,68,0.2);
   color: var(--danger);
+  transform: translateY(-1px);
 }
 
 @media (max-width: 640px) {
+  .status-footer {
+    flex-direction: column;
+    padding: 16px;
+    gap: 16px;
+    text-align: center;
+  }
+  .status-user-info {
+    flex-direction: column;
+    width: 100%;
+  }
+  .status-logout-btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
   .status-card {
     padding: 40px 24px;
   }
