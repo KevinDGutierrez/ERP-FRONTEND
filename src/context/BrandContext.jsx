@@ -48,15 +48,22 @@ export const BrandProvider = ({ children }) => {
     return () => unsubscribe();
   }, [profile?.companyId]);
 
+  // Fields that belong to brand configuration (not company metadata)
+  const BRAND_FIELDS = ['name', 'logo', 'theme', 'nit', 'address', 'phone', 'email', 'slogan'];
+
   const updateBrand = async (newConfig) => {
     const updated = { ...brand, ...newConfig };
     setBrand(updated);
     
-    // Persistencia en Firestore
+    // Only persist brand-specific fields to the company doc
     if (profile?.companyId) {
       try {
         const brandRef = doc(db, 'companies', profile.companyId);
-        await setDoc(brandRef, updated, { merge: true });
+        const brandOnly = {};
+        BRAND_FIELDS.forEach(key => {
+          if (updated[key] !== undefined) brandOnly[key] = updated[key];
+        });
+        await setDoc(brandRef, brandOnly, { merge: true });
       } catch (error) {
         console.error("Error saving brand to Firestore:", error);
       }
