@@ -46,7 +46,7 @@ const AdminApprovals = () => {
 
   // Helper: resolve companyId to company name
   const getCompanyName = (companyId) => {
-    if (!companyId || companyId === 'master_company') return '—';
+    if (!companyId) return 'Sin asignar';
     const found = companies.find(c => c.id === companyId);
     return found ? found.name : companyId;
   };
@@ -171,7 +171,9 @@ const AdminApprovals = () => {
                             </div>
                           </td>
                           <td>
-                            <span className="company-name">{u.requestedCompany || 'Existente'}</span>
+                            <span className="company-name">
+                              {u.requestedCompany || getCompanyName(u.companyId)}
+                            </span>
                           </td>
                           <td>
                             {u.status === 'pending' ? (
@@ -255,7 +257,7 @@ const AdminApprovals = () => {
                       <div className="approval-card-fields">
                         <div className="field-row">
                           <span className="field-label">Empresa solicitada</span>
-                          <span>{u.requestedCompany || 'Existente'}</span>
+                          <span>{u.requestedCompany || getCompanyName(u.companyId)}</span>
                         </div>
                         <div className="field-row">
                           <span className="field-label">Asignar empresa</span>
