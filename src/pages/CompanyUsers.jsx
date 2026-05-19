@@ -128,7 +128,14 @@ const CompanyUsers = () => {
                         </span>
                       </td>
                       <td className="user-date">
-                        {u.createdAt ? new Date(u.createdAt.seconds ? u.createdAt.seconds * 1000 : u.createdAt).toLocaleDateString('es-GT') : '—'}
+                        {(() => {
+                          if (!u.createdAt) return '—';
+                          let d;
+                          if (u.createdAt._seconds) d = new Date(u.createdAt._seconds * 1000);
+                          else if (u.createdAt.seconds) d = new Date(u.createdAt.seconds * 1000);
+                          else d = new Date(u.createdAt);
+                          return isNaN(d.getTime()) ? '—' : d.toLocaleDateString('es-GT');
+                        })()}
                       </td>
                     </motion.tr>
                   );
