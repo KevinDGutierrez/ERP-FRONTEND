@@ -80,6 +80,12 @@ const Settings = () => {
     }
   }, [profile, user]);
 
+  useEffect(() => {
+    // Sync formData with loaded brand so we don't save empty defaults
+    setFormData(brand);
+    setLogoPreview(brand.logo);
+  }, [brand]);
+
   const handleBrandChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
