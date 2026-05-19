@@ -16,7 +16,13 @@ import {
 import { motion, AnimatePresence } from 'framer-motion';
 import './Reports.css';
 
-const formatQ = (val) => `Q${(val || 0).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+const formatQ = (val) => {
+  const num = Number(val) || 0;
+  if (num < 0) {
+    return `-Q${Math.abs(num).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+  }
+  return `Q${num.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+};
 
 const generatePrintHTML = (title, bodyContent) => `
 <!DOCTYPE html>
@@ -104,7 +110,11 @@ const exportReportPDF = (activeTab, data) => {
     title = 'Balance General';
     const activoRows = (data.activos || []).map(a => `<div class="summary-line"><span>${a.name}</span><span>${formatQ(a.balance)}</span></div>`).join('');
     const pasivoRows = (data.pasivos || []).map(p => `<div class="summary-line"><span>${p.name}</span><span>${formatQ(Math.abs(p.balance))}</span></div>`).join('');
-    const patrimonioRows = (data.patrimonio || []).map(p => `<div class="summary-line"><span>${p.name}</span><span>${formatQ(Math.abs(p.balance))}</span></div>`).join('');
+    const patrimonioRows = (data.patrimonio || []).map(p => {
+      const isResult = p.code === '3.2.01.01' || p.id === '_resultado_ejercicio' || p.name.toLowerCase() === 'resultado del ejercicio';
+      const val = isResult ? p.balance : Math.abs(p.balance);
+      return `<div class="summary-line"><span>${p.name}</span><span>${formatQ(val)}</span></div>`;
+    }).join('');
     bodyContent = `
       <div class="two-col">
         <div>
@@ -363,12 +373,12 @@ const BalanceSheetView = ({ data }) => (
         {data.activos?.map(a => (
           <div key={a.id || a.code} className="pnl-line">
             <span>{a.name}</span>
-            <span>Q{a.balance.toLocaleString()}</span>
+            <span>{formatQ(a.balance)}</span>
           </div>
         ))}
         <div className="pnl-line total">
           <span>TOTAL ACTIVO</span>
-          <span>Q{data.totales?.activo.toLocaleString()}</span>
+          <span>{formatQ(data.totales?.activo)}</span>
         </div>
       </div>
     </div>
@@ -385,21 +395,25 @@ const BalanceSheetView = ({ data }) => (
         {data.pasivos?.map(p => (
           <div key={p.id || p.code} className="pnl-line">
             <span>{p.name}</span>
-            <span>Q{Math.abs(p.balance).toLocaleString()}</span>
+            <span>{formatQ(Math.abs(p.balance))}</span>
           </div>
         ))}
         
         <div className="bs-group-label" style={{ marginTop: '1.5rem' }}>Patrimonio</div>
-        {data.patrimonio?.map(p => (
-          <div key={p.id || p.code} className="pnl-line">
-            <span>{p.name}</span>
-            <span>Q{Math.abs(p.balance).toLocaleString()}</span>
-          </div>
-        ))}
+        {data.patrimonio?.map(p => {
+          const isResult = p.code === '3.2.01.01' || p.id === '_resultado_ejercicio' || p.name.toLowerCase() === 'resultado del ejercicio';
+          const val = isResult ? p.balance : Math.abs(p.balance);
+          return (
+            <div key={p.id || p.code} className="pnl-line">
+              <span>{p.name}</span>
+              <span className={isResult && val < 0 ? 'negative' : ''}>{formatQ(val)}</span>
+            </div>
+          );
+        })}
         
         <div className="pnl-line total">
           <span>TOTAL PASIVO Y CAPITAL</span>
-          <span>Q{data.totales?.patrimonio.toLocaleString()}</span>
+          <span>{formatQ(data.totales?.patrimonio)}</span>
         </div>
       </div>
     </div>
