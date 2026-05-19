@@ -18,7 +18,8 @@ import {
   Sun,
   Moon,
   Building,
-  Users
+  Users,
+  BookOpenCheck
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import './Layout.css';
@@ -43,6 +44,7 @@ const getMenuItems = (role) => {
     { name: 'Catálogo', icon: <BookOpen size={22} />, path: '/accounts' },
     { name: 'Nueva Partida', icon: <PlusCircle size={22} />, path: '/new-entry' },
     { name: 'Libro Diario', icon: <History size={22} />, path: '/entries' },
+    { name: 'Libro Mayor', icon: <BookOpenCheck size={22} />, path: '/ledger' },
     { name: 'Reportes', icon: <PieChart size={22} />, path: '/reports' },
   ];
 

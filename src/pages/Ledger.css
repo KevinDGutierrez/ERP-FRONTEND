@@ -1,0 +1,172 @@
+/* ============================================================
+   LIBRO MAYOR — Reuses existing design tokens
+   ============================================================ */
+
+.ledger-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* ── Filters ── */
+.ledger-filters-grid {
+  display: flex;
+  align-items: flex-end;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.filter-account {
+  flex: 1;
+  min-width: 250px;
+}
+
+/* ── Account Info Card ── */
+.ledger-account-info {
+  margin-bottom: 1.5rem;
+}
+
+.account-info-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 1rem;
+}
+
+.info-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.info-label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+}
+
+.info-value {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.info-value.code {
+  font-family: 'SF Mono', 'Fira Code', monospace;
+  color: var(--primary);
+}
+
+.nature-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  width: fit-content;
+}
+
+.nature-badge.deudora {
+  background: rgba(59, 130, 246, 0.1);
+  color: #3b82f6;
+}
+
+.nature-badge.acreedora {
+  background: rgba(168, 85, 247, 0.1);
+  color: #a855f7;
+}
+
+.info-value.positive { color: #10b981; }
+.info-value.negative { color: #ef4444; }
+
+/* ── Table ── */
+.ledger-table-card {
+  padding: 0 !important;
+  overflow: hidden;
+}
+
+.ledger-table-scroll {
+  max-height: 55vh;
+  overflow-y: auto;
+  overflow-x: auto;
+}
+
+.ledger-table-scroll::-webkit-scrollbar { width: 6px; }
+.ledger-table-scroll::-webkit-scrollbar-track { background: transparent; }
+.ledger-table-scroll::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+.ledger-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 700px;
+}
+
+.ledger-table thead {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background: var(--surface-raised);
+}
+
+.ledger-table th {
+  padding: 14px 20px;
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+  border-bottom: 1px solid var(--border);
+  text-align: left;
+}
+
+.ledger-table td {
+  padding: 12px 20px;
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.ledger-table tbody tr { transition: background 0.15s; }
+.ledger-table tbody tr:hover td { background: rgba(59, 130, 246, 0.03); }
+.ledger-table tbody tr:last-child td { border-bottom: none; }
+
+.date-cell { white-space: nowrap; font-weight: 500; }
+.partida-cell { font-weight: 700; color: var(--text-muted); }
+.desc-cell { max-width: 280px; }
+
+.type-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 6px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  background: var(--bg-subtle);
+  color: var(--text-secondary);
+  border: 1px solid var(--border);
+}
+
+.text-right { text-align: right; }
+
+.amount-cell.debe { color: var(--text-secondary); }
+.amount-cell.haber { color: var(--text-secondary); }
+.amount-cell.positive { color: #10b981; font-weight: 600; }
+.amount-cell.negative { color: #ef4444; font-weight: 600; }
+
+/* ── Responsive ── */
+@media (max-width: 900px) {
+  .account-info-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .ledger-filters-grid {
+    flex-direction: column;
+  }
+  .filter-account {
+    min-width: 0;
+    width: 100%;
+  }
+  .account-info-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

@@ -16,6 +16,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import './JournalEntries.css';
 
 import * as XLSX from 'xlsx';
+import { exportJournalPDF } from '../utils/pdfExport';
 
 const exportToExcel = (entries) => {
   if (!entries || entries.length === 0) return;
@@ -175,6 +176,9 @@ const JournalEntries = () => {
               </button>
               <button className="btn-glass" title="Exportar Excel" onClick={() => exportToExcel(entries)}>
                 <FileSpreadsheet size={20} />
+              </button>
+              <button className="btn-glass" title="Exportar PDF" onClick={() => exportJournalPDF(entries)}>
+                <Download size={20} />
               </button>
             </div>
           </div>

@@ -16,6 +16,7 @@ const Dashboard = lazy(() => import('./pages/Dashboard'));
 const AccountCatalog = lazy(() => import('./pages/AccountCatalog'));
 const JournalEntries = lazy(() => import('./pages/JournalEntries'));
 const NewEntry = lazy(() => import('./pages/NewEntry'));
+const Ledger = lazy(() => import('./pages/Ledger'));
 const Reports = lazy(() => import('./pages/Reports'));
 const Settings = lazy(() => import('./pages/Settings'));
 
@@ -129,6 +130,11 @@ const AppContent = () => {
         <Route path="/reports" element={
           <ProtectedRoute requireERP>
             <Reports />
+          </ProtectedRoute>
+        } />
+        <Route path="/ledger" element={
+          <ProtectedRoute requireERP>
+            <Ledger />
           </ProtectedRoute>
         } />
 

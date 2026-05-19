@@ -6,6 +6,10 @@ import {
   TrendingUp, TrendingDown, DollarSign, Package, Wallet, 
   BarChart3, Calendar, FileText, AlertCircle, PlusCircle 
 } from 'lucide-react';
+import {
+  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip,
+  ResponsiveContainer, Legend, Cell, PieChart, Pie
+} from 'recharts';
 import { useNavigate } from 'react-router-dom';
 import './Dashboard.css';
 
@@ -21,6 +25,34 @@ const StatCard = ({ title, value, icon, color, subtitle }) => (
     </div>
   </motion.div>
 );
+
+const CHART_COLORS = {
+  ingresos: '#10b981',
+  gastos: '#ef4444'
+};
+
+const CustomTooltip = ({ active, payload, label }) => {
+  if (!active || !payload) return null;
+  return (
+    <div style={{
+      background: 'var(--surface, #1e1e2e)',
+      border: '1px solid var(--border, #333)',
+      borderRadius: 10,
+      padding: '12px 16px',
+      boxShadow: '0 8px 24px rgba(0,0,0,0.3)',
+      fontSize: 13
+    }}>
+      <p style={{ fontWeight: 700, marginBottom: 6, color: 'var(--text-primary, #fff)' }}>Día {label}</p>
+      {payload.map((p, i) => (
+        <p key={i} style={{ color: p.color, margin: '2px 0' }}>
+          {p.name}: Q{(p.value || 0).toLocaleString(undefined, { minimumFractionDigits: 2 })}
+        </p>
+      ))}
+    </div>
+  );
+};
+
+const PIE_COLORS = ['#10b981', '#f59e0b', '#ef4444', '#3b82f6'];
 
 const Dashboard = () => {
   const [data, setData] = useState(null);
@@ -45,6 +77,13 @@ const Dashboard = () => {
   }, []);
 
   const hasMovements = data && (data.totalAssets > 0 || data.totalLiabilities > 0 || data.monthlySales > 0 || data.monthlyExpenses > 0 || (data.latestEntries && data.latestEntries.length > 0));
+
+  // Prepare pie data for financial breakdown
+  const pieData = data ? [
+    { name: 'Ingresos', value: data.monthlySales || 0 },
+    { name: 'Costos', value: Math.abs(data.monthlyExpenses || 0) * 0.4 },
+    { name: 'Gastos', value: Math.abs(data.monthlyExpenses || 0) * 0.6 },
+  ].filter(d => d.value > 0) : [];
 
   return (
     <Layout>
@@ -144,25 +183,41 @@ const Dashboard = () => {
                 </div>
               </div>
 
-              {/* Chart Area */}
+              {/* Chart Area — Recharts */}
               <div className="chart-card card">
                 <div className="summary-header">
                   <h4>Ingresos vs Gastos del Mes</h4>
                 </div>
                 {data.chartData && data.chartData.length > 0 ? (
-                  <div className="mini-chart">
-                    {data.chartData.map((day, idx) => {
-                      const maxVal = Math.max(...data.chartData.map(d => Math.max(d.ingresos, d.gastos)), 1);
-                      return (
-                        <div key={idx} className="chart-bar-group" title={`${day.date}\nIngresos: Q${day.ingresos.toLocaleString()}\nGastos: Q${day.gastos.toLocaleString()}`}>
-                          <div className="bar-stack">
-                            <div className="bar ingreso" style={{ height: `${(day.ingresos / maxVal) * 100}%` }}></div>
-                            <div className="bar gasto" style={{ height: `${(day.gastos / maxVal) * 100}%` }}></div>
-                          </div>
-                          <span className="bar-label">{day.date.split('-')[2]}</span>
-                        </div>
-                      );
-                    })}
+                  <div className="recharts-wrapper">
+                    <ResponsiveContainer width="100%" height={240}>
+                      <BarChart data={data.chartData.map(d => ({
+                        ...d,
+                        dia: d.date.split('-')[2]
+                      }))} barGap={2} barCategoryGap="20%">
+                        <CartesianGrid strokeDasharray="3 3" stroke="var(--border, #333)" opacity={0.3} />
+                        <XAxis
+                          dataKey="dia"
+                          tick={{ fill: 'var(--text-muted, #888)', fontSize: 11 }}
+                          axisLine={{ stroke: 'var(--border, #333)' }}
+                          tickLine={false}
+                        />
+                        <YAxis
+                          tick={{ fill: 'var(--text-muted, #888)', fontSize: 11 }}
+                          axisLine={false}
+                          tickLine={false}
+                          tickFormatter={v => v >= 1000 ? `${(v/1000).toFixed(0)}k` : v}
+                        />
+                        <Tooltip content={<CustomTooltip />} cursor={{ fill: 'rgba(59,130,246,0.05)' }} />
+                        <Legend
+                          wrapperStyle={{ fontSize: 12, paddingTop: 8 }}
+                          iconType="circle"
+                          iconSize={8}
+                        />
+                        <Bar dataKey="ingresos" name="Ingresos" fill={CHART_COLORS.ingresos} radius={[4, 4, 0, 0]} maxBarSize={28} />
+                        <Bar dataKey="gastos" name="Gastos" fill={CHART_COLORS.gastos} radius={[4, 4, 0, 0]} maxBarSize={28} />
+                      </BarChart>
+                    </ResponsiveContainer>
                   </div>
                 ) : (
                   <div className="chart-empty">
@@ -170,10 +225,6 @@ const Dashboard = () => {
                     <p>Sin datos este mes</p>
                   </div>
                 )}
-                <div className="chart-legend">
-                  <span className="legend-item"><span className="legend-dot ingreso"></span>Ingresos</span>
-                  <span className="legend-item"><span className="legend-dot gasto"></span>Gastos</span>
-                </div>
               </div>
             </div>
 
@@ -211,3 +262,4 @@ const Dashboard = () => {
 };
 
 export default Dashboard;
+
