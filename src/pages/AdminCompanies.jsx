@@ -150,7 +150,9 @@ const AdminCompanies = () => {
                   {company.phone && <div className="detail-item"><span className="detail-label">Teléfono</span><span>{company.phone}</span></div>}
                   <div className="detail-item">
                     <span className="detail-label">Creada</span>
-                    <span>{company.createdAt ? new Date(company.createdAt).toLocaleDateString('es-GT') : '—'}</span>
+                    <span>{company.createdAt
+                      ? new Date(company.createdAt.seconds ? company.createdAt.seconds * 1000 : company.createdAt).toLocaleDateString('es-GT')
+                      : '—'}</span>
                   </div>
                 </div>
                 <div className="company-card-actions">

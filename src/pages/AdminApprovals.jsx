@@ -2,8 +2,13 @@ import React, { useEffect, useState } from 'react';
 import Layout from '../components/layout/Layout';
 import api from '../api/client';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Users, CheckCircle, XCircle, Clock, RefreshCw } from 'lucide-react';
+import { Users, CheckCircle, XCircle, Clock, RefreshCw, Shield } from 'lucide-react';
 import './AdminApprovals.css';
+
+const ROLES = [
+  { value: 'contador', label: 'Contador' },
+  { value: 'admin_empresa', label: 'Administrador' },
+];
 
 const AdminApprovals = () => {
   const [users, setUsers]     = useState([]);
@@ -11,6 +16,7 @@ const AdminApprovals = () => {
   const [filter, setFilter]   = useState('pending');
   const [companies, setCompanies] = useState([]);
   const [selectedCompany, setSelectedCompany] = useState({});
+  const [selectedRole, setSelectedRole] = useState({});
 
   const fetchUsers = async () => {
     setLoading(true);
@@ -38,8 +44,16 @@ const AdminApprovals = () => {
     fetchCompanies();
   }, []);
 
+  // Helper: resolve companyId to company name
+  const getCompanyName = (companyId) => {
+    if (!companyId || companyId === 'master_company') return '—';
+    const found = companies.find(c => c.id === companyId);
+    return found ? found.name : companyId;
+  };
+
   const handleApprove = async (uid) => {
     const companyId = selectedCompany[uid] || users.find(u => u.uid === uid)?.companyId;
+    const role = selectedRole[uid] || 'contador';
     if (!companyId && !users.find(u => u.uid === uid)?.requestedCompany) {
       alert('Debes seleccionar o confirmar una empresa.');
       return;
@@ -49,9 +63,9 @@ const AdminApprovals = () => {
       await api.patch(`/admin/users/${uid}/approve`, { 
         companyId, 
         companyName: companyId ? null : users.find(u => u.uid === uid)?.requestedCompany,
-        role: 'usuario' 
+        role
       });
-      setUsers(prev => prev.map(u => u.uid === uid ? { ...u, status: 'active', companyId } : u));
+      setUsers(prev => prev.map(u => u.uid === uid ? { ...u, status: 'active', companyId, role } : u));
     } catch (e) {
       console.error('Error approving user:', e);
       alert('Error al aprobar usuario.');
@@ -77,6 +91,8 @@ const AdminApprovals = () => {
       default: return { label: 'Pendiente', icon: <Clock size={12} />, class: 'status-pending' };
     }
   };
+
+  const roleLabels = { super_admin: 'Super Admin', admin_empresa: 'Administrador', contador: 'Contador', usuario: 'Usuario' };
 
   return (
     <Layout>
@@ -117,89 +133,178 @@ const AdminApprovals = () => {
           ) : filteredUsers.length === 0 ? (
             <div className="table-empty">No hay solicitudes que coincidan con el filtro</div>
           ) : (
-            <table className="approvals-table">
-              <thead>
-                <tr>
-                  <th>Usuario</th>
-                  <th>Solicitud Empresa</th>
-                  <th>Asignar Empresa</th>
-                  <th>Método</th>
-                  <th>Estado</th>
-                  <th>Acciones</th>
-                </tr>
-              </thead>
-              <tbody>
-                <AnimatePresence mode='popLayout'>
-                  {filteredUsers.map((u) => {
-                    const badge = getStatusBadge(u.status);
-                    return (
-                      <motion.tr
-                        key={u.uid}
-                        layout
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                      >
-                        <td>
-                          <div className="user-info-cell">
-                            <div className="user-avatar-small">
-                              {u.displayName ? u.displayName[0].toUpperCase() : (u.email ? u.email[0].toUpperCase() : '?')}
+            <>
+              {/* Desktop Table */}
+              <table className="approvals-table desktop-only">
+                <thead>
+                  <tr>
+                    <th>Usuario</th>
+                    <th>Solicitud Empresa</th>
+                    <th>Asignar Empresa</th>
+                    <th>Rol</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <AnimatePresence mode='popLayout'>
+                    {filteredUsers.map((u) => {
+                      const badge = getStatusBadge(u.status);
+                      const isSuperAdmin = u.role === 'super_admin';
+                      return (
+                        <motion.tr
+                          key={u.uid}
+                          layout
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          exit={{ opacity: 0 }}
+                        >
+                          <td>
+                            <div className="user-info-cell">
+                              <div className="user-avatar-small">
+                                {u.displayName ? u.displayName[0].toUpperCase() : (u.email ? u.email[0].toUpperCase() : '?')}
+                              </div>
+                              <div className="user-info-stack">
+                                <span className="user-name">{u.displayName || 'Sin nombre'}</span>
+                                <span className="user-email">{u.email}</span>
+                              </div>
                             </div>
-                            <div className="user-info-stack">
-                              <span className="user-name">{u.displayName || 'Sin nombre'}</span>
-                              <span className="user-email">{u.email}</span>
-                            </div>
-                          </div>
-                        </td>
-                        <td>
-                          <div className="company-request">
+                          </td>
+                          <td>
                             <span className="company-name">{u.requestedCompany || 'Existente'}</span>
+                          </td>
+                          <td>
+                            {u.status === 'pending' ? (
+                              <select 
+                                className="admin-select"
+                                value={selectedCompany[u.uid] || u.companyId || ''}
+                                onChange={(e) => setSelectedCompany({ ...selectedCompany, [u.uid]: e.target.value })}
+                              >
+                                <option value="">-- Usar Solicitada --</option>
+                                {companies.map(c => (
+                                  <option key={c.id} value={c.id}>{c.name}</option>
+                                ))}
+                              </select>
+                            ) : (
+                              <span className="company-assigned">{getCompanyName(u.companyId)}</span>
+                            )}
+                          </td>
+                          <td>
+                            {isSuperAdmin ? (
+                              <span className="role-badge-fixed"><Shield size={12} /> Super Admin</span>
+                            ) : u.status === 'pending' ? (
+                              <select
+                                className="admin-select"
+                                value={selectedRole[u.uid] || 'contador'}
+                                onChange={(e) => setSelectedRole({ ...selectedRole, [u.uid]: e.target.value })}
+                              >
+                                {ROLES.map(r => (
+                                  <option key={r.value} value={r.value}>{r.label}</option>
+                                ))}
+                              </select>
+                            ) : (
+                              <span className="role-badge-fixed">{roleLabels[u.role] || u.role}</span>
+                            )}
+                          </td>
+                          <td>
+                            <span className={`badge ${badge.class}`}>
+                              {badge.icon} {badge.label}
+                            </span>
+                          </td>
+                          <td>
+                            <div className="action-btns">
+                              {u.status === 'pending' && (
+                                <>
+                                  <button className="action-btn action-approve" onClick={() => handleApprove(u.uid)}>
+                                    <CheckCircle size={14} /> Aprobar
+                                  </button>
+                                  <button className="action-btn action-reject" onClick={() => handleReject(u.uid)}>
+                                    <XCircle size={14} /> Rechazar
+                                  </button>
+                                </>
+                              )}
+                            </div>
+                          </td>
+                        </motion.tr>
+                      );
+                    })}
+                  </AnimatePresence>
+                </tbody>
+              </table>
+
+              {/* Mobile Cards */}
+              <div className="approvals-cards mobile-only">
+                {filteredUsers.map((u) => {
+                  const badge = getStatusBadge(u.status);
+                  const isSuperAdmin = u.role === 'super_admin';
+                  return (
+                    <div key={u.uid} className="approval-card card">
+                      <div className="approval-card-top">
+                        <div className="user-info-cell">
+                          <div className="user-avatar-small">
+                            {u.displayName ? u.displayName[0].toUpperCase() : (u.email ? u.email[0].toUpperCase() : '?')}
                           </div>
-                        </td>
-                        <td>
+                          <div className="user-info-stack">
+                            <span className="user-name">{u.displayName || 'Sin nombre'}</span>
+                            <span className="user-email">{u.email}</span>
+                          </div>
+                        </div>
+                        <span className={`badge ${badge.class}`}>{badge.icon} {badge.label}</span>
+                      </div>
+
+                      <div className="approval-card-fields">
+                        <div className="field-row">
+                          <span className="field-label">Empresa solicitada</span>
+                          <span>{u.requestedCompany || 'Existente'}</span>
+                        </div>
+                        <div className="field-row">
+                          <span className="field-label">Asignar empresa</span>
                           {u.status === 'pending' ? (
-                            <select 
+                            <select
                               className="admin-select"
                               value={selectedCompany[u.uid] || u.companyId || ''}
                               onChange={(e) => setSelectedCompany({ ...selectedCompany, [u.uid]: e.target.value })}
                             >
                               <option value="">-- Usar Solicitada --</option>
-                              {companies.map(c => (
-                                <option key={c.id} value={c.id}>{c.name}</option>
-                              ))}
+                              {companies.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
                             </select>
                           ) : (
-                            <span className="company-assigned">{u.companyId || 'N/A'}</span>
+                            <span>{getCompanyName(u.companyId)}</span>
                           )}
-                        </td>
-                        <td>
-                          <span className="provider-badge">{(u.provider === 'google' || u.provider === 'google.com') ? 'Google' : 'Email'}</span>
-                        </td>
-                        <td>
-                          <span className={`badge ${badge.class}`}>
-                            {badge.icon} {badge.label}
-                          </span>
-                        </td>
-                        <td>
-                          <div className="action-btns">
-                            {u.status === 'pending' && (
-                              <>
-                                <button className="action-btn action-approve" onClick={() => handleApprove(u.uid)}>
-                                  <CheckCircle size={14} /> Aprobar
-                                </button>
-                                <button className="action-btn action-reject" onClick={() => handleReject(u.uid)}>
-                                  <XCircle size={14} /> Rechazar
-                                </button>
-                              </>
-                            )}
-                          </div>
-                        </td>
-                      </motion.tr>
-                    );
-                  })}
-                </AnimatePresence>
-              </tbody>
-            </table>
+                        </div>
+                        <div className="field-row">
+                          <span className="field-label">Rol</span>
+                          {isSuperAdmin ? (
+                            <span className="role-badge-fixed"><Shield size={12} /> Super Admin</span>
+                          ) : u.status === 'pending' ? (
+                            <select
+                              className="admin-select"
+                              value={selectedRole[u.uid] || 'contador'}
+                              onChange={(e) => setSelectedRole({ ...selectedRole, [u.uid]: e.target.value })}
+                            >
+                              {ROLES.map(r => <option key={r.value} value={r.value}>{r.label}</option>)}
+                            </select>
+                          ) : (
+                            <span>{roleLabels[u.role] || u.role}</span>
+                          )}
+                        </div>
+                      </div>
+
+                      {u.status === 'pending' && (
+                        <div className="approval-card-actions">
+                          <button className="action-btn action-approve" onClick={() => handleApprove(u.uid)}>
+                            <CheckCircle size={14} /> Aprobar
+                          </button>
+                          <button className="action-btn action-reject" onClick={() => handleReject(u.uid)}>
+                            <XCircle size={14} /> Rechazar
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            </>
           )}
         </div>
       </div>

@@ -40,16 +40,17 @@ const ProtectedRoute = ({ children, requireAdmin = false, requireCompanyAdmin = 
 
   // Super Admin has immediate access to admin routes only
   if (isAdmin) {
-    // If this is an ERP route (not admin), redirect super_admin to admin panel
     if (requireERP) {
       return <Navigate to="/admin/approvals" replace />;
     }
     return children;
   }
 
-  // If profile hasn't loaded yet, wait
-  if (profile === null) {
-    return <div className="loading-screen">Cargando perfil...</div>;
+  // Profile is null = Firestore doc doesn't exist (e.g. first Google login)
+  // Redirect to complete-profile so user can select company
+  if (profile === null || profile === undefined) {
+    if (window.location.pathname === '/complete-profile') return children;
+    return <Navigate to="/complete-profile" replace />;
   }
 
   // Incomplete profile → must complete

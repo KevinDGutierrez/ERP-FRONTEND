@@ -1,5 +1,5 @@
 /* ============================================================
-   ADMIN APPROVALS — Noir Premium
+   ADMIN APPROVALS — Noir Premium + Mobile
    ============================================================ */
 
 .approvals-page {
@@ -14,6 +14,8 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 8px;
+  flex-wrap: wrap;
+  gap: 16px;
 }
 
 .header-info {
@@ -73,6 +75,7 @@
   border-radius: var(--r-lg);
   width: fit-content;
   border: 1px solid var(--border);
+  overflow-x: auto;
 }
 
 .filter-tab {
@@ -85,12 +88,10 @@
   font-weight: 600;
   cursor: pointer;
   transition: all var(--dur-fast);
+  white-space: nowrap;
 }
 
-.filter-tab:hover {
-  color: var(--text-secondary);
-}
-
+.filter-tab:hover { color: var(--text-secondary); }
 .filter-tab.active {
   background: var(--surface-raised);
   color: var(--accent);
@@ -130,9 +131,7 @@
   color: var(--text-secondary);
 }
 
-.approvals-table tr:last-child td {
-  border-bottom: none;
-}
+.approvals-table tr:last-child td { border-bottom: none; }
 
 /* User Cell */
 .user-info-cell {
@@ -142,40 +141,26 @@
 }
 
 .user-avatar-small {
-  width: 36px;
-  height: 36px;
+  width: 36px; height: 36px;
   border-radius: 50%;
   background: var(--accent-dim);
   border: 1px solid rgba(190,198,224,0.15);
   color: var(--accent);
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  display: flex; align-items: center; justify-content: center;
   font-family: var(--font-display);
-  font-weight: 800;
-  font-size: 14px;
+  font-weight: 800; font-size: 14px;
+  flex-shrink: 0;
 }
 
-.user-info-stack {
-  display: flex;
-  flex-direction: column;
-}
+.user-info-stack { display: flex; flex-direction: column; }
+.user-name { font-weight: 600; color: var(--text-primary); }
+.user-email { font-size: 12px; color: var(--text-muted); }
 
-.user-name {
-  font-weight: 600;
-  color: var(--text-primary);
-}
-
-.user-email {
-  font-size: 12px;
-  color: var(--text-muted);
-}
-
-/* Company Selector */
+/* Select */
 .admin-select {
   width: 100%;
   max-width: 200px;
-  padding: 8px 12px;
+  padding: 8px 32px 8px 12px;
   background: var(--bg-subtle);
   border: 1px solid var(--border);
   border-radius: var(--r-md);
@@ -187,41 +172,33 @@
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='rgba(255,255,255,0.5)' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right 10px center;
-  padding-right: 32px;
 }
 
-.admin-select option {
-  background-color: var(--surface-overlay);
-  color: var(--text-primary);
-  padding: 10px;
-}
-
-.admin-select:focus {
-  border-color: var(--accent);
-  outline: none;
-  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
-}
+.admin-select option { background-color: var(--surface-overlay); color: var(--text-primary); }
+.admin-select:focus { border-color: var(--accent); outline: none; box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2); }
 
 .company-assigned {
-  font-size: 12px;
-  font-family: monospace;
-  color: var(--text-muted);
-  background: rgba(255,255,255,0.05);
+  font-size: 13px;
+  color: var(--text-secondary);
   padding: 4px 8px;
   border-radius: 4px;
 }
 
-/* Badges */
-.provider-badge {
-  font-size: 11px;
-  font-weight: 700;
-  text-transform: uppercase;
-  background: rgba(255,255,255,0.05);
+/* Role badge for non-editable */
+.role-badge-fixed {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
   padding: 4px 10px;
-  border-radius: var(--r-full);
-  color: var(--text-muted);
+  border-radius: 8px;
+  background: var(--bg-subtle);
+  border: 1px solid var(--border);
 }
 
+/* Badges */
 .badge {
   display: inline-flex;
   align-items: center;
@@ -238,10 +215,7 @@
 .status-rejected { background: var(--danger-dim); color: var(--danger); }
 
 /* Actions */
-.action-btns {
-  display: flex;
-  gap: 8px;
-}
+.action-btns { display: flex; gap: 8px; }
 
 .action-btn {
   display: flex;
@@ -256,25 +230,10 @@
   transition: all var(--dur-fast);
 }
 
-.action-approve {
-  background: var(--success);
-  color: white;
-}
-
-.action-approve:hover {
-  filter: brightness(1.1);
-  transform: translateY(-1px);
-}
-
-.action-reject {
-  background: transparent;
-  border-color: var(--danger);
-  color: var(--danger);
-}
-
-.action-reject:hover {
-  background: var(--danger-dim);
-}
+.action-approve { background: var(--success); color: white; }
+.action-approve:hover { filter: brightness(1.1); transform: translateY(-1px); }
+.action-reject { background: transparent; border-color: var(--danger); color: var(--danger); }
+.action-reject:hover { background: var(--danger-dim); }
 
 /* States */
 .table-loading, .table-empty {
@@ -284,7 +243,68 @@
   font-size: 14px;
 }
 
-.spin {
-  animation: spin 1s linear infinite;
-}
+.spin { animation: spin 1s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
+
+/* ── Mobile Cards ── */
+.mobile-only { display: none; }
+.desktop-only { display: table; }
+
+.approvals-cards { display: flex; flex-direction: column; gap: 16px; padding: 16px; }
+
+.approval-card {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.approval-card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.approval-card-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.field-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  font-size: 0.88rem;
+}
+
+.field-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+
+.field-row .admin-select { max-width: 160px; font-size: 12px; }
+
+.approval-card-actions {
+  display: flex;
+  gap: 10px;
+  padding-top: 10px;
+  border-top: 1px solid var(--border-subtle);
+}
+
+.approval-card-actions .action-btn { flex: 1; justify-content: center; }
+
+/* ── Responsive ── */
+@media (max-width: 900px) {
+  .desktop-only { display: none !important; }
+  .mobile-only { display: flex !important; }
+  .approvals-header { flex-direction: column; align-items: flex-start; }
+  .header-info h1 { font-size: 20px; }
+  .approvals-filter-bar { width: 100%; }
+  .filter-tab { padding: 8px 14px; font-size: 12px; }
+}
