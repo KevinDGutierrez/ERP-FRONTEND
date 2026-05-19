@@ -225,7 +225,7 @@ const JournalEntries = () => {
                       <span className="entry-tag">Partida #{entries.length - idx}</span>
                       <span className="entry-date-bubble">
                         <Calendar size={14} />
-                        {new Date(entry.date).toLocaleDateString(undefined, { day: 'numeric', month: 'long', year: 'numeric' })}
+                        {new Date(entry.date + 'T12:00:00').toLocaleDateString(undefined, { day: 'numeric', month: 'long', year: 'numeric' })}
                       </span>
                     </div>
                     <div className={`entry-type-tag ${entry.type?.toLowerCase()}`}>

@@ -243,7 +243,7 @@ const Dashboard = () => {
                         <p className="activity-desc">{entry.description}</p>
                         <span className="activity-time">
                           <Calendar size={12} />
-                          {new Date(entry.date).toLocaleDateString('es-GT', { day: 'numeric', month: 'short' })}
+                          {new Date(entry.date + 'T12:00:00').toLocaleDateString('es-GT', { day: 'numeric', month: 'long', year: 'numeric' })}
                         </span>
                       </div>
                       <div className="activity-amount">Q{(entry.total || 0).toLocaleString(undefined, { minimumFractionDigits: 2 })}</div>
