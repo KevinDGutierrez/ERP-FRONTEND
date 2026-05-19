@@ -254,7 +254,7 @@
 }
 
 /* Ver todas — small ghost button */
-.btn-glass-sm {
+.btn-ghost-sm {
   display: inline-flex;
   align-items: center;
   gap: 6px;
@@ -271,7 +271,7 @@
   white-space: nowrap;
 }
 
-.btn-glass-sm:hover {
+.btn-ghost-sm:hover {
   background: var(--surface-overlay);
   border-color: var(--border-strong);
   color: var(--text-primary);

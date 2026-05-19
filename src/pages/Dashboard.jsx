@@ -232,7 +232,7 @@ const Dashboard = () => {
             <div className="recent-activity-card card">
               <div className="summary-header">
                 <h4>Últimas Partidas</h4>
-                <button className="btn-glass-sm" onClick={() => navigate('/entries')}>Ver todas</button>
+                <button className="btn-ghost-sm" onClick={() => navigate('/entries')}>Ver todas</button>
               </div>
               <div className="activity-list">
                 {data.latestEntries && data.latestEntries.length > 0 ? (
