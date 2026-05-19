@@ -1,5 +1,5 @@
 import jsPDF from 'jspdf';
-import 'jspdf-autotable';
+import autoTable from 'jspdf-autotable';
 
 const formatQ = (val) => {
   const num = Number(val) || 0;
@@ -39,7 +39,7 @@ export const exportTrialBalancePDF = (data, filename = 'balance_comprobacion') =
     acc.balance < 0 ? formatQ(Math.abs(acc.balance)) : '-'
   ]);
 
-  doc.autoTable({
+  autoTable(doc, {
     startY: 40,
     head: [['Código', 'Nombre de la Cuenta', 'Deudor', 'Acreedor']],
     body: rows,
@@ -191,7 +191,7 @@ export const exportJournalPDF = (entries) => {
     }
   });
 
-  doc.autoTable({
+  autoTable(doc, {
     startY: 40,
     head: [['#', 'Fecha', 'Tipo', 'Descripción', 'Código', 'Cuenta', 'Debe', 'Haber']],
     body: rows,
@@ -232,7 +232,7 @@ export const exportLedgerPDF = (account, movements) => {
   const totalCredit = movements.reduce((s, m) => s + (m.credit || 0), 0);
   const finalBalance = movements.length > 0 ? movements[movements.length - 1].balance : 0;
 
-  doc.autoTable({
+  autoTable(doc, {
     startY: y + 6,
     head: [['Fecha', '#', 'Descripción', 'Tipo', 'Debe', 'Haber', 'Saldo']],
     body: rows,
