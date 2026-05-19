@@ -36,6 +36,7 @@ export const AuthProvider = ({ children }) => {
 
     const unsubscribeAuth = onAuthStateChanged(auth, async (firebaseUser) => {
       if (firebaseUser) {
+        setLoading(true);
         setUser(firebaseUser);
         const token = await firebaseUser.getIdToken();
         localStorage.setItem('auth_token', token);
