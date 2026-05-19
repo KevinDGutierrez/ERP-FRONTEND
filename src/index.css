@@ -1,79 +1,81 @@
 :root {
   /* Dark Theme Tokens (Default) */
-  --bg:              #070708;
-  --bg-subtle:       #0d0d0f;
-  --surface:         #111113;
-  --surface-raised:  #161618;
+  --bg: #070708;
+  --bg-subtle: #0d0d0f;
+  --surface: #111113;
+  --surface-raised: #161618;
   --surface-overlay: #1c1c1f;
-  --border:          rgba(255, 255, 255, 0.08);
-  --border-subtle:   rgba(255, 255, 255, 0.04);
-  --border-strong:   rgba(255, 255, 255, 0.16);
-  --text-primary:    #f4f4f5;
-  --text-secondary:  #a1a1aa;
-  --text-muted:      #52525b;
-  --primary:         #3B82F6;
-  --primary-dim:     rgba(59, 130, 246, 0.1);
-  --accent:          #bec6e0;
-  --bg-card:         #111113;
-  --glass-bg:        rgba(255, 255, 255, 0.02);
-  --glass-border:    rgba(255, 255, 255, 0.06);
-  --shadow-xl:       0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  --border: rgba(255, 255, 255, 0.08);
+  --border-subtle: rgba(255, 255, 255, 0.04);
+  --border-strong: rgba(255, 255, 255, 0.16);
+  --text-primary: #f4f4f5;
+  --text-secondary: #a1a1aa;
+  --text-muted: #52525b;
+  --primary: #3B82F6;
+  --primary-dim: rgba(59, 130, 246, 0.1);
+  --accent: #bec6e0;
+  --bg-card: #111113;
+  --glass-bg: rgba(255, 255, 255, 0.02);
+  --glass-border: rgba(255, 255, 255, 0.06);
+  --shadow-xl: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
 
   /* Design System Extra Tokens */
-  --font-display:    'Inter', sans-serif;
-  --font-body:       'Inter', sans-serif;
-  --r-md:            8px;
-  --r-lg:            12px;
-  --r-xl:            16px;
-  --r-2xl:           24px;
-  --r-full:          9999px;
-  --dur-fast:        150ms;
-  --dur-normal:      250ms;
-  --ease-out:        cubic-bezier(0.16, 1, 0.3, 1);
-  
+  --font-display: 'Inter', sans-serif;
+  --font-body: 'Inter', sans-serif;
+  --r-md: 8px;
+  --r-lg: 12px;
+  --r-xl: 16px;
+  --r-2xl: 24px;
+  --r-full: 9999px;
+  --dur-fast: 150ms;
+  --dur-normal: 250ms;
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+
   /* Status Colors */
-  --success:         #10b981;
-  --success-dim:     rgba(16, 185, 129, 0.1);
-  --danger:          #ef4444;
-  --danger-dim:      rgba(239, 68, 68, 0.1);
-  --warning:         #f59e0b;
-  --warning-dim:     rgba(245, 158, 11, 0.1);
-  --info:            #3b82f6;
-  --info-dim:        rgba(59, 130, 246, 0.1);
+  --success: #10b981;
+  --success-dim: rgba(16, 185, 129, 0.1);
+  --danger: #ef4444;
+  --danger-dim: rgba(239, 68, 68, 0.1);
+  --warning: #f59e0b;
+  --warning-dim: rgba(245, 158, 11, 0.1);
+  --info: #3b82f6;
+  --info-dim: rgba(59, 130, 246, 0.1);
 
   /* Sidebar */
-  --sidebar-width:     260px;
+  --sidebar-width: 260px;
   --sidebar-collapsed: 80px;
 }
 
 [data-theme='light'] {
-  --bg:              #f0f4f8;
-  --bg-subtle:       #e8edf3;
-  --surface:         #ffffff;
-  --surface-raised:  #ffffff;
+  --bg: #f0f4f8;
+  --bg-subtle: #e8edf3;
+  --surface: #ffffff;
+  --surface-raised: #ffffff;
   --surface-overlay: #edf2f7;
-  --border:          rgba(0, 0, 0, 0.10);
-  --border-subtle:   rgba(0, 0, 0, 0.05);
-  --border-strong:   rgba(0, 0, 0, 0.18);
-  --text-primary:    #0f172a;
-  --text-secondary:  #334155;
-  --text-muted:      #64748b;
-  --accent:          #475569;
-  --bg-card:         #ffffff;
-  --glass-bg:        rgba(0, 0, 0, 0.015);
-  --glass-border:    rgba(0, 0, 0, 0.08);
-  --shadow-xl:       0 20px 40px rgba(0, 0, 0, 0.10);
-  --primary-dim:     rgba(59, 130, 246, 0.12);
-  --success-dim:     rgba(16, 185, 129, 0.12);
-  --danger-dim:      rgba(239, 68, 68, 0.12);
-  --warning-dim:     rgba(245, 158, 11, 0.12);
-  --info-dim:        rgba(59, 130, 246, 0.12);
+  --border: rgba(0, 0, 0, 0.10);
+  --border-subtle: rgba(0, 0, 0, 0.05);
+  --border-strong: rgba(0, 0, 0, 0.18);
+  --text-primary: #0f172a;
+  --text-secondary: #334155;
+  --text-muted: #64748b;
+  --accent: #475569;
+  --bg-card: #ffffff;
+  --glass-bg: rgba(0, 0, 0, 0.015);
+  --glass-border: rgba(0, 0, 0, 0.08);
+  --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.10);
+  --primary-dim: rgba(59, 130, 246, 0.12);
+  --success-dim: rgba(16, 185, 129, 0.12);
+  --danger-dim: rgba(239, 68, 68, 0.12);
+  --warning-dim: rgba(245, 158, 11, 0.12);
+  --info-dim: rgba(59, 130, 246, 0.12);
   /* En light mode el btn-primary usa --text-primary (#0f172a) como bg → texto negro sobre negro.
      Override para que siempre sea legible: */
 }
 
 /* ── Reset y Tipografía ── */
-*, *::before, *::after {
+*,
+*::before,
+*::after {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
@@ -88,14 +90,21 @@ body {
 }
 
 /* ── Tipografía base ── */
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   font-family: var(--font-display);
   color: var(--text-primary);
   line-height: 1.15;
   letter-spacing: -0.02em;
 }
 
-p { line-height: 1.6; }
+p {
+  line-height: 1.6;
+}
 
 a {
   color: inherit;
@@ -110,7 +119,8 @@ button {
   outline: none;
 }
 
-select, input {
+select,
+input {
   font-family: inherit;
   outline: none;
   background-color: var(--bg-subtle);
@@ -177,13 +187,23 @@ select option {
 }
 
 /* ── Scrollbar Noir ── */
-::-webkit-scrollbar { width: 6px; height: 6px; }
-::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
 ::-webkit-scrollbar-thumb {
   background: var(--surface-overlay);
   border-radius: var(--r-full);
 }
-::-webkit-scrollbar-thumb:hover { background: var(--border-strong); }
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--border-strong);
+}
 
 /* ── Componentes globales reutilizables ── */
 
@@ -196,7 +216,7 @@ select option {
 }
 
 .card-glass {
-  background: rgba(255,255,255,0.02);
+  background: rgba(255, 255, 255, 0.02);
   backdrop-filter: blur(40px);
   border: 1px solid var(--border-subtle);
   border-radius: var(--r-xl);
@@ -220,13 +240,22 @@ select option {
   cursor: pointer;
   white-space: nowrap;
 }
+
 .btn-primary:hover {
   filter: brightness(1.1);
   transform: translateY(-2px);
   box-shadow: 0 8px 24px rgba(59, 130, 246, 0.3);
 }
-.btn-primary:active { transform: translateY(0); }
-.btn-primary:disabled { opacity: 0.6; cursor: not-allowed; pointer-events: none; }
+
+.btn-primary:active {
+  transform: translateY(0);
+}
+
+.btn-primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  pointer-events: none;
+}
 
 /* Botón Glass */
 .btn-glass {
@@ -259,7 +288,7 @@ select option {
   gap: 8px;
   padding: 10px 20px;
   background: var(--danger-dim);
-  border: 1px solid rgba(239,68,68,0.2);
+  border: 1px solid rgba(239, 68, 68, 0.2);
   color: var(--danger);
   border-radius: var(--r-md);
   font-weight: 600;
@@ -267,7 +296,10 @@ select option {
   font-family: var(--font-body);
   transition: all var(--dur-fast);
 }
-.btn-danger:hover { background: rgba(239,68,68,0.2); }
+
+.btn-danger:hover {
+  background: rgba(239, 68, 68, 0.2);
+}
 
 /* Inputs */
 .field-label {
@@ -290,13 +322,17 @@ select option {
   font-size: 0.95rem;
   transition: all 0.2s;
 }
+
 .field-input:focus {
   background: var(--surface);
   border-color: var(--primary);
   box-shadow: 0 0 0 4px var(--primary-dim);
   outline: none;
 }
-.field-input::placeholder { color: var(--text-muted); }
+
+.field-input::placeholder {
+  color: var(--text-muted);
+}
 
 /* Input with Icon Container */
 .input-with-icon {
@@ -306,6 +342,7 @@ select option {
   width: 100%;
 }
 
+/* El SVG va antes del input en el DOM, se posiciona absoluto a la izquierda */
 .input-with-icon svg {
   position: absolute;
   left: 14px;
@@ -315,14 +352,39 @@ select option {
   transition: color var(--dur-fast);
 }
 
+/* El input hereda los estilos base y añade padding-left para el ícono */
 .input-with-icon input,
 .input-with-icon select {
-  padding-left: 42px !important;
+  width: 100%;
+  background: var(--bg-subtle);
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  color: var(--text-primary);
+  font-size: 0.95rem;
+  padding: 16px 20px 16px 42px;
+  transition: all 0.2s;
 }
 
-.input-with-icon input:focus + svg,
-.input-with-icon select:focus + svg {
+.input-with-icon input:focus,
+.input-with-icon select:focus {
+  background: var(--surface);
+  border-color: var(--primary);
+  box-shadow: 0 0 0 4px var(--primary-dim);
+  outline: none;
+}
+
+/* Bug fix: el selector correcto es :focus-within en el contenedor,
+   ya que el SVG es hermano anterior al input (no posterior) */
+.input-with-icon:focus-within svg {
   color: var(--primary);
+}
+
+/* Ocultar el picker indicator nativo en inputs con ícono propio,
+   para evitar mostrar dos íconos de calendario simultáneamente */
+.input-with-icon input[type="date"]::-webkit-calendar-picker-indicator {
+  opacity: 0;
+  width: 0;
+  padding: 0;
 }
 
 /* Native Calendar Icon — reemplazamos el ícono del sistema con un SVG coloreado */
@@ -364,11 +426,31 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
   font-size: 12px;
   font-weight: 600;
 }
-.badge-success { background: var(--success-dim); color: var(--success); }
-.badge-danger  { background: var(--danger-dim);  color: var(--danger); }
-.badge-warning { background: var(--warning-dim); color: var(--warning); }
-.badge-info    { background: var(--info-dim);    color: var(--info); }
-.badge-muted   { background: var(--border-subtle); color: var(--text-secondary); }
+
+.badge-success {
+  background: var(--success-dim);
+  color: var(--success);
+}
+
+.badge-danger {
+  background: var(--danger-dim);
+  color: var(--danger);
+}
+
+.badge-warning {
+  background: var(--warning-dim);
+  color: var(--warning);
+}
+
+.badge-info {
+  background: var(--info-dim);
+  color: var(--info);
+}
+
+.badge-muted {
+  background: var(--border-subtle);
+  color: var(--text-secondary);
+}
 
 /* Tablas */
 .data-table {
@@ -376,9 +458,11 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
   border-collapse: separate;
   border-spacing: 0;
 }
+
 .data-table thead tr {
   background: var(--surface-overlay);
 }
+
 .data-table th {
   padding: 14px 20px;
   font-size: 11px;
@@ -388,12 +472,14 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
   color: var(--text-muted);
   text-align: left;
 }
+
 .data-table td {
   padding: 16px 20px;
   font-size: 14px;
   color: var(--text-secondary);
   border-bottom: 1px solid var(--border-subtle);
 }
+
 .data-table tbody tr:hover td {
   background: var(--bg-subtle);
   color: var(--text-primary);
@@ -408,9 +494,24 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
   flex-wrap: wrap;
   gap: 12px;
 }
-.page-header h1 { font-size: 1.5rem; font-weight: 800; margin: 0; }
-.page-header p { color: var(--text-muted); font-size: 0.88rem; margin: 4px 0 0; }
-.date-display { font-size: 0.85rem; color: var(--text-muted); text-transform: capitalize; }
+
+.page-header h1 {
+  font-size: 1.5rem;
+  font-weight: 800;
+  margin: 0;
+}
+
+.page-header p {
+  color: var(--text-muted);
+  font-size: 0.88rem;
+  margin: 4px 0 0;
+}
+
+.date-display {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  text-transform: capitalize;
+}
 
 .page-title {
   font-family: var(--font-display);
@@ -419,6 +520,7 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
   letter-spacing: -0.04em;
   color: var(--text-primary);
 }
+
 .page-subtitle {
   font-size: 14px;
   color: var(--text-muted);
@@ -444,7 +546,7 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
 .modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.7);
+  background: rgba(0, 0, 0, 0.7);
   backdrop-filter: blur(8px);
   z-index: 1000;
   display: flex;
@@ -452,6 +554,7 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
   justify-content: center;
   padding: 20px;
 }
+
 .modal-panel {
   background: var(--surface-raised);
   border: 1px solid var(--border);
@@ -464,14 +567,50 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
 
 /* ── Global Mobile Responsive ── */
 @media (max-width: 768px) {
-  .page-header { flex-direction: column; align-items: flex-start; }
-  .page-header h1 { font-size: 1.25rem; }
-  .card { padding: 20px; }
-  .modal-panel { padding: 24px 20px; margin: 12px; border-radius: var(--r-xl); }
-  .page-title { font-size: 24px; }
-  .data-table th { padding: 10px 12px; font-size: 10px; }
-  .data-table td { padding: 12px; font-size: 13px; }
-  .btn-primary { padding: 10px 18px; font-size: 13px; }
-  .btn-glass { padding: 10px 18px; font-size: 13px; }
-  .field-input { padding: 12px 14px; }
+  .page-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .page-header h1 {
+    font-size: 1.25rem;
+  }
+
+  .card {
+    padding: 20px;
+  }
+
+  .modal-panel {
+    padding: 24px 20px;
+    margin: 12px;
+    border-radius: var(--r-xl);
+  }
+
+  .page-title {
+    font-size: 24px;
+  }
+
+  .data-table th {
+    padding: 10px 12px;
+    font-size: 10px;
+  }
+
+  .data-table td {
+    padding: 12px;
+    font-size: 13px;
+  }
+
+  .btn-primary {
+    padding: 10px 18px;
+    font-size: 13px;
+  }
+
+  .btn-glass {
+    padding: 10px 18px;
+    font-size: 13px;
+  }
+
+  .field-input {
+    padding: 12px 14px;
+  }
 }
