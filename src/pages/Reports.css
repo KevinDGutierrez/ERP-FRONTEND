@@ -158,14 +158,6 @@
   padding: 0 1.5rem 1.5rem;
 }
 
-.total-row td {
-  background: var(--primary-dim);
-  color: var(--primary);
-  font-weight: 800;
-  font-size: 0.95rem;
-  border-top: 2px solid var(--primary);
-}
-
 /* PnL Specific */
 .pnl-summary-grid {
   display: grid;
@@ -290,15 +282,84 @@
   margin-top: 0.5rem;
 }
 
+/* ── Trial Balance Table (clases compartidas con JournalEntries) ── */
+.modern-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.modern-table th {
+  text-align: left;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  padding: 12px 16px;
+  border-bottom: 2px solid var(--border);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.modern-table td {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border-subtle);
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+.modern-table tbody tr:hover td {
+  background: rgba(59, 130, 246, 0.03);
+}
+
+.code-font {
+  font-family: 'JetBrains Mono', 'SF Mono', 'Fira Code', monospace;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+.name-cell {
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+.text-right {
+  text-align: right;
+}
+
+.amount-cell {
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.amount-cell.debe {
+  color: var(--text-primary);
+}
+
+.amount-cell.haber {
+  color: var(--text-secondary);
+}
+
+.total-row td {
+  background: var(--primary-dim);
+  color: var(--primary);
+  font-weight: 800;
+  font-size: 0.95rem;
+  border-top: 2px solid var(--primary);
+}
+
+/* Spin */
 .spin {
   animation: spin 1s linear infinite;
 }
 
 @keyframes spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
-.report-loading, .report-error {
+.report-loading,
+.report-error {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -312,13 +373,16 @@
   .pnl-summary-grid {
     grid-template-columns: 1fr;
   }
+
   .balance-grid-layout {
     grid-template-columns: 1fr;
   }
+
   .reports-nav-tabs {
     flex-direction: column;
     padding: 1rem;
   }
+
   .report-tab {
     width: 100%;
     justify-content: flex-start;
@@ -332,7 +396,7 @@
     gap: 1.5rem;
     padding: 1.5rem;
   }
-  
+
   .header-actions {
     width: 100%;
     justify-content: space-between;
