@@ -163,9 +163,7 @@
   padding-left: 44px !important;
 }
 
-.form-group select {
-  appearance: auto;
-}
+/* Select inherits global premium dropdown styling */
 
 .form-group select option {
   background-color: var(--surface-overlay);

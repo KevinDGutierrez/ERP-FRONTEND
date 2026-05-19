@@ -16,6 +16,122 @@ import {
 import { motion, AnimatePresence } from 'framer-motion';
 import './Reports.css';
 
+const formatQ = (val) => `Q${(val || 0).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+
+const generatePrintHTML = (title, bodyContent) => `
+<!DOCTYPE html>
+<html>
+<head>
+  <title>${title}</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Segoe UI', Arial, sans-serif; padding: 40px; color: #1a1a1a; font-size: 12px; }
+    .report-header { text-align: center; margin-bottom: 30px; border-bottom: 2px solid #1a1a1a; padding-bottom: 16px; }
+    .report-header h1 { font-size: 20px; font-weight: 700; margin-bottom: 4px; }
+    .report-header p { font-size: 11px; color: #666; }
+    table { width: 100%; border-collapse: collapse; margin-top: 16px; }
+    th { background: #f0f0f0; padding: 10px 14px; text-align: left; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; border-bottom: 2px solid #333; }
+    td { padding: 8px 14px; border-bottom: 1px solid #e0e0e0; font-size: 12px; }
+    .text-right { text-align: right; }
+    .total-row td { font-weight: 700; border-top: 2px solid #333; background: #f8f8f8; font-size: 13px; }
+    .section-title { font-size: 13px; font-weight: 700; color: #2563eb; margin: 24px 0 8px; text-transform: uppercase; letter-spacing: 0.03em; }
+    .summary-line { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #eee; font-size: 13px; }
+    .summary-line.total { border-top: 2px solid #333; border-bottom: none; font-weight: 700; font-size: 14px; padding-top: 12px; }
+    .summary-line.subtotal { font-weight: 600; color: #2563eb; }
+    .summary-line .negative { color: #dc2626; }
+    .summary-line .positive { color: #16a34a; }
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+    .col-title { font-size: 15px; font-weight: 700; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 2px solid #333; }
+    .group-label { font-size: 11px; font-weight: 700; color: #666; text-transform: uppercase; margin: 16px 0 6px; }
+    @media print { body { padding: 20px; } }
+  </style>
+</head>
+<body>
+  <div class="report-header">
+    <h1>${title}</h1>
+    <p>Generado el ${new Date().toLocaleDateString('es-GT', { day: 'numeric', month: 'long', year: 'numeric' })} — Street Ledger ERP</p>
+  </div>
+  ${bodyContent}
+</body>
+</html>
+`;
+
+const exportReportPDF = (activeTab, data) => {
+  if (!data) return;
+
+  let title = '';
+  let bodyContent = '';
+
+  if (activeTab === 'trial') {
+    title = 'Balance de Comprobación';
+    const rows = (data.accounts || []).map(acc => `
+      <tr>
+        <td style="font-family:monospace;font-weight:600">${acc.code}</td>
+        <td>${acc.name}</td>
+        <td class="text-right">${acc.balance > 0 ? formatQ(acc.balance) : '-'}</td>
+        <td class="text-right">${acc.balance < 0 ? formatQ(Math.abs(acc.balance)) : '-'}</td>
+      </tr>
+    `).join('');
+    bodyContent = `
+      <table>
+        <thead><tr><th>CÓDIGO</th><th>NOMBRE DE LA CUENTA</th><th class="text-right">DEUDOR</th><th class="text-right">ACREEDOR</th></tr></thead>
+        <tbody>${rows}</tbody>
+        <tfoot><tr class="total-row">
+          <td colspan="2">TOTALES GENERALES</td>
+          <td class="text-right">${formatQ(data.totals?.debe)}</td>
+          <td class="text-right">${formatQ(data.totals?.haber)}</td>
+        </tr></tfoot>
+      </table>
+    `;
+  } else if (activeTab === 'pnl') {
+    title = 'Estado de Resultados';
+    const r = data.resumen || {};
+    bodyContent = `
+      <div class="section-title">INGRESOS DE OPERACIÓN</div>
+      <div class="summary-line"><span>Ventas y Servicios</span><span>${formatQ(r.totalIngresos)}</span></div>
+      <div class="summary-line total"><span>TOTAL INGRESOS</span><span>${formatQ(r.totalIngresos)}</span></div>
+      
+      <div class="section-title">COSTOS Y GASTOS</div>
+      <div class="summary-line"><span>Costo de Ventas</span><span class="negative">(${formatQ(r.totalCostos)})</span></div>
+      <div class="summary-line subtotal"><span>UTILIDAD BRUTA</span><span>${formatQ(r.utilidadBruta)}</span></div>
+      <div class="summary-line"><span>Gastos de Administración</span><span class="negative">(${formatQ(r.totalGastos)})</span></div>
+      
+      <div style="margin-top:24px;padding:16px;background:#f0fdf4;border:2px solid #16a34a;border-radius:8px;">
+        <div class="summary-line total"><span>UTILIDAD NETA DEL EJERCICIO</span><span class="positive">${formatQ(r.utilidadNeta)}</span></div>
+      </div>
+    `;
+  } else if (activeTab === 'balance') {
+    title = 'Balance General';
+    const activoRows = (data.activos || []).map(a => `<div class="summary-line"><span>${a.name}</span><span>${formatQ(a.balance)}</span></div>`).join('');
+    const pasivoRows = (data.pasivos || []).map(p => `<div class="summary-line"><span>${p.name}</span><span>${formatQ(Math.abs(p.balance))}</span></div>`).join('');
+    const patrimonioRows = (data.patrimonio || []).map(p => `<div class="summary-line"><span>${p.name}</span><span>${formatQ(Math.abs(p.balance))}</span></div>`).join('');
+    bodyContent = `
+      <div class="two-col">
+        <div>
+          <div class="col-title">Activos</div>
+          ${activoRows}
+          <div class="summary-line total"><span>TOTAL ACTIVO</span><span>${formatQ(data.totales?.activo)}</span></div>
+        </div>
+        <div>
+          <div class="col-title">Pasivo y Patrimonio</div>
+          <div class="group-label">Pasivos</div>
+          ${pasivoRows}
+          <div class="group-label" style="margin-top:16px">Patrimonio</div>
+          ${patrimonioRows}
+          <div class="summary-line total"><span>TOTAL PASIVO Y CAPITAL</span><span>${formatQ(data.totales?.patrimonio)}</span></div>
+        </div>
+      </div>
+    `;
+  }
+
+  const printWindow = window.open('', '_blank', 'width=900,height=700');
+  printWindow.document.write(generatePrintHTML(title, bodyContent));
+  printWindow.document.close();
+  printWindow.onload = () => {
+    printWindow.print();
+  };
+};
+
 const Reports = () => {
   const [activeTab, setActiveTab] = useState('trial'); // trial, pnl, balance
   const [data, setData] = useState(null);
@@ -62,7 +178,7 @@ const Reports = () => {
             <button className="btn-glass-icon" onClick={fetchData} title="Refrescar">
               <RefreshCw size={20} className={loading ? 'spin' : ''} />
             </button>
-            <button className="btn-primary">
+            <button className="btn-primary" onClick={() => exportReportPDF(activeTab, data)} disabled={loading || !data}>
               <Download size={20} />
               <span>Exportar PDF</span>
             </button>

@@ -15,6 +15,42 @@ import {
 import { motion, AnimatePresence } from 'framer-motion';
 import './JournalEntries.css';
 
+const exportToExcel = (entries) => {
+  if (!entries || entries.length === 0) return;
+
+  const BOM = '\uFEFF';
+  let csv = BOM + 'Partida,Fecha,Tipo,Descripción,Código,Cuenta,Debe,Haber\n';
+
+  entries.forEach((entry, idx) => {
+    const num = entries.length - idx;
+    const fecha = entry.date || '';
+    const tipo = entry.type || '';
+    const desc = (entry.description || '').replace(/"/g, '""');
+
+    if (entry.details && entry.details.length > 0) {
+      entry.details.forEach(detail => {
+        const code = detail.accountCode || '';
+        const name = (detail.accountName || '').replace(/"/g, '""');
+        const debit = detail.debit || 0;
+        const credit = detail.credit || 0;
+        csv += `${num},"${fecha}","${tipo}","${desc}","${code}","${name}",${debit.toFixed(2)},${credit.toFixed(2)}\n`;
+      });
+    } else {
+      csv += `${num},"${fecha}","${tipo}","${desc}","","",0.00,0.00\n`;
+    }
+  });
+
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = `libro_diario_${new Date().toISOString().split('T')[0]}.csv`;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  URL.revokeObjectURL(url);
+};
+
 const JournalEntries = () => {
   const [entries, setEntries] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -110,7 +146,7 @@ const JournalEntries = () => {
                 {loading ? <div className="spinner-small"></div> : <Search size={20} />}
                 <span>Aplicar Filtros</span>
               </button>
-              <button className="btn-glass" title="Exportar Excel">
+              <button className="btn-glass" title="Exportar Excel" onClick={() => exportToExcel(entries)}>
                 <FileSpreadsheet size={20} />
               </button>
             </div>

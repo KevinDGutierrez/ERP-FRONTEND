@@ -6,12 +6,7 @@ import { useTheme } from '../../context/ThemeContext';
 import { 
   LayoutDashboard, 
   BookOpen, 
-  FileText, 
   PieChart, 
-  Users, 
-  Wrench,
-  Sun,
-  Moon,
   ShieldCheck,
   PlusCircle,
   History,
@@ -19,10 +14,59 @@ import {
   LogOut,
   Menu,
   ChevronLeft,
-  ChevronRight
+  ChevronRight,
+  Sun,
+  Moon,
+  Building,
+  Users
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import './Layout.css';
+
+/**
+ * Returns the menu items for the sidebar based on the user's role.
+ * - super_admin: Only admin panel items
+ * - admin_empresa: Full ERP + company users + settings
+ * - contador (or any other role): ERP core modules only
+ */
+const getMenuItems = (role) => {
+  if (role === 'super_admin') {
+    return [
+      { name: 'Solicitudes', icon: <ShieldCheck size={22} />, path: '/admin/approvals' },
+      { name: 'Empresas', icon: <Building size={22} />, path: '/admin/companies' },
+    ];
+  }
+
+  // Base ERP items for contador and admin_empresa
+  const items = [
+    { name: 'Dashboard', icon: <LayoutDashboard size={22} />, path: '/' },
+    { name: 'Catálogo', icon: <BookOpen size={22} />, path: '/accounts' },
+    { name: 'Nueva Partida', icon: <PlusCircle size={22} />, path: '/new-entry' },
+    { name: 'Libro Diario', icon: <History size={22} />, path: '/entries' },
+    { name: 'Reportes', icon: <PieChart size={22} />, path: '/reports' },
+  ];
+
+  if (role === 'admin_empresa') {
+    items.push(
+      { name: 'Usuarios', icon: <Users size={22} />, path: '/company/users' }
+    );
+  }
+
+  // Settings available for all ERP users (tabs are filtered by role inside Settings.jsx)
+  items.push({ name: 'Configuración', icon: <Settings size={22} />, path: '/settings' });
+
+  return items;
+};
+
+const getRoleLabel = (role) => {
+  const labels = {
+    super_admin: 'SUPER ADMIN',
+    admin_empresa: 'ADMINISTRADOR',
+    contador: 'CONTADOR',
+    usuario: 'USUARIO'
+  };
+  return labels[role] || 'USUARIO';
+};
 
 const Layout = ({ children }) => {
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -30,26 +74,10 @@ const Layout = ({ children }) => {
   const { logout, user, profile, isAdmin } = useAuth();
   const { brand } = useBrand();
   const navigate = useNavigate();
-
-  const menuItems = [
-    { name: 'Dashboard', icon: <LayoutDashboard size={22} />, path: '/' },
-    { name: 'Catálogo', icon: <BookOpen size={22} />, path: '/accounts' },
-    { name: 'Nueva Partida', icon: <PlusCircle size={22} />, path: '/new-entry' },
-    { name: 'Libro Diario', icon: <History size={22} />, path: '/entries' },
-    { name: 'Reportes', icon: <PieChart size={22} />, path: '/reports' },
-    { name: 'Configuración', icon: <Settings size={22} />, path: '/settings' },
-  ];
-
-  // Añadir ítem de administrador si corresponde
-  if (isAdmin) {
-    menuItems.splice(1, 0, { 
-      name: 'Solicitudes', 
-      icon: <ShieldCheck size={22} color="#f59e0b" />, 
-      path: '/admin/approvals' 
-    });
-  }
-
   const { theme, toggleTheme } = useTheme();
+
+  const role = profile?.role || 'usuario';
+  const menuItems = getMenuItems(role);
 
   const handleLogout = async () => {
     await logout();
@@ -62,7 +90,7 @@ const Layout = ({ children }) => {
       <aside className={`sidebar ${isCollapsed ? 'collapsed' : ''}`}>
         <div className="sidebar-header">
           <div className="brand-icon">
-            {brand.logo ? <img src={brand.logo} alt="Logo" /> : <div className="placeholder-mini-logo">SS</div>}
+            {brand.logo ? <img src={brand.logo} alt="Logo" /> : <div className="placeholder-mini-logo">SL</div>}
           </div>
           <AnimatePresence>
             {!isCollapsed && (
@@ -151,7 +179,7 @@ const Layout = ({ children }) => {
             <div className="user-profile-block">
               <div className="user-details">
                 <span className="display-name">{profile?.displayName || user?.displayName || 'Usuario'}</span>
-                <span className="user-role">{profile?.role === 'super_admin' ? 'SUPER ADMIN' : 'CONTADOR'}</span>
+                <span className="user-role">{getRoleLabel(role)}</span>
               </div>
               <div className="avatar-wrapper">
                 {(profile?.photoURL || user?.photoURL) ? (
@@ -198,7 +226,7 @@ const Layout = ({ children }) => {
               <div className="mobile-menu-header">
                   <div className="brand-section">
                     <div className="brand-icon">
-                      {brand.logo ? <img src={brand.logo} alt="Logo" /> : <div className="placeholder-mini-logo">SS</div>}
+                      {brand.logo ? <img src={brand.logo} alt="Logo" /> : <div className="placeholder-mini-logo">SL</div>}
                     </div>
                     <span className="brand-name">{brand.name}</span>
                   </div>

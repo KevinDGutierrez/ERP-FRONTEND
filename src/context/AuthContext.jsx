@@ -108,6 +108,7 @@ export const AuthProvider = ({ children }) => {
     logout,
     updateProfileData: updateProfile,
     isAdmin: profile?.role === 'super_admin',
+    isCompanyAdmin: profile?.role === 'admin_empresa',
     isActive: profile?.status === 'active'
   };
 

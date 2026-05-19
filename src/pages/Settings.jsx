@@ -39,16 +39,19 @@ const compressImage = (file, maxWidth = 700) => {
   });
 };
 
-/* ── Tabs ── */
-const TABS = [
-  { id: 'profile', label: 'Perfil', icon: User },
-  { id: 'company', label: 'Empresa', icon: Building2 },
-  { id: 'visual', label: 'Visual', icon: Palette },
+/* ── Tabs by role ── */
+const ALL_TABS = [
+  { id: 'profile', label: 'Perfil', icon: User, roles: ['admin_empresa', 'contador', 'usuario'] },
+  { id: 'company', label: 'Empresa', icon: Building2, roles: ['admin_empresa'] },
+  { id: 'visual', label: 'Visual', icon: Palette, roles: ['admin_empresa'] },
 ];
 
 const Settings = () => {
   const { brand, updateBrand } = useBrand();
   const { profile, user, updateProfileData } = useAuth();
+  const role = profile?.role || 'usuario';
+  const isCompanyAdmin = role === 'admin_empresa';
+  const TABS = ALL_TABS.filter(tab => tab.roles.includes(role));
 
   const [activeTab, setActiveTab] = useState('profile');
   const [formData, setFormData] = useState(brand);
@@ -135,7 +138,7 @@ const Settings = () => {
       const profilePayload = { ...userData };
       if (profilePhotoData) profilePayload.photoURL = profilePhotoData;
       await updateProfileData(profilePayload);
-      await updateBrand(formData);
+      if (isCompanyAdmin) await updateBrand(formData);
       setSaveSuccess(true);
       setTimeout(() => setSaveSuccess(false), 3000);
     } catch {

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Layout from '../components/layout/Layout';
 import Modal from '../components/common/Modal';
 import api from '../api/client';
-import { Search, Plus, Filter, ArrowUpDown, AlertTriangle, CheckCircle2 } from 'lucide-react';
+import { Search, Plus, Filter, ArrowUpDown, AlertTriangle, CheckCircle2, BookOpen, X, Download } from 'lucide-react';
 import './AccountCatalog.css';
 
 const AccountCatalog = () => {
@@ -16,6 +16,13 @@ const AccountCatalog = () => {
   const [formLoading, setFormLoading] = useState(false);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(false);
+
+  // Ledger Modal State
+  const [ledgerOpen, setLedgerOpen] = useState(false);
+  const [ledgerData, setLedgerData] = useState(null);
+  const [ledgerLoading, setLedgerLoading] = useState(false);
+  const [ledgerError, setLedgerError] = useState(null);
+  const [selectedAccount, setSelectedAccount] = useState(null);
   
   const [newAccount, setNewAccount] = useState({
     parentId: '',
@@ -71,6 +78,47 @@ const AccountCatalog = () => {
     }
   };
 
+  const handleViewLedger = async (account) => {
+    setSelectedAccount(account);
+    setLedgerOpen(true);
+    setLedgerLoading(true);
+    setLedgerError(null);
+    setLedgerData(null);
+    try {
+      const response = await api.get(`/entries/ledger?accountId=${account.id}`);
+      setLedgerData(response.data);
+    } catch (err) {
+      console.error('Error fetching ledger:', err);
+      setLedgerError(err.response?.data?.message || 'Error al obtener el libro mayor');
+    } finally {
+      setLedgerLoading(false);
+    }
+  };
+
+  const exportLedgerCSV = () => {
+    if (!ledgerData || !ledgerData.movements || ledgerData.movements.length === 0) return;
+    const acc = ledgerData.account || selectedAccount;
+
+    const BOM = '\uFEFF';
+    let csv = BOM + `Libro Mayor - ${acc.code || ''} ${acc.name || ''}\n`;
+    csv += 'Fecha,Descripción,Ref.,Debe,Haber,Saldo\n';
+
+    ledgerData.movements.forEach(m => {
+      const desc = (m.description || '').replace(/"/g, '""');
+      csv += `"${m.date}","${desc}","${m.referenceId || ''}",${(m.debit || 0).toFixed(2)},${(m.credit || 0).toFixed(2)},${(m.balance || 0).toFixed(2)}\n`;
+    });
+
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `mayor_${(acc.code || 'cuenta').replace(/\./g, '_')}_${new Date().toISOString().split('T')[0]}.csv`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  };
+
   const filteredAccounts = accounts.filter(acc => {
     // Defensive checks to prevent crashes if data is missing
     const name = acc.name || '';
@@ -86,7 +134,8 @@ const AccountCatalog = () => {
                         type.toUpperCase() === activeFilters.type ||
                         (activeFilters.type === 'INGRESOS' && type.toUpperCase() === 'INGRESO') ||
                         (activeFilters.type === 'COSTOS' && type.toUpperCase() === 'COSTO') ||
-                        (activeFilters.type === 'GASTOS' && type.toUpperCase() === 'GASTO');
+                        (activeFilters.type === 'GASTOS' && type.toUpperCase() === 'GASTO') ||
+                        (activeFilters.type === 'CAPITAL' && type.toUpperCase() === 'CAPITAL');
 
     const matchesNature = activeFilters.nature === 'ALL' || 
                           nature.toUpperCase() === activeFilters.nature;
@@ -148,6 +197,7 @@ const AccountCatalog = () => {
                     <option value="ACTIVO">Activo</option>
                     <option value="PASIVO">Pasivo</option>
                     <option value="PATRIMONIO">Patrimonio</option>
+                    <option value="CAPITAL">Capital</option>
                     <option value="INGRESOS">Ingresos</option>
                     <option value="COSTOS">Costos</option>
                     <option value="GASTOS">Gastos</option>
@@ -208,7 +258,10 @@ const AccountCatalog = () => {
                         <td>{account.nature}</td>
                         <td className="amount-cell">Q{(account.balance || 0).toLocaleString('en-US', { minimumFractionDigits: 2 })}</td>
                         <td>
-                          <button className="action-link">Ver Mayor</button>
+                          <button className="action-link" onClick={() => handleViewLedger(account)}>
+                            <BookOpen size={14} style={{ marginRight: 4, verticalAlign: 'middle' }} />
+                            Ver Mayor
+                          </button>
                         </td>
                       </tr>
                     ))
@@ -226,6 +279,7 @@ const AccountCatalog = () => {
         </div>
       </div>
 
+      {/* Modal Nueva Cuenta */}
       <Modal 
         isOpen={isModalOpen} 
         onClose={() => setIsModalOpen(false)}
@@ -286,6 +340,7 @@ const AccountCatalog = () => {
                 <option value="ACTIVO">Activo</option>
                 <option value="PASIVO">Pasivo</option>
                 <option value="PATRIMONIO">Patrimonio</option>
+                <option value="CAPITAL">Capital</option>
                 <option value="INGRESOS">Ingresos</option>
                 <option value="COSTOS">Costos</option>
                 <option value="GASTOS">Gastos</option>
@@ -337,9 +392,107 @@ const AccountCatalog = () => {
           </div>
         </form>
       </Modal>
+
+      {/* Modal Libro Mayor */}
+      {ledgerOpen && (
+        <div className="modal-overlay" onClick={() => setLedgerOpen(false)}>
+          <div className="ledger-modal animate-slide-up" onClick={e => e.stopPropagation()}>
+            <div className="ledger-modal-header">
+              <div className="ledger-title-group">
+                <div className="ledger-icon-badge">
+                  <BookOpen size={20} />
+                </div>
+                <div>
+                  <h2>Libro Mayor</h2>
+                  {selectedAccount && (
+                    <p className="ledger-account-info">
+                      <span className="ledger-code">{selectedAccount.code}</span>
+                      <span className="ledger-sep">—</span>
+                      {selectedAccount.name}
+                    </p>
+                  )}
+                </div>
+              </div>
+              <div className="ledger-header-actions">
+                {ledgerData && ledgerData.movements && ledgerData.movements.length > 0 && (
+                  <button className="btn-glass-sm" onClick={exportLedgerCSV} title="Exportar CSV">
+                    <Download size={16} />
+                  </button>
+                )}
+                <button className="close-btn" onClick={() => setLedgerOpen(false)}>
+                  <X size={22} />
+                </button>
+              </div>
+            </div>
+            <div className="ledger-modal-body">
+              {ledgerLoading ? (
+                <div className="ledger-loading">
+                  <div className="spinner"></div>
+                  <p>Cargando movimientos...</p>
+                </div>
+              ) : ledgerError ? (
+                <div className="ledger-error">
+                  <AlertTriangle size={32} />
+                  <p>{ledgerError}</p>
+                </div>
+              ) : !ledgerData || !ledgerData.movements || ledgerData.movements.length === 0 ? (
+                <div className="ledger-empty">
+                  <BookOpen size={40} strokeWidth={1.5} />
+                  <h3>Sin movimientos</h3>
+                  <p>Esta cuenta no tiene movimientos registrados.</p>
+                </div>
+              ) : (
+                <div className="ledger-table-scroll">
+                  <table className="ledger-table">
+                    <thead>
+                      <tr>
+                        <th>FECHA</th>
+                        <th>DESCRIPCIÓN</th>
+                        <th className="text-right">DEBE</th>
+                        <th className="text-right">HABER</th>
+                        <th className="text-right">SALDO</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {ledgerData.movements.map((m, idx) => (
+                        <tr key={idx}>
+                          <td className="ledger-date">{new Date(m.date).toLocaleDateString('es-GT')}</td>
+                          <td className="ledger-desc">{m.description}</td>
+                          <td className="text-right ledger-amount">
+                            {m.debit > 0 ? `Q${m.debit.toLocaleString(undefined, {minimumFractionDigits: 2})}` : '-'}
+                          </td>
+                          <td className="text-right ledger-amount">
+                            {m.credit > 0 ? `Q${m.credit.toLocaleString(undefined, {minimumFractionDigits: 2})}` : '-'}
+                          </td>
+                          <td className={`text-right ledger-balance ${m.balance < 0 ? 'negative' : ''}`}>
+                            Q{Math.abs(m.balance).toLocaleString(undefined, {minimumFractionDigits: 2})}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                    <tfoot>
+                      <tr className="ledger-total-row">
+                        <td colSpan="2">SALDO FINAL</td>
+                        <td className="text-right">
+                          Q{ledgerData.movements.reduce((s, m) => s + (m.debit || 0), 0).toLocaleString(undefined, {minimumFractionDigits: 2})}
+                        </td>
+                        <td className="text-right">
+                          Q{ledgerData.movements.reduce((s, m) => s + (m.credit || 0), 0).toLocaleString(undefined, {minimumFractionDigits: 2})}
+                        </td>
+                        <td className="text-right ledger-final-balance">
+                          Q{Math.abs(ledgerData.movements[ledgerData.movements.length - 1]?.balance || 0).toLocaleString(undefined, {minimumFractionDigits: 2})}
+                        </td>
+                      </tr>
+                    </tfoot>
+                  </table>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </Layout>
   );
 };
 
 export default AccountCatalog;
-

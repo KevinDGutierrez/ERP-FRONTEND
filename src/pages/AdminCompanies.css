@@ -1,0 +1,25 @@
+.admin-companies-container { max-width: 1200px; margin: 0 auto; }
+.companies-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 24px; }
+.company-count { font-size: 0.85rem; color: var(--text-muted); white-space: nowrap; }
+.companies-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(360px, 1fr)); gap: 20px; }
+.company-card { padding: 24px; display: flex; flex-direction: column; gap: 16px; }
+.company-card-header { display: flex; justify-content: space-between; align-items: flex-start; }
+.company-name-group h3 { font-size: 1.1rem; font-weight: 700; color: var(--text-primary); margin: 0; }
+.legal-name { font-size: 0.8rem; color: var(--text-muted); }
+.status-dot { font-size: 0.75rem; font-weight: 700; padding: 4px 12px; border-radius: 20px; text-transform: uppercase; letter-spacing: 0.04em; }
+.status-dot.active { background: rgba(16, 185, 129, 0.1); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.2); }
+.status-dot.inactive { background: rgba(239, 68, 68, 0.1); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.2); }
+.company-details-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.detail-item { display: flex; flex-direction: column; gap: 2px; }
+.detail-label { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-muted); }
+.detail-item span:last-child { font-size: 0.88rem; color: var(--text-secondary); }
+.company-card-actions { display: flex; gap: 8px; justify-content: flex-end; border-top: 1px solid var(--border-subtle); padding-top: 12px; }
+.btn-glass-sm { width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; background: var(--bg-subtle); border: 1px solid var(--border); border-radius: 10px; color: var(--text-secondary); cursor: pointer; transition: all 0.2s; }
+.btn-glass-sm:hover { background: var(--surface-overlay); border-color: var(--primary); color: var(--primary); }
+.btn-glass-sm.warn:hover { border-color: #ef4444; color: #ef4444; }
+.btn-glass-sm.success:hover { border-color: #10b981; color: #10b981; }
+
+@media (max-width: 768px) {
+  .companies-grid { grid-template-columns: 1fr; }
+  .companies-toolbar { flex-direction: column; }
+}
