@@ -123,6 +123,12 @@
   gap: 1.5rem;
 }
 
+.entries-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
 .entry-card-premium {
   padding: 0 !important;
   overflow: hidden;

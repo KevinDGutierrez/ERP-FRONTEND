@@ -102,7 +102,7 @@ const Layout = ({ children }) => {
                 exit={{ opacity: 0 }}
                 className="brand-name"
               >
-                {brand.name}
+                {brand.name || profile?.companyName || 'Street Ledger'}
               </motion.span>
             )}
           </AnimatePresence>
