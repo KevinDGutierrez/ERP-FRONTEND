@@ -15,6 +15,7 @@ import {
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { exportTrialBalancePDF, exportProfitLossPDF, exportBalanceSheetPDF } from '../utils/pdfExport';
+import { exportTrialBalanceExcel, exportPnLExcel, exportBalanceSheetExcel } from '../utils/excelExport';
 import './Reports.css';
 
 const formatQ = (val) => {
@@ -34,6 +35,14 @@ const handleExportPDF = (activeTab, data) => {
   else if (activeTab === 'adjusted') exportTrialBalancePDF(data, 'balance_saldos_ajustado');
   else if (activeTab === 'pnl') exportProfitLossPDF(data);
   else if (activeTab === 'balance') exportBalanceSheetPDF(data);
+};
+
+const handleExportExcel = (activeTab, data) => {
+  if (!data) return;
+  if (activeTab === 'trial') exportTrialBalanceExcel(data, false);
+  else if (activeTab === 'adjusted') exportTrialBalanceExcel(data, true);
+  else if (activeTab === 'pnl') exportPnLExcel(data);
+  else if (activeTab === 'balance') exportBalanceSheetExcel(data);
 };
 
 /* ────────────────────────────────────────────────── */
@@ -86,9 +95,13 @@ const Reports = () => {
             <button className="btn-glass-icon" onClick={fetchData} title="Refrescar">
               <RefreshCw size={20} className={loading ? 'spin' : ''} />
             </button>
-            <button className="btn-primary" onClick={() => handleExportPDF(activeTab, data)} disabled={loading || !data}>
+            <button className="btn-primary" onClick={() => handleExportExcel(activeTab, data)} disabled={loading || !data} title="Exportar Excel">
               <Download size={20} />
-              <span>Exportar PDF</span>
+              <span>Excel</span>
+            </button>
+            <button className="btn-primary" onClick={() => handleExportPDF(activeTab, data)} disabled={loading || !data} title="Exportar PDF">
+              <Download size={20} />
+              <span>PDF</span>
             </button>
           </div>
         </header>

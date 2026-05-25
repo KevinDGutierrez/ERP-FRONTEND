@@ -7,6 +7,7 @@ import {
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { exportLedgerPDF } from '../utils/pdfExport';
+import { exportLedgerExcel } from '../utils/excelExport';
 import './Ledger.css';
 
 const formatQ = (val) => {
@@ -81,10 +82,19 @@ const Ledger = () => {
             <div className="header-actions">
               <button
                 className="btn-primary"
-                onClick={() => exportLedgerPDF(accountInfo, movements)}
+                onClick={() => exportLedgerExcel(accountInfo, movements)}
+                title="Exportar Excel"
               >
                 <Download size={20} />
-                <span>Exportar PDF</span>
+                <span>Excel</span>
+              </button>
+              <button
+                className="btn-primary"
+                onClick={() => exportLedgerPDF(accountInfo, movements)}
+                title="Exportar PDF"
+              >
+                <Download size={20} />
+                <span>PDF</span>
               </button>
             </div>
           )}

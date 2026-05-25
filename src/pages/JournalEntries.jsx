@@ -15,69 +15,10 @@ import {
 import { motion, AnimatePresence } from 'framer-motion';
 import './JournalEntries.css';
 
-import * as XLSX from 'xlsx';
 import { exportJournalPDF } from '../utils/pdfExport';
+import { exportJournalExcel } from '../utils/excelExport';
 
-const exportToExcel = (entries) => {
-  if (!entries || entries.length === 0) return;
 
-  const rows = [];
-
-  entries.forEach((entry, idx) => {
-    const num = idx + 1;
-    const fecha = entry.date || '';
-    const tipo = entry.type || '';
-    const desc = entry.description || '';
-
-    if (entry.details && entry.details.length > 0) {
-      entry.details.forEach(detail => {
-        const code = detail.accountCode || '';
-        const name = detail.accountName || '';
-        const debit = detail.debit || 0;
-        const credit = detail.credit || 0;
-        rows.push({
-          'Partida': num,
-          'Fecha': fecha,
-          'Tipo': tipo,
-          'Descripción': desc,
-          'Código': code,
-          'Cuenta': name,
-          'Debe': debit,
-          'Haber': credit
-        });
-      });
-    } else {
-      rows.push({
-        'Partida': num,
-        'Fecha': fecha,
-        'Tipo': tipo,
-        'Descripción': desc,
-        'Código': '',
-        'Cuenta': '',
-        'Debe': 0,
-        'Haber': 0
-      });
-    }
-  });
-
-  const worksheet = XLSX.utils.json_to_sheet(rows);
-  const workbook = XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(workbook, worksheet, 'Libro Diario');
-
-  // Ajustar ancho de columnas automáticamente
-  worksheet['!cols'] = [
-    { wch: 8 },  // Partida
-    { wch: 12 }, // Fecha
-    { wch: 12 }, // Tipo
-    { wch: 30 }, // Descripción
-    { wch: 12 }, // Código
-    { wch: 25 }, // Cuenta
-    { wch: 12 }, // Debe
-    { wch: 12 }  // Haber
-  ];
-
-  XLSX.writeFile(workbook, `libro_diario_${new Date().toISOString().split('T')[0]}.xlsx`);
-};
 
 const JournalEntries = () => {
   const [entries, setEntries] = useState([]);
@@ -174,7 +115,7 @@ const JournalEntries = () => {
                 {loading ? <div className="spinner-small"></div> : <Search size={20} />}
                 <span>Aplicar Filtros</span>
               </button>
-              <button className="btn-glass" title="Exportar Excel" onClick={() => exportToExcel(entries)}>
+              <button className="btn-glass" title="Exportar Excel" onClick={() => exportJournalExcel(entries)}>
                 <FileSpreadsheet size={20} />
               </button>
               <button className="btn-glass" title="Exportar PDF" onClick={() => exportJournalPDF(entries)}>
