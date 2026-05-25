@@ -173,7 +173,7 @@ const TrialBalanceView = ({ data }) => (
   <div className="report-card-premium card">
     <div className="report-card-header">
       <h3>Resumen de Saldos</h3>
-      <span className="date-tag">{new Date(data.date + 'T12:00:00').toLocaleDateString()}</span>
+      <span className="date-tag">{new Date(data.date.includes('T') ? data.date : data.date + 'T12:00:00').toLocaleDateString()}</span>
     </div>
     <div className="table-wrapper-scroll">
       <table className="modern-table">
@@ -218,7 +218,7 @@ const AdjustedTrialBalanceView = ({ data }) => (
         <ClipboardCheck size={18} />
         <h3>Balance de Saldos Ajustado</h3>
       </div>
-      <span className="date-tag">{new Date(data.date + 'T12:00:00').toLocaleDateString()}</span>
+      <span className="date-tag">{new Date(data.date.includes('T') ? data.date : data.date + 'T12:00:00').toLocaleDateString()}</span>
     </div>
     <div className="table-wrapper-scroll">
       <table className="modern-table">
