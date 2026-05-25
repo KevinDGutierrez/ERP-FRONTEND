@@ -7,12 +7,6 @@
   margin: 0 auto;
 }
 
-.header-actions {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
 /* ── Filters ── */
 .ledger-filters-grid {
   display: flex;

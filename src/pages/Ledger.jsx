@@ -79,7 +79,7 @@ const Ledger = () => {
             </div>
           </div>
           {accountInfo && movements.length > 0 && (
-            <div className="header-actions">
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
               <button
                 className="btn-primary"
                 onClick={() => exportLedgerExcel(accountInfo, movements)}
