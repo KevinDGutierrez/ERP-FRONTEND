@@ -177,7 +177,7 @@ export const exportJournalPDF = (entries) => {
 
   const rows = [];
   entries.forEach((entry, idx) => {
-    const num = entries.length - idx;
+    const num = idx + 1;
     if (entry.details && entry.details.length > 0) {
       entry.details.forEach(d => {
         rows.push([

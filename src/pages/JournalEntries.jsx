@@ -24,7 +24,7 @@ const exportToExcel = (entries) => {
   const rows = [];
 
   entries.forEach((entry, idx) => {
-    const num = entries.length - idx;
+    const num = idx + 1;
     const fecha = entry.date || '';
     const tipo = entry.type || '';
     const desc = entry.description || '';
@@ -222,7 +222,7 @@ const JournalEntries = () => {
                 >
                   <div className="entry-head">
                     <div className="entry-info">
-                      <span className="entry-tag">Partida #{entries.length - idx}</span>
+                      <span className="entry-tag">Partida #{idx + 1}</span>
                       <span className="entry-date-bubble">
                         <Calendar size={14} />
                         {new Date(entry.date + 'T12:00:00').toLocaleDateString(undefined, { day: 'numeric', month: 'long', year: 'numeric' })}
