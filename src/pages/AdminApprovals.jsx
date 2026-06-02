@@ -22,6 +22,12 @@ const AdminApprovals = () => {
   const [selectedRole, setSelectedRole] = useState({});
   const [expandedUid, setExpandedUid] = useState(null);
   const [confirmResetId, setConfirmResetId] = useState(null);
+  const [message, setMessage] = useState({ type: '', text: '' });
+
+  const showMessage = (type, text) => {
+    setMessage({ type, text });
+    setTimeout(() => setMessage({ type: '', text: '' }), 4000);
+  };
 
   const fetchUsers = async () => {
     setLoading(true);
@@ -69,7 +75,7 @@ const AdminApprovals = () => {
     const companyId = selectedCompany[uid] || users.find(u => u.uid === uid)?.companyId;
     const role = selectedRole[uid] || 'contador';
     if (!companyId && !users.find(u => u.uid === uid)?.requestedCompany) {
-      alert('Debes seleccionar o confirmar una empresa.');
+      showMessage('error', 'Debes seleccionar o confirmar una empresa.');
       return;
     }
     try {
@@ -82,7 +88,7 @@ const AdminApprovals = () => {
       setExpandedUid(null);
     } catch (e) {
       console.error('Error approving user:', e);
-      alert('Error al aprobar usuario.');
+      showMessage('error', 'Error al aprobar usuario.');
     }
   };
 
@@ -93,7 +99,7 @@ const AdminApprovals = () => {
       setExpandedUid(null);
     } catch (e) {
       console.error('Error rejecting user:', e);
-      alert('Error al rechazar usuario.');
+      showMessage('error', 'Error al rechazar usuario.');
     }
   };
 
@@ -108,10 +114,10 @@ const AdminApprovals = () => {
     try {
       await api.post(`/admin/reset-requests/${id}/approve`);
       setResetRequests(prev => prev.map(r => r.id === id ? { ...r, status: 'APPROVED' } : r));
-      alert('ERP vaciado con éxito.');
+      showMessage('success', 'ERP vaciado con éxito.');
     } catch (e) {
       console.error(e);
-      alert(e.response?.data?.message || 'Error al aprobar solicitud.');
+      showMessage('error', e.response?.data?.message || 'Error al aprobar solicitud.');
     }
   };
 
@@ -121,7 +127,7 @@ const AdminApprovals = () => {
       setResetRequests(prev => prev.map(r => r.id === id ? { ...r, status: 'REJECTED' } : r));
     } catch (e) {
       console.error(e);
-      alert('Error al rechazar solicitud.');
+      showMessage('error', 'Error al rechazar solicitud.');
     }
   };
 
@@ -156,6 +162,30 @@ const AdminApprovals = () => {
             <RefreshCw size={16} className={loading ? 'spin' : ''} /> Actualizar
           </button>
         </header>
+
+        <AnimatePresence>
+          {message.text && (
+            <motion.div
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              className={`settings-card ${message.type === 'success' ? 'success' : 'danger-card'}`}
+              style={{
+                marginBottom: '1rem',
+                padding: '1rem',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.75rem',
+                backgroundColor: message.type === 'success' ? 'rgba(34, 197, 94, 0.1)' : 'rgba(239, 68, 68, 0.1)',
+                border: `1px solid ${message.type === 'success' ? 'rgba(34, 197, 94, 0.2)' : 'rgba(239, 68, 68, 0.2)'}`,
+                color: message.type === 'success' ? 'var(--success)' : 'var(--danger)'
+              }}
+            >
+              {message.type === 'success' ? <CheckCircle size={20} /> : <AlertTriangle size={20} />}
+              <span style={{ fontWeight: 500 }}>{message.text}</span>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         <div className="main-tabs" style={{ display: 'flex', gap: '1rem', marginBottom: '1rem', borderBottom: '1px solid var(--border)' }}>
           <button 
