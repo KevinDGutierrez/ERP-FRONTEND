@@ -23,6 +23,7 @@ const Ledger = () => {
   const [accountInfo, setAccountInfo] = useState(null);
   const [allLedgers, setAllLedgers] = useState([]);
   const [viewMode, setViewMode] = useState('general');
+  const [showEmptyAccounts, setShowEmptyAccounts] = useState(false);
   const [loading, setLoading] = useState(false);
   const [loadingAccounts, setLoadingAccounts] = useState(true);
   const [error, setError] = useState(null);
@@ -138,7 +139,7 @@ const Ledger = () => {
             <div className="header-actions">
               <button
                 className="btn-primary"
-                onClick={() => viewMode === 'general' ? exportFullLedgerExcel(allLedgers, filters.startDate) : exportLedgerExcel(accountInfo, movements)}
+                onClick={() => viewMode === 'general' ? exportFullLedgerExcel(allLedgers.filter(l => showEmptyAccounts || l.movements.length > 0), filters.startDate) : exportLedgerExcel(accountInfo, movements)}
                 title="Exportar Excel"
               >
                 <Download size={20} />
@@ -146,7 +147,7 @@ const Ledger = () => {
               </button>
               <button
                 className="btn-primary"
-                onClick={() => viewMode === 'general' ? exportFullLedgerPDF(allLedgers, filters.startDate) : exportLedgerPDF(accountInfo, movements)}
+                onClick={() => viewMode === 'general' ? exportFullLedgerPDF(allLedgers.filter(l => showEmptyAccounts || l.movements.length > 0), filters.startDate) : exportLedgerPDF(accountInfo, movements)}
                 title="Exportar PDF"
               >
                 <Download size={20} />
@@ -210,6 +211,20 @@ const Ledger = () => {
               </button>
             </div>
           </div>
+          {viewMode === 'general' && (
+            <div className="ledger-options" style={{ marginTop: '1rem', paddingTop: '1rem', borderTop: '1px solid var(--border)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <input 
+                type="checkbox" 
+                id="showEmptyAccounts" 
+                checked={showEmptyAccounts} 
+                onChange={(e) => setShowEmptyAccounts(e.target.checked)} 
+                style={{ width: '16px', height: '16px', cursor: 'pointer' }}
+              />
+              <label htmlFor="showEmptyAccounts" style={{ cursor: 'pointer', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>
+                Mostrar cuentas sin movimientos
+              </label>
+            </div>
+          )}
         </section>
 
         {/* General View */}
@@ -233,7 +248,7 @@ const Ledger = () => {
                 <p>No se encontraron cuentas con la configuración actual.</p>
               </div>
             ) : (
-              allLedgers.map((ledger, idx) => (
+              allLedgers.filter(ledger => showEmptyAccounts || ledger.movements.length > 0).map((ledger, idx) => (
                 <div key={ledger.accountInfo.id} className="general-ledger-block" style={{ marginBottom: '3rem' }}>
                   <motion.div
                     initial={{ opacity: 0, y: 10 }}

@@ -13,6 +13,91 @@ import {
 } from 'lucide-react';
 import './NewEntry.css';
 
+const SearchableSelect = ({ value, onChange, options, placeholder, required }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [search, setSearch] = useState('');
+  const wrapperRef = React.useRef(null);
+
+  useEffect(() => {
+    const selected = options.find(o => o.id === value);
+    if (selected) {
+      setSearch(`[${selected.code}] ${selected.name}`);
+    } else {
+      setSearch('');
+    }
+  }, [value, options]);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (wrapperRef.current && !wrapperRef.current.contains(event.target)) {
+        setIsOpen(false);
+        const selected = options.find(o => o.id === value);
+        setSearch(selected ? `[${selected.code}] ${selected.name}` : '');
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [value, options]);
+
+  const filteredOptions = options.filter(o => 
+    o.name.toLowerCase().includes(search.toLowerCase()) || 
+    o.code.includes(search)
+  );
+
+  return (
+    <div className="searchable-select" ref={wrapperRef} style={{ position: 'relative' }}>
+      <input
+        type="text"
+        className="account-select"
+        value={search}
+        onChange={(e) => {
+          setSearch(e.target.value);
+          setIsOpen(true);
+          onChange('');
+        }}
+        onFocus={() => setIsOpen(true)}
+        placeholder={placeholder}
+        required={required && !value}
+        style={{ width: '100%', boxSizing: 'border-box' }}
+      />
+      {isOpen && (
+        <div className="searchable-dropdown" style={{
+          position: 'absolute',
+          top: '100%',
+          left: 0,
+          right: 0,
+          maxHeight: '200px',
+          overflowY: 'auto',
+          backgroundColor: 'var(--bg-card, white)',
+          border: '1px solid var(--border, #e5e7eb)',
+          borderRadius: '6px',
+          zIndex: 50,
+          boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
+        }}>
+          {filteredOptions.length > 0 ? filteredOptions.map(opt => (
+            <div 
+              key={opt.id}
+              style={{ padding: '8px 12px', cursor: 'pointer', borderBottom: '1px solid var(--border, #f3f4f6)', color: 'var(--text-primary, #374151)', fontSize: '0.9rem' }}
+              onMouseDown={() => {
+                onChange(opt.id);
+                setSearch(`[${opt.code}] ${opt.name}`);
+                setIsOpen(false);
+              }}
+              onMouseEnter={(e) => e.target.style.backgroundColor = 'var(--bg-hover, #f3f4f6)'}
+              onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
+            >
+              <span style={{ fontWeight: 600, marginRight: '8px', color: 'var(--primary)' }}>[{opt.code}]</span>
+              {opt.name}
+            </div>
+          )) : (
+            <div style={{ padding: '8px 12px', color: '#9ca3af', fontSize: '0.9rem' }}>No se encontraron cuentas</div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+};
+
 const NewEntry = () => {
   const [accounts, setAccounts] = useState([]);
   const [loading, setLoading]   = useState(false);
@@ -66,6 +151,11 @@ const NewEntry = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const hasEmptyAccounts = formData.details.some(d => !d.accountId);
+    if (hasEmptyAccounts) {
+      setError('Por favor, selecciona una cuenta válida en todas las líneas de la partida.');
+      return;
+    }
     if (!isSquared) {
       setError('La partida no está cuadrada (Debe != Haber)');
       return;
@@ -179,19 +269,13 @@ const NewEntry = () => {
                   {formData.details.map((detail, index) => (
                     <tr key={index}>
                       <td>
-                        <select 
-                          className="account-select"
+                        <SearchableSelect
                           value={detail.accountId}
-                          onChange={e => handleDetailChange(index, 'accountId', e.target.value)}
-                          required
-                        >
-                          <option value="">Seleccionar cuenta...</option>
-                          {accounts.map(acc => (
-                            <option key={acc.id} value={acc.id}>
-                              [{acc.code}] {acc.name}
-                            </option>
-                          ))}
-                        </select>
+                          onChange={val => handleDetailChange(index, 'accountId', val)}
+                          options={accounts}
+                          placeholder="Buscar cuenta por nombre o código..."
+                          required={true}
+                        />
                       </td>
                       <td>
                         <input 
