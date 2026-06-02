@@ -21,6 +21,8 @@ const Ledger = () => {
   const [selectedAccountId, setSelectedAccountId] = useState('');
   const [movements, setMovements] = useState([]);
   const [accountInfo, setAccountInfo] = useState(null);
+  const [allLedgers, setAllLedgers] = useState([]);
+  const [viewMode, setViewMode] = useState('general');
   const [loading, setLoading] = useState(false);
   const [loadingAccounts, setLoadingAccounts] = useState(true);
   const [error, setError] = useState(null);
@@ -34,15 +36,60 @@ const Ledger = () => {
     const fetchAccounts = async () => {
       try {
         const res = await api.get('/accounts');
-        setAccounts(res.data || []);
+        const accountsData = res.data || [];
+        setAccounts(accountsData);
+        fetchAllLedgers(accountsData, filters.startDate, filters.endDate);
       } catch (err) {
         console.error('Error fetching accounts:', err);
-      } finally {
         setLoadingAccounts(false);
       }
     };
     fetchAccounts();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const fetchAllLedgers = async (accountsList, start, end) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const promises = accountsList.map(acc =>
+        api.get(`/entries/ledger?accountId=${acc.id}&startDate=${start}&endDate=${end}`)
+          .then(res => res.data)
+          .catch(err => null)
+      );
+      const results = await Promise.all(promises);
+      const validLedgers = results.filter(r => r && r.account).map(r => {
+        const tDebit = (r.movements || []).reduce((s, m) => s + (m.debit || 0), 0);
+        const tCredit = (r.movements || []).reduce((s, m) => s + (m.credit || 0), 0);
+        const fBalance = r.movements && r.movements.length > 0 ? r.movements[r.movements.length - 1].balance : 0;
+        return {
+          accountInfo: r.account,
+          movements: r.movements || [],
+          totalDebit: tDebit,
+          totalCredit: tCredit,
+          finalBalance: fBalance
+        };
+      });
+      setAllLedgers(validLedgers);
+      setViewMode('general');
+    } catch (err) {
+      console.error(err);
+      setError('Error al obtener los libros mayores.');
+    } finally {
+      setLoading(false);
+      setLoadingAccounts(false);
+    }
+  };
+
+  const handleCardClick = (accountId) => {
+    setSelectedAccountId(accountId);
+    const ledger = allLedgers.find(l => l.accountInfo.id === accountId);
+    if (ledger) {
+      setAccountInfo(ledger.accountInfo);
+      setMovements(ledger.movements);
+      setViewMode('individual');
+    }
+  };
 
   const fetchLedger = async () => {
     if (!selectedAccountId) return;
@@ -52,12 +99,21 @@ const Ledger = () => {
       const res = await api.get(`/entries/ledger?accountId=${selectedAccountId}&startDate=${filters.startDate}&endDate=${filters.endDate}`);
       setAccountInfo(res.data.account);
       setMovements(res.data.movements || []);
+      setViewMode('individual');
     } catch (err) {
       console.error('Error fetching ledger:', err);
       setError(err.response?.data?.message || 'Error al obtener el libro mayor.');
       setMovements([]);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleConsultar = () => {
+    if (!selectedAccountId) {
+      fetchAllLedgers(accounts, filters.startDate, filters.endDate);
+    } else {
+      fetchLedger();
     }
   };
 
@@ -110,7 +166,7 @@ const Ledger = () => {
                 onChange={e => setSelectedAccountId(e.target.value)}
                 disabled={loadingAccounts}
               >
-                <option value="">— Seleccionar cuenta —</option>
+                <option value="">— Todas las cuentas (Vista General) —</option>
                 {accounts.map(acc => (
                   <option key={acc.id} value={acc.id}>
                     {acc.code} — {acc.name}
@@ -146,8 +202,8 @@ const Ledger = () => {
             <div className="filter-actions">
               <button
                 className="btn-primary btn-search"
-                onClick={fetchLedger}
-                disabled={loading || !selectedAccountId}
+                onClick={handleConsultar}
+                disabled={loading}
               >
                 {loading ? <div className="spinner-small"></div> : <Search size={20} />}
                 <span>Consultar</span>
@@ -156,6 +212,139 @@ const Ledger = () => {
           </div>
         </section>
 
+        {/* General View */}
+        {viewMode === 'general' && (
+          <div className="ledger-general-view">
+            {loading ? (
+              <div className="loading-state-premium">
+                <div className="loader-ring"></div>
+                <p>Consultando libros mayores...</p>
+              </div>
+            ) : error ? (
+              <div className="empty-state-premium card">
+                <AlertCircle size={40} strokeWidth={1.5} />
+                <h3>Error</h3>
+                <p>{error}</p>
+              </div>
+            ) : allLedgers.length === 0 ? (
+              <div className="empty-state-premium card">
+                <BookOpen size={48} strokeWidth={1.2} />
+                <h3>Sin cuentas</h3>
+                <p>No se encontraron cuentas con la configuración actual.</p>
+              </div>
+            ) : (
+              allLedgers.map((ledger, idx) => (
+                <div key={ledger.accountInfo.id} className="general-ledger-block" style={{ marginBottom: '3rem' }}>
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: idx * 0.05 }}
+                    className="ledger-account-info card hover-effect"
+                    onClick={() => handleCardClick(ledger.accountInfo.id)}
+                    style={{ cursor: 'pointer', border: '1px solid transparent', transition: 'border-color 0.2s' }}
+                    onMouseEnter={(e) => e.currentTarget.style.borderColor = 'var(--primary)'}
+                    onMouseLeave={(e) => e.currentTarget.style.borderColor = 'transparent'}
+                    title="Clic para ver detalle de esta cuenta"
+                  >
+                    <div className="account-info-grid">
+                      <div className="info-item">
+                        <span className="info-label">Código</span>
+                        <span className="info-value code">{ledger.accountInfo.code}</span>
+                      </div>
+                      <div className="info-item">
+                        <span className="info-label">Cuenta</span>
+                        <span className="info-value">{ledger.accountInfo.name}</span>
+                      </div>
+                      <div className="info-item">
+                        <span className="info-label">Naturaleza</span>
+                        <span className={`info-value nature-badge ${ledger.accountInfo.nature === 'DEUDORA' ? 'deudora' : 'acreedora'}`}>
+                          {ledger.accountInfo.nature}
+                        </span>
+                      </div>
+                      <div className="info-item">
+                        <span className="info-label">Total Debe</span>
+                        <span className="info-value">{formatQ(ledger.totalDebit)}</span>
+                      </div>
+                      <div className="info-item">
+                        <span className="info-label">Total Haber</span>
+                        <span className="info-value">{formatQ(ledger.totalCredit)}</span>
+                      </div>
+                      <div className="info-item">
+                        <span className="info-label">Saldo Final</span>
+                        <span className={`info-value ${ledger.finalBalance >= 0 ? 'positive' : 'negative'}`}>
+                          {formatQ(ledger.finalBalance)}
+                        </span>
+                      </div>
+                    </div>
+                  </motion.div>
+
+                  {ledger.movements.length === 0 ? (
+                    <div className="empty-state-premium card" style={{ marginTop: '1rem', padding: '1.5rem', minHeight: 'auto' }}>
+                      <FileText size={24} strokeWidth={1.5} />
+                      <p style={{ margin: 0, fontSize: '0.9rem' }}>Sin movimientos</p>
+                    </div>
+                  ) : (
+                    <motion.div
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="ledger-table-card card"
+                      style={{ marginTop: '1rem' }}
+                    >
+                      <div className="ledger-table-scroll">
+                        <table className="modern-table ledger-table">
+                          <thead>
+                            <tr>
+                              <th>Fecha</th>
+                              <th>#</th>
+                              <th>Descripción</th>
+                              <th>Tipo</th>
+                              <th className="text-right">Debe</th>
+                              <th className="text-right">Haber</th>
+                              <th className="text-right">Saldo</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {ledger.movements.map((m, mIdx) => (
+                              <tr key={mIdx}>
+                                <td className="date-cell">{m.date}</td>
+                                <td className="partida-cell">{mIdx + 1}</td>
+                                <td className="desc-cell">{m.description || '—'}</td>
+                                <td>
+                                  <span className="type-badge">{m.type || '—'}</span>
+                                </td>
+                                <td className="text-right amount-cell debe">
+                                  {m.debit ? formatQ(m.debit) : '-'}
+                                </td>
+                                <td className="text-right amount-cell haber">
+                                  {m.credit ? formatQ(m.credit) : '-'}
+                                </td>
+                                <td className={`text-right amount-cell ${m.balance >= 0 ? 'positive' : 'negative'}`}>
+                                  {formatQ(m.balance)}
+                                </td>
+                              </tr>
+                            ))}
+                          </tbody>
+                          <tfoot>
+                            <tr className="total-row">
+                              <td colSpan="4">TOTALES</td>
+                              <td className="text-right">{formatQ(ledger.totalDebit)}</td>
+                              <td className="text-right">{formatQ(ledger.totalCredit)}</td>
+                              <td className="text-right">{formatQ(ledger.finalBalance)}</td>
+                            </tr>
+                          </tfoot>
+                        </table>
+                      </div>
+                    </motion.div>
+                  )}
+                </div>
+              ))
+            )}
+          </div>
+        )}
+
+        {/* Individual View */}
+        {viewMode === 'individual' && (
+          <>
         {/* Account Info Header */}
         {accountInfo && (
           <motion.div
@@ -276,6 +465,8 @@ const Ledger = () => {
               </table>
             </div>
           </motion.div>
+        )}
+          </>
         )}
       </div>
     </Layout>
