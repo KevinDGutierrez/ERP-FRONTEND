@@ -407,7 +407,7 @@ const AccountCatalog = () => {
                   {selectedAccount && (
                     <p className="ledger-account-info">
                       <span className="ledger-code">{selectedAccount.code}</span>
-                      <span className="ledger-sep">â€”</span>
+                      <span className="ledger-sep">—</span>
                       {selectedAccount.name}
                     </p>
                   )}

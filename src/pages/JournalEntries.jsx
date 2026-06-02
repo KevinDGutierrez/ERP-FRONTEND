@@ -193,7 +193,7 @@ const JournalEntries = () => {
                           <tr key={dIdx} className={detail.credit > 0 ? 'row-credit' : ''}>
                             <td className="code-font">{detail.accountCode}</td>
                             <td className="name-cell">
-                              {detail.credit > 0 && <span className="indent-arrow">â†³</span>}
+                              {detail.credit > 0 && <span className="indent-arrow">↳</span>}
                               {detail.accountName}
                             </td>
                             <td className="text-right amount-cell debe">

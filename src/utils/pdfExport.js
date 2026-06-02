@@ -17,7 +17,7 @@ const addHeader = (doc, title) => {
   doc.setFontSize(9);
   doc.setFont('helvetica', 'normal');
   doc.setTextColor(100);
-  doc.text(`Generado el ${dateStr()} â€” Street Ledger ERP`, doc.internal.pageSize.getWidth() / 2, 30, { align: 'center' });
+  doc.text(`Generado el ${dateStr()} — Street Ledger ERP`, doc.internal.pageSize.getWidth() / 2, 30, { align: 'center' });
   doc.setTextColor(0);
   doc.setDrawColor(30);
   doc.setLineWidth(0.5);
@@ -215,7 +215,7 @@ export const exportLedgerPDF = (account, movements) => {
 
   let y = 40;
   doc.setFontSize(11); doc.setFont('helvetica', 'bold');
-  doc.text(`Cuenta: ${account.code} â€” ${account.name}`, 25, y);
+  doc.text(`Cuenta: ${account.code} — ${account.name}`, 25, y);
   y += 6;
   doc.setFontSize(9); doc.setFont('helvetica', 'normal'); doc.setTextColor(100);
   doc.text(`Naturaleza: ${account.nature}`, 25, y);
@@ -269,7 +269,7 @@ export const exportFullLedgerPDF = (allLedgers, dateStrSuffix) => {
     }
     
     doc.setFontSize(11); doc.setFont('helvetica', 'bold');
-    doc.text(`Cuenta: ${account.code} â€” ${account.name}`, 25, y);
+    doc.text(`Cuenta: ${account.code} — ${account.name}`, 25, y);
     y += 6;
     doc.setFontSize(9); doc.setFont('helvetica', 'normal'); doc.setTextColor(100);
     doc.text(`Naturaleza: ${account.nature}`, 25, y);

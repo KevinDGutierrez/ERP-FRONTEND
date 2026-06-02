@@ -167,10 +167,10 @@ const Ledger = () => {
                 onChange={e => setSelectedAccountId(e.target.value)}
                 disabled={loadingAccounts}
               >
-                <option value="">â€” Todas las cuentas (Vista General) â€”</option>
+                <option value="">— Todas las cuentas (Vista General) —</option>
                 {accounts.map(acc => (
                   <option key={acc.id} value={acc.id}>
-                    {acc.code} â€” {acc.name}
+                    {acc.code} — {acc.name}
                   </option>
                 ))}
               </select>
@@ -323,9 +323,9 @@ const Ledger = () => {
                               <tr key={mIdx}>
                                 <td className="date-cell">{m.date}</td>
                                 <td className="partida-cell">{mIdx + 1}</td>
-                                <td className="desc-cell">{m.description || 'â€”'}</td>
+                                <td className="desc-cell">{m.description || '—'}</td>
                                 <td>
-                                  <span className="type-badge">{m.type || 'â€”'}</span>
+                                  <span className="type-badge">{m.type || '—'}</span>
                                 </td>
                                 <td className="text-right amount-cell debe">
                                   {m.debit ? formatQ(m.debit) : '-'}
@@ -453,9 +453,9 @@ const Ledger = () => {
                     >
                       <td className="date-cell">{m.date}</td>
                       <td className="partida-cell">{idx + 1}</td>
-                      <td className="desc-cell">{m.description || 'â€”'}</td>
+                      <td className="desc-cell">{m.description || '—'}</td>
                       <td>
-                        <span className="type-badge">{m.type || 'â€”'}</span>
+                        <span className="type-badge">{m.type || '—'}</span>
                       </td>
                       <td className="text-right amount-cell debe">
                         {m.debit ? formatQ(m.debit) : '-'}

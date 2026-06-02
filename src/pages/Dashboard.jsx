@@ -175,7 +175,7 @@ const Dashboard = () => {
                     <span className="amount">{formatQ(data.totalEquity)}</span>
                   </div>
                   <div className="summary-line highlight">
-                    <span>Utilidad / PÃ©rdida Neta</span>
+                    <span>Utilidad / Pérdida Neta</span>
                     <span className={`amount ${data.netIncome >= 0 ? 'positive' : 'negative'}`}>
                       {formatQ(data.netIncome)}
                     </span>
@@ -183,7 +183,7 @@ const Dashboard = () => {
                 </div>
               </div>
 
-              {/* Chart Area â€” Recharts */}
+              {/* Chart Area — Recharts */}
               <div className="chart-card card">
                 <div className="summary-header">
                   <h4>Ingresos vs Gastos del Mes</h4>

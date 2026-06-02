@@ -92,12 +92,12 @@ const Settings = () => {
   }, [brand]);
 
   useEffect(() => {
-    if (isCompanyAdmin && user?.companyId) {
-      api.get(`/companies/${user.companyId}/reset-status`)
+    if (isCompanyAdmin && profile?.companyId) {
+      api.get(`/companies/${profile.companyId}/reset-status`)
         .then(res => setResetStatus(res.data.status))
         .catch(err => setResetStatus('error'));
     }
-  }, [isCompanyAdmin, user]);
+  }, [isCompanyAdmin, profile]);
 
   const handleBrandChange = (e) => {
     const { name, value } = e.target;
@@ -172,7 +172,7 @@ const Settings = () => {
     setSaving(true);
     setError(null);
     try {
-      await api.post(`/companies/${user.companyId}/request-reset`, { reason: resetReason });
+      await api.post(`/companies/${profile.companyId}/request-reset`, { reason: resetReason });
       setResetStatus('PENDING');
       setSaveSuccess(true);
       setTimeout(() => setSaveSuccess(false), 3000);
