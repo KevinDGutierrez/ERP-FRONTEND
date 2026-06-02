@@ -9,6 +9,7 @@ import {
   User, Camera, Check, ChevronRight
 } from 'lucide-react';
 import api from '../api/client';
+import Modal from '../components/common/Modal';
 import './Settings.css';
 
 /* ── Helper: compress any image to base64 ── */
@@ -75,6 +76,7 @@ const Settings = () => {
   /* Reset request state */
   const [resetStatus, setResetStatus] = useState('loading');
   const [resetReason, setResetReason] = useState('');
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
 
   const profilePhotoRef = useRef(null);
   const logoRef = useRef(null);
@@ -168,8 +170,12 @@ const Settings = () => {
     }
   };
 
-  const handleRequestReset = async () => {
-    if (!window.confirm('¿Estás seguro que deseas solicitar el reinicio de los datos contables? Esta acción eliminará todas las partidas.')) return;
+  const handleRequestReset = () => {
+    setShowConfirmModal(true);
+  };
+
+  const executeRequestReset = async () => {
+    setShowConfirmModal(false);
     setSaving(true);
     setError(null);
     try {
@@ -536,6 +542,41 @@ const Settings = () => {
           </button>
         </form>
       </div>
+
+      <Modal 
+        isOpen={showConfirmModal} 
+        onClose={() => setShowConfirmModal(false)}
+        title="Confirmar Reinicio de ERP"
+      >
+        <div style={{ padding: '1rem 0' }}>
+          <div style={{ display: 'flex', alignItems: 'flex-start', gap: '1rem', marginBottom: '1.5rem', padding: '1rem', backgroundColor: 'rgba(239, 68, 68, 0.1)', borderRadius: '8px', border: '1px solid rgba(239, 68, 68, 0.2)' }}>
+            <AlertTriangle size={24} style={{ color: 'var(--danger)', flexShrink: 0 }} />
+            <div>
+              <h4 style={{ margin: '0 0 0.5rem 0', color: 'var(--danger)' }}>Acción Destructiva</h4>
+              <p style={{ margin: 0, fontSize: '0.9rem', color: 'var(--text-secondary)' }}>
+                ¿Estás seguro que deseas solicitar el reinicio de los datos contables? Esta acción eliminará todas las partidas y dejará los saldos en cero.
+              </p>
+            </div>
+          </div>
+          <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '1rem' }}>
+            <button 
+              className="btn-secondary" 
+              onClick={() => setShowConfirmModal(false)}
+              disabled={saving}
+            >
+              Cancelar
+            </button>
+            <button 
+              className="btn-danger" 
+              onClick={executeRequestReset}
+              disabled={saving}
+              style={{ background: 'var(--danger)', color: 'white', border: 'none', padding: '0.5rem 1rem', borderRadius: '4px', cursor: 'pointer' }}
+            >
+              {saving ? 'Procesando...' : 'Sí, Solicitar Reinicio'}
+            </button>
+          </div>
+        </div>
+      </Modal>
     </Layout>
   );
 };

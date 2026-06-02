@@ -3,6 +3,7 @@ import Layout from '../components/layout/Layout';
 import api from '../api/client';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Users, CheckCircle, XCircle, Clock, RefreshCw, Shield, ChevronDown, Building2, AlertTriangle } from 'lucide-react';
+import Modal from '../components/common/Modal';
 import './AdminApprovals.css';
 
 const ROLES = [
@@ -20,6 +21,7 @@ const AdminApprovals = () => {
   const [selectedCompany, setSelectedCompany] = useState({});
   const [selectedRole, setSelectedRole] = useState({});
   const [expandedUid, setExpandedUid] = useState(null);
+  const [confirmResetId, setConfirmResetId] = useState(null);
 
   const fetchUsers = async () => {
     setLoading(true);
@@ -95,8 +97,14 @@ const AdminApprovals = () => {
     }
   };
 
-  const handleApproveReset = async (id) => {
-    if(!window.confirm('ALERTA DE DESTRUCCIÓN DE DATOS: ¿Estás 100% seguro de vaciar el ERP de esta empresa? Las partidas serán eliminadas y los saldos se pondrán a cero. Esta acción no se puede deshacer.')) return;
+  const handleApproveReset = (id) => {
+    setConfirmResetId(id);
+  };
+
+  const executeApproveReset = async () => {
+    if (!confirmResetId) return;
+    const id = confirmResetId;
+    setConfirmResetId(null);
     try {
       await api.post(`/admin/reset-requests/${id}/approve`);
       setResetRequests(prev => prev.map(r => r.id === id ? { ...r, status: 'APPROVED' } : r));
@@ -376,6 +384,39 @@ const AdminApprovals = () => {
           </div>
         )}
       </div>
+
+      <Modal 
+        isOpen={!!confirmResetId} 
+        onClose={() => setConfirmResetId(null)}
+        title="Alerta de Destrucción de Datos"
+      >
+        <div style={{ padding: '1rem 0' }}>
+          <div style={{ display: 'flex', alignItems: 'flex-start', gap: '1rem', marginBottom: '1.5rem', padding: '1rem', backgroundColor: 'rgba(239, 68, 68, 0.1)', borderRadius: '8px', border: '1px solid rgba(239, 68, 68, 0.2)' }}>
+            <AlertTriangle size={24} style={{ color: 'var(--danger)', flexShrink: 0 }} />
+            <div>
+              <h4 style={{ margin: '0 0 0.5rem 0', color: 'var(--danger)' }}>Confirmación Crítica</h4>
+              <p style={{ margin: 0, fontSize: '0.9rem', color: 'var(--text-secondary)' }}>
+                ¿Estás 100% seguro de vaciar el ERP de esta empresa? Las partidas serán eliminadas y los saldos se pondrán a cero. <strong>Esta acción no se puede deshacer.</strong>
+              </p>
+            </div>
+          </div>
+          <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '1rem' }}>
+            <button 
+              className="btn-secondary" 
+              onClick={() => setConfirmResetId(null)}
+            >
+              Cancelar
+            </button>
+            <button 
+              className="btn-danger" 
+              onClick={executeApproveReset}
+              style={{ background: 'var(--danger)', color: 'white', border: 'none', padding: '0.5rem 1rem', borderRadius: '4px', cursor: 'pointer' }}
+            >
+              Sí, Vaciar ERP
+            </button>
+          </div>
+        </div>
+      </Modal>
     </Layout>
   );
 };
