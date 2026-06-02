@@ -6,7 +6,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import {
   Save, Palette, Building2, Globe, Phone, Mail,
   Image as ImageIcon, Upload, Loader2, AlertTriangle,
-  User, Camera, Check, ChevronRight
+  User, Camera, Check, ChevronRight, Clock
 } from 'lucide-react';
 import api from '../api/client';
 import Modal from '../components/common/Modal';
