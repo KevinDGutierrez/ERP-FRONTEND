@@ -248,3 +248,69 @@ export const exportLedgerPDF = (account, movements) => {
   const safeName = (account.name || 'cuenta').toLowerCase().replace(/\s+/g, '_').replace(/[^a-z0-9_]/g, '');
   doc.save(`libro_mayor_${safeName}_${fileDate()}.pdf`);
 };
+
+/* ────────────────────────────────────────────────── */
+/* LIBRO MAYOR COMPLETO                              */
+/* ────────────────────────────────────────────────── */
+export const exportFullLedgerPDF = (allLedgers, dateStrSuffix) => {
+  if (!allLedgers || allLedgers.length === 0) return;
+  const doc = new jsPDF();
+  addHeader(doc, 'Libro Mayor Completo');
+
+  let y = 40;
+  
+  allLedgers.forEach((ledger, idx) => {
+    const account = ledger.accountInfo;
+    const movements = ledger.movements || [];
+    
+    if (y > 250) { 
+      doc.addPage(); 
+      y = 20; 
+    }
+    
+    doc.setFontSize(11); doc.setFont('helvetica', 'bold');
+    doc.text(`Cuenta: ${account.code} — ${account.name}`, 25, y);
+    y += 6;
+    doc.setFontSize(9); doc.setFont('helvetica', 'normal'); doc.setTextColor(100);
+    doc.text(`Naturaleza: ${account.nature}`, 25, y);
+    doc.setTextColor(0);
+
+    if (movements.length === 0) {
+      y += 8;
+      doc.setFontSize(9); doc.setFont('helvetica', 'italic'); doc.setTextColor(150);
+      doc.text('Sin movimientos', 25, y);
+      y += 15;
+      doc.setTextColor(0);
+      return;
+    }
+
+    const rows = movements.map((m, i) => [
+      m.date, i + 1, m.description || '', m.type || '',
+      m.debit ? formatQ(m.debit) : '-',
+      m.credit ? formatQ(m.credit) : '-',
+      formatQ(m.balance)
+    ]);
+
+    const totalDebit = ledger.totalDebit !== undefined ? ledger.totalDebit : movements.reduce((s, m) => s + (m.debit || 0), 0);
+    const totalCredit = ledger.totalCredit !== undefined ? ledger.totalCredit : movements.reduce((s, m) => s + (m.credit || 0), 0);
+    const finalBalance = ledger.finalBalance !== undefined ? ledger.finalBalance : movements[movements.length - 1].balance;
+
+    autoTable(doc, {
+      startY: y + 6,
+      head: [['Fecha', '#', 'Descripción', 'Tipo', 'Debe', 'Haber', 'Saldo']],
+      body: rows,
+      foot: [['', '', '', 'TOTALES', formatQ(totalDebit), formatQ(totalCredit), formatQ(finalBalance)]],
+      styles: { fontSize: 9, cellPadding: 4 },
+      headStyles: { fillColor: [30, 30, 30], textColor: 255, fontStyle: 'bold', fontSize: 8 },
+      footStyles: { fillColor: [240, 240, 240], textColor: [30, 30, 30], fontStyle: 'bold', fontSize: 10 },
+      columnStyles: { 4: { halign: 'right' }, 5: { halign: 'right' }, 6: { halign: 'right' } },
+      alternateRowStyles: { fillColor: [248, 248, 248] },
+      margin: { left: 20, right: 20 }
+    });
+    
+    y = doc.lastAutoTable.finalY + 15;
+  });
+
+  const suffix = dateStrSuffix || fileDate();
+  doc.save(`libro_mayor_completo_${suffix}.pdf`);
+};

@@ -6,8 +6,8 @@ import {
   AlertCircle, FileText
 } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { exportLedgerPDF } from '../utils/pdfExport';
-import { exportLedgerExcel } from '../utils/excelExport';
+import { exportLedgerPDF, exportFullLedgerPDF } from '../utils/pdfExport';
+import { exportLedgerExcel, exportFullLedgerExcel } from '../utils/excelExport';
 import './Ledger.css';
 
 const formatQ = (val) => {
@@ -134,11 +134,11 @@ const Ledger = () => {
               <p>Movimientos detallados por cuenta contable.</p>
             </div>
           </div>
-          {accountInfo && movements.length > 0 && (
+          {((viewMode === 'individual' && accountInfo && movements.length > 0) || (viewMode === 'general' && allLedgers.length > 0)) && (
             <div className="header-actions">
               <button
                 className="btn-primary"
-                onClick={() => exportLedgerExcel(accountInfo, movements)}
+                onClick={() => viewMode === 'general' ? exportFullLedgerExcel(allLedgers, filters.startDate) : exportLedgerExcel(accountInfo, movements)}
                 title="Exportar Excel"
               >
                 <Download size={20} />
@@ -146,7 +146,7 @@ const Ledger = () => {
               </button>
               <button
                 className="btn-primary"
-                onClick={() => exportLedgerPDF(accountInfo, movements)}
+                onClick={() => viewMode === 'general' ? exportFullLedgerPDF(allLedgers, filters.startDate) : exportLedgerPDF(accountInfo, movements)}
                 title="Exportar PDF"
               >
                 <Download size={20} />

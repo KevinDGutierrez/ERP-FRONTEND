@@ -177,6 +177,92 @@ export const exportLedgerExcel = (account, movements) => {
 };
 
 /* ────────────────────────────────────────────────── */
+/* LIBRO MAYOR COMPLETO                              */
+/* ────────────────────────────────────────────────── */
+export const exportFullLedgerExcel = (allLedgers, dateStrSuffix) => {
+  if (!allLedgers || allLedgers.length === 0) return;
+
+  const rows = [];
+  rows.push(['LIBRO MAYOR COMPLETO']);
+  rows.push(['Generado el:', new Date().toLocaleDateString('es-GT')]);
+  rows.push([]);
+
+  allLedgers.forEach((ledger) => {
+    const account = ledger.accountInfo;
+    const movements = ledger.movements || [];
+
+    rows.push(['Cuenta:', `${account.code} - ${account.name}`]);
+    rows.push(['Naturaleza:', account.nature]);
+    
+    if (movements.length === 0) {
+       rows.push(['Sin movimientos']);
+       rows.push([]);
+       rows.push([]);
+       return;
+    }
+
+    rows.push(['Fecha', 'Partida', 'Descripción', 'Tipo', 'Debe', 'Haber', 'Saldo']);
+
+    let totalDebit = 0;
+    let totalCredit = 0;
+    let finalBalance = 0;
+
+    movements.forEach((m, i) => {
+      totalDebit += (m.debit || 0);
+      totalCredit += (m.credit || 0);
+      finalBalance = m.balance;
+      
+      rows.push([m.date, i + 1, m.description || '', m.type || '', m.debit || 0, m.credit || 0, m.balance || 0]);
+    });
+
+    const td = ledger.totalDebit !== undefined ? ledger.totalDebit : totalDebit;
+    const tc = ledger.totalCredit !== undefined ? ledger.totalCredit : totalCredit;
+    const fb = ledger.finalBalance !== undefined ? ledger.finalBalance : finalBalance;
+
+    rows.push(['', '', 'TOTALES', '', td, tc, fb]);
+    rows.push([]);
+    rows.push([]);
+  });
+
+  const worksheet = XLSX.utils.aoa_to_sheet(rows);
+  const range = XLSX.utils.decode_range(worksheet['!ref']);
+
+  applyRowStyle(worksheet, 0, 7, STYLES.title);
+  applyRowStyle(worksheet, 1, 7, STYLES.subtitle);
+
+  for (let R = 0; R <= range.e.r; ++R) {
+    const cell0 = worksheet[XLSX.utils.encode_cell({c: 0, r: R})];
+    const cell1 = worksheet[XLSX.utils.encode_cell({c: 1, r: R})];
+    const cell2 = worksheet[XLSX.utils.encode_cell({c: 2, r: R})];
+
+    if (cell0 && cell0.v === 'Cuenta:') {
+       applyRowStyle(worksheet, R, 7, STYLES.sectionTitle);
+    } else if (cell0 && cell0.v === 'Naturaleza:') {
+       applyRowStyle(worksheet, R, 7, STYLES.subtitle);
+    } else if (cell0 && cell0.v === 'Fecha' && cell1 && cell1.v === 'Partida') {
+       applyRowStyle(worksheet, R, 7, STYLES.tableHeadDark);
+    } else if (cell2 && cell2.v === 'TOTALES') {
+       applyRowStyle(worksheet, R, 7, STYLES.totalRow);
+       applyCellStyle(worksheet, R, 2, STYLES.totalRowLabel);
+    }
+
+    for (let C = 4; C <= 6; ++C) {
+      const cell = worksheet[XLSX.utils.encode_cell({c: C, r: R})];
+      if (cell && typeof cell.v === 'number') cell.z = '"Q"#,##0.00;-"Q"#,##0.00';
+    }
+  }
+
+  worksheet['!cols'] = [
+    { wch: 14 }, { wch: 10 }, { wch: 45 }, { wch: 14 },
+    { wch: 18 }, { wch: 18 }, { wch: 18 }
+  ];
+
+  const suffix = dateStrSuffix || fileDate();
+  saveExcel(worksheet, 'Libro Mayor Completo', `libro_mayor_completo_${suffix}`);
+};
+
+
+/* ────────────────────────────────────────────────── */
 /* BALANCE DE COMPROBACIÓN / SALDOS AJUSTADO         */
 /* ────────────────────────────────────────────────── */
 export const exportTrialBalanceExcel = (data, isAdjusted = false) => {
