@@ -8,6 +8,7 @@ import {
   Image as ImageIcon, Upload, Loader2, AlertTriangle,
   User, Camera, Check, ChevronRight
 } from 'lucide-react';
+import api from '../api/client';
 import './Settings.css';
 
 /* ── Helper: compress any image to base64 ── */
