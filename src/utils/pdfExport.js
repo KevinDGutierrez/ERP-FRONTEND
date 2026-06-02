@@ -3,8 +3,8 @@ import autoTable from 'jspdf-autotable';
 
 const formatQ = (val) => {
   const num = Number(val) || 0;
-  if (num < 0) return `-Q${Math.abs(num).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-  return `Q${num.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+  if (num < 0) return `-Q${Math.abs(num).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',')}`;
+  return `Q${num.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',')}`;
 };
 
 const dateStr = () => new Date().toLocaleDateString('es-GT', { day: 'numeric', month: 'long', year: 'numeric' });

@@ -21,9 +21,9 @@ import './Reports.css';
 const formatQ = (val) => {
   const num = Number(val) || 0;
   if (num < 0) {
-    return `-Q${Math.abs(num).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+    return `-Q${Math.abs(num).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',')}`;
   }
-  return `Q${num.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+  return `Q${num.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',')}`;
 };
 
 /* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
@@ -204,10 +204,10 @@ const TrialBalanceView = ({ data }) => (
               <td className="code-font">{acc.code}</td>
               <td className="name-cell">{acc.name}</td>
               <td className="text-right amount-cell debe">
-                {acc.balance > 0 ? `Q${acc.balance.toLocaleString('en-US', {minimumFractionDigits: 2})}` : '-'}
+                {acc.balance > 0 ? `Q${acc.balance.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',')}` : '-'}
               </td>
               <td className="text-right amount-cell haber">
-                {acc.balance < 0 ? `Q${Math.abs(acc.balance).toLocaleString('en-US', {minimumFractionDigits: 2})}` : '-'}
+                {acc.balance < 0 ? `Q${Math.abs(acc.balance).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',')}` : '-'}
               </td>
             </tr>
           ))}
@@ -215,8 +215,8 @@ const TrialBalanceView = ({ data }) => (
         <tfoot>
           <tr className="total-row">
             <td colSpan="2">TOTALES GENERALES</td>
-            <td className="text-right">Q{(data.totals?.debe || 0).toLocaleString('en-US', {minimumFractionDigits: 2})}</td>
-            <td className="text-right">Q{(data.totals?.haber || 0).toLocaleString('en-US', {minimumFractionDigits: 2})}</td>
+            <td className="text-right">Q{(data.totals?.debe || 0).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',')}</td>
+            <td className="text-right">Q{(data.totals?.haber || 0).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',')}</td>
           </tr>
         </tfoot>
       </table>
@@ -249,10 +249,10 @@ const AdjustedTrialBalanceView = ({ data }) => (
               <td className="code-font">{acc.code}</td>
               <td className="name-cell">{acc.name}</td>
               <td className="text-right amount-cell debe">
-                {acc.balance > 0 ? `Q${acc.balance.toLocaleString('en-US', {minimumFractionDigits: 2})}` : '-'}
+                {acc.balance > 0 ? `Q${acc.balance.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',')}` : '-'}
               </td>
               <td className="text-right amount-cell haber">
-                {acc.balance < 0 ? `Q${Math.abs(acc.balance).toLocaleString('en-US', {minimumFractionDigits: 2})}` : '-'}
+                {acc.balance < 0 ? `Q${Math.abs(acc.balance).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',')}` : '-'}
               </td>
             </tr>
           ))}
@@ -260,8 +260,8 @@ const AdjustedTrialBalanceView = ({ data }) => (
         <tfoot>
           <tr className="total-row">
             <td colSpan="2">TOTALES GENERALES</td>
-            <td className="text-right">Q{(data.totals?.debe || 0).toLocaleString('en-US', {minimumFractionDigits: 2})}</td>
-            <td className="text-right">Q{(data.totals?.haber || 0).toLocaleString('en-US', {minimumFractionDigits: 2})}</td>
+            <td className="text-right">Q{(data.totals?.debe || 0).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',')}</td>
+            <td className="text-right">Q{(data.totals?.haber || 0).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',')}</td>
           </tr>
         </tfoot>
       </table>
@@ -274,15 +274,15 @@ const ProfitLossView = ({ data }) => (
     <div className="pnl-summary-grid">
       <div className="pnl-stat-card card">
         <span className="label">Ingresos Totales</span>
-        <span className="value positive">Q{data.resumen?.totalIngresos.toLocaleString('en-US')}</span>
+        <span className="value positive">Q{data.resumen?.totalIngresos.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',')}</span>
       </div>
       <div className="pnl-stat-card card">
         <span className="label">Costos Totales</span>
-        <span className="value negative">Q{data.resumen?.totalCostos.toLocaleString('en-US')}</span>
+        <span className="value negative">Q{data.resumen?.totalCostos.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',')}</span>
       </div>
       <div className="pnl-stat-card card highlight">
         <span className="label">Utilidad Neta</span>
-        <span className="value">Q{data.resumen?.utilidadNeta.toLocaleString('en-US')}</span>
+        <span className="value">Q{data.resumen?.utilidadNeta.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',')}</span>
       </div>
     </div>
 
@@ -292,11 +292,11 @@ const ProfitLossView = ({ data }) => (
           <div className="section-title">INGRESOS DE OPERACIÃ“N</div>
           <div className="pnl-line">
             <span>Ventas y Servicios</span>
-            <span>Q{data.resumen?.totalIngresos.toLocaleString('en-US')}</span>
+            <span>Q{data.resumen?.totalIngresos.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',')}</span>
           </div>
           <div className="pnl-line total">
             <span>TOTAL INGRESOS</span>
-            <span>Q{data.resumen?.totalIngresos.toLocaleString('en-US')}</span>
+            <span>Q{data.resumen?.totalIngresos.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',')}</span>
           </div>
         </div>
 
@@ -304,22 +304,22 @@ const ProfitLossView = ({ data }) => (
           <div className="section-title">COSTOS Y GASTOS</div>
           <div className="pnl-line">
             <span>Costo de Ventas</span>
-            <span className="negative">(Q{data.resumen?.totalCostos.toLocaleString('en-US')})</span>
+            <span className="negative">(Q{data.resumen?.totalCostos.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',')})</span>
           </div>
           <div className="pnl-line subtotal">
             <span>UTILIDAD BRUTA</span>
-            <span>Q{data.resumen?.utilidadBruta.toLocaleString('en-US')}</span>
+            <span>Q{data.resumen?.utilidadBruta.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',')}</span>
           </div>
           <div className="pnl-line">
             <span>Gastos de AdministraciÃ³n</span>
-            <span className="negative">(Q{data.resumen?.totalGastos.toLocaleString('en-US')})</span>
+            <span className="negative">(Q{data.resumen?.totalGastos.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',')})</span>
           </div>
         </div>
 
         <div className="pnl-section final">
           <div className="pnl-line result">
             <span>UTILIDAD NETA DEL EJERCICIO</span>
-            <span className="result-value">Q{data.resumen?.utilidadNeta.toLocaleString('en-US')}</span>
+            <span className="result-value">Q{data.resumen?.utilidadNeta.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',')}</span>
           </div>
         </div>
       </div>

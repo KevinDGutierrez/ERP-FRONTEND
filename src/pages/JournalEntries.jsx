@@ -72,12 +72,12 @@ const JournalEntries = () => {
           <div className="header-stats">
             <div className="stat-item">
               <span className="stat-label">Total Debe</span>
-              <span className="stat-value">Q{totalDebe.toLocaleString('en-US', {minimumFractionDigits: 2})}</span>
+              <span className="stat-value">Q{totalDebe.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',')}</span>
             </div>
             <div className="stat-divider"></div>
             <div className="stat-item">
               <span className="stat-label">Total Haber</span>
-              <span className="stat-value">Q{totalHaber.toLocaleString('en-US', {minimumFractionDigits: 2})}</span>
+              <span className="stat-value">Q{totalHaber.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',')}</span>
             </div>
           </div>
         </header>
@@ -197,10 +197,10 @@ const JournalEntries = () => {
                               {detail.accountName}
                             </td>
                             <td className="text-right amount-cell debe">
-                              {detail.debit > 0 ? `Q${detail.debit.toLocaleString('en-US', {minimumFractionDigits: 2})}` : '-'}
+                              {detail.debit > 0 ? `Q${detail.debit.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',')}` : '-'}
                             </td>
                             <td className="text-right amount-cell haber">
-                              {detail.credit > 0 ? `Q${detail.credit.toLocaleString('en-US', {minimumFractionDigits: 2})}` : '-'}
+                              {detail.credit > 0 ? `Q${detail.credit.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',')}` : '-'}
                             </td>
                           </tr>
                         ))}

@@ -256,7 +256,7 @@ const AccountCatalog = () => {
                           </span>
                         </td>
                         <td>{account.nature}</td>
-                        <td className="amount-cell">Q{(account.balance || 0).toLocaleString('en-US', { minimumFractionDigits: 2 })}</td>
+                        <td className="amount-cell">Q{(account.balance || 0).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',')}</td>
                         <td>
                           <button className="action-link" onClick={() => handleViewLedger(account)}>
                             <BookOpen size={14} style={{ marginRight: 4, verticalAlign: 'middle' }} />
@@ -459,13 +459,13 @@ const AccountCatalog = () => {
                           <td className="ledger-date">{new Date(m.date).toLocaleDateString('es-GT')}</td>
                           <td className="ledger-desc">{m.description}</td>
                           <td className="text-right ledger-amount">
-                            {m.debit > 0 ? `Q${m.debit.toLocaleString('en-US', {minimumFractionDigits: 2})}` : '-'}
+                            {m.debit > 0 ? `Q${m.debit.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',')}` : '-'}
                           </td>
                           <td className="text-right ledger-amount">
-                            {m.credit > 0 ? `Q${m.credit.toLocaleString('en-US', {minimumFractionDigits: 2})}` : '-'}
+                            {m.credit > 0 ? `Q${m.credit.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',')}` : '-'}
                           </td>
                           <td className={`text-right ledger-balance ${m.balance < 0 ? 'negative' : ''}`}>
-                            Q{Math.abs(m.balance).toLocaleString('en-US', {minimumFractionDigits: 2})}
+                            Q{Math.abs(m.balance).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
                           </td>
                         </tr>
                       ))}
@@ -474,13 +474,13 @@ const AccountCatalog = () => {
                       <tr className="ledger-total-row">
                         <td colSpan="2">SALDO FINAL</td>
                         <td className="text-right">
-                          Q{ledgerData.movements.reduce((s, m) => s + (m.debit || 0), 0).toLocaleString('en-US', {minimumFractionDigits: 2})}
+                          Q{ledgerData.movements.reduce((s, m) => s + (m.debit || 0), 0).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
                         </td>
                         <td className="text-right">
-                          Q{ledgerData.movements.reduce((s, m) => s + (m.credit || 0), 0).toLocaleString('en-US', {minimumFractionDigits: 2})}
+                          Q{ledgerData.movements.reduce((s, m) => s + (m.credit || 0), 0).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
                         </td>
                         <td className="text-right ledger-final-balance">
-                          Q{Math.abs(ledgerData.movements[ledgerData.movements.length - 1]?.balance || 0).toLocaleString('en-US', {minimumFractionDigits: 2})}
+                          Q{Math.abs(ledgerData.movements[ledgerData.movements.length - 1]?.balance || 0).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
                         </td>
                       </tr>
                     </tfoot>

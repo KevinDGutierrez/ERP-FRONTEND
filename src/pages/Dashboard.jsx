@@ -13,7 +13,7 @@ import {
 import { useNavigate } from 'react-router-dom';
 import './Dashboard.css';
 
-const formatQ = (val) => `Q${(val || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+const formatQ = (val) => `Q${(val || 0).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',')}`;
 
 const StatCard = ({ title, value, icon, color, subtitle }) => (
   <motion.div whileHover={{ y: -4 }} className="stat-card">
@@ -45,7 +45,7 @@ const CustomTooltip = ({ active, payload, label }) => {
       <p style={{ fontWeight: 700, marginBottom: 6, color: 'var(--text-primary, #fff)' }}>DÃ­a {label}</p>
       {payload.map((p, i) => (
         <p key={i} style={{ color: p.color, margin: '2px 0' }}>
-          {p.name}: Q{(p.value || 0).toLocaleString('en-US', { minimumFractionDigits: 2 })}
+          {p.name}: Q{(p.value || 0).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
         </p>
       ))}
     </div>
@@ -246,7 +246,7 @@ const Dashboard = () => {
                           {new Date(entry.date + 'T12:00:00').toLocaleDateString('es-GT', { day: 'numeric', month: 'long', year: 'numeric' })}
                         </span>
                       </div>
-                      <div className="activity-amount">Q{(entry.total || 0).toLocaleString('en-US', { minimumFractionDigits: 2 })}</div>
+                      <div className="activity-amount">Q{(entry.total || 0).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',')}</div>
                     </div>
                   ))
                 ) : (

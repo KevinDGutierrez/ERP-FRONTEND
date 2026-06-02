@@ -318,10 +318,10 @@ const NewEntry = () => {
                       </button>
                     </td>
                     <td className={`total-cell ${!isSquared ? 'error' : ''}`}>
-                      Q{totalDebe.toLocaleString('en-US', {minimumFractionDigits: 2})}
+                      Q{totalDebe.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
                     </td>
                     <td className={`total-cell ${!isSquared ? 'error' : ''}`}>
-                      Q{totalHaber.toLocaleString('en-US', {minimumFractionDigits: 2})}
+                      Q{totalHaber.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
                     </td>
                     <td></td>
                   </tr>
