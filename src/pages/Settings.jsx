@@ -39,11 +39,12 @@ const compressImage = (file, maxWidth = 700) => {
   });
 };
 
-/* ── Tabs by role ── */
+/* 🎨 Tabs by role 🎨 */
 const ALL_TABS = [
   { id: 'profile', label: 'Perfil', icon: User, roles: ['admin_empresa', 'contador', 'usuario'] },
   { id: 'company', label: 'Empresa', icon: Building2, roles: ['admin_empresa'] },
   { id: 'visual', label: 'Visual', icon: Palette, roles: ['admin_empresa'] },
+  { id: 'danger', label: 'Zona Peligrosa', icon: AlertTriangle, roles: ['admin_empresa'] },
 ];
 
 const Settings = () => {
@@ -69,6 +70,10 @@ const Settings = () => {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState(null);
   const [saveSuccess, setSaveSuccess] = useState(false);
+  
+  /* Reset request state */
+  const [resetStatus, setResetStatus] = useState('loading');
+  const [resetReason, setResetReason] = useState('');
 
   const profilePhotoRef = useRef(null);
   const logoRef = useRef(null);
@@ -85,6 +90,14 @@ const Settings = () => {
     setFormData(brand);
     setLogoPreview(brand.logo);
   }, [brand]);
+
+  useEffect(() => {
+    if (isCompanyAdmin && user?.companyId) {
+      api.get(`/companies/${user.companyId}/reset-status`)
+        .then(res => setResetStatus(res.data.status))
+        .catch(err => setResetStatus('error'));
+    }
+  }, [isCompanyAdmin, user]);
 
   const handleBrandChange = (e) => {
     const { name, value } = e.target;
@@ -149,6 +162,22 @@ const Settings = () => {
       setTimeout(() => setSaveSuccess(false), 3000);
     } catch {
       setError('Error al guardar la configuración.');
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleRequestReset = async () => {
+    if (!window.confirm('¿Estás seguro que deseas solicitar el reinicio de los datos contables? Esta acción eliminará todas las partidas.')) return;
+    setSaving(true);
+    setError(null);
+    try {
+      await api.post(`/companies/${user.companyId}/request-reset`, { reason: resetReason });
+      setResetStatus('PENDING');
+      setSaveSuccess(true);
+      setTimeout(() => setSaveSuccess(false), 3000);
+    } catch (err) {
+      setError(err.response?.data?.message || 'Error al solicitar reinicio.');
     } finally {
       setSaving(false);
     }
@@ -417,6 +446,63 @@ const Settings = () => {
                         </div>
                       </div>
                       <p className="preview-hint">Así se verá en el sidebar y los reportes.</p>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+            )}
+
+            {/* 🎨 TAB: ZONA PELIGROSA 🎨 */}
+            {activeTab === 'danger' && (
+              <motion.div key="danger"
+                initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.18 }}
+                className="settings-tab-content"
+              >
+                <div className="settings-card danger-card" style={{ borderColor: 'var(--danger)' }}>
+                  <div className="card-header" style={{ color: 'var(--danger)' }}>
+                    <AlertTriangle size={18} />
+                    <h3>Zona de Peligro</h3>
+                  </div>
+                  <div className="card-body">
+                    <p style={{ marginBottom: '1rem', color: 'var(--text-secondary)' }}>
+                      Las acciones en esta área son destructivas y requieren aprobación del Super Administrador.
+                    </p>
+                    
+                    <div className="danger-action-box" style={{ padding: '1rem', background: 'rgba(239, 68, 68, 0.05)', borderRadius: '8px', border: '1px solid rgba(239, 68, 68, 0.2)' }}>
+                      <h4 style={{ color: 'var(--text-primary)', marginBottom: '0.5rem' }}>Vaciar ERP (Eliminar Movimientos)</h4>
+                      <p style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', marginBottom: '1rem' }}>
+                        Esta acción eliminará todas las partidas contables y pondrá los saldos de todas las cuentas a cero. El Catálogo de Cuentas, usuarios y configuraciones se mantendrán intactos.
+                      </p>
+                      
+                      {resetStatus === 'loading' ? (
+                        <div className="spinner-small" style={{ borderColor: 'var(--danger) transparent var(--danger) transparent' }}></div>
+                      ) : resetStatus === 'PENDING' ? (
+                        <div className="badge warning" style={{ display: 'inline-flex', padding: '0.5rem 1rem' }}>
+                          <Clock size={16} style={{ marginRight: '0.5rem' }} />
+                          Solicitud pendiente de aprobación
+                        </div>
+                      ) : (
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', maxWidth: '400px' }}>
+                          <input 
+                            type="text" 
+                            className="settings-input" 
+                            placeholder="Motivo (opcional)" 
+                            value={resetReason}
+                            onChange={(e) => setResetReason(e.target.value)}
+                          />
+                          <button 
+                            type="button" 
+                            className="btn-danger"
+                            onClick={handleRequestReset}
+                            disabled={saving}
+                            style={{ alignSelf: 'flex-start', background: 'var(--danger)', color: 'white', border: 'none', padding: '0.5rem 1rem', borderRadius: '4px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.5rem', fontWeight: 500 }}
+                          >
+                            <AlertTriangle size={16} />
+                            Solicitar reinicio de ERP
+                          </button>
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>

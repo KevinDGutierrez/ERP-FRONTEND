@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Layout from '../components/layout/Layout';
 import api from '../api/client';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Users, CheckCircle, XCircle, Clock, RefreshCw, Shield, ChevronDown, Building2 } from 'lucide-react';
+import { Users, CheckCircle, XCircle, Clock, RefreshCw, Shield, ChevronDown, Building2, AlertTriangle } from 'lucide-react';
 import './AdminApprovals.css';
 
 const ROLES = [
@@ -11,6 +11,8 @@ const ROLES = [
 ];
 
 const AdminApprovals = () => {
+  const [activeMainTab, setActiveMainTab] = useState('users');
+  const [resetRequests, setResetRequests] = useState([]);
   const [users, setUsers]     = useState([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter]   = useState('pending');
@@ -31,6 +33,15 @@ const AdminApprovals = () => {
     }
   };
 
+  const fetchResetRequests = async () => {
+    try {
+      const res = await api.get('/admin/reset-requests');
+      setResetRequests(res.data.requests || []);
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
   const fetchCompanies = async () => {
     try {
       const res = await api.get('/companies');
@@ -43,6 +54,7 @@ const AdminApprovals = () => {
   useEffect(() => { 
     fetchUsers(); 
     fetchCompanies();
+    fetchResetRequests();
   }, []);
 
   const getCompanyName = (companyId) => {
@@ -83,6 +95,28 @@ const AdminApprovals = () => {
     }
   };
 
+  const handleApproveReset = async (id) => {
+    if(!window.confirm('ALERTA DE DESTRUCCIÓN DE DATOS: ¿Estás 100% seguro de vaciar el ERP de esta empresa? Las partidas serán eliminadas y los saldos se pondrán a cero. Esta acción no se puede deshacer.')) return;
+    try {
+      await api.post(`/admin/reset-requests/${id}/approve`);
+      setResetRequests(prev => prev.map(r => r.id === id ? { ...r, status: 'APPROVED' } : r));
+      alert('ERP vaciado con éxito.');
+    } catch (e) {
+      console.error(e);
+      alert(e.response?.data?.message || 'Error al aprobar solicitud.');
+    }
+  };
+
+  const handleRejectReset = async (id) => {
+    try {
+      await api.post(`/admin/reset-requests/${id}/reject`);
+      setResetRequests(prev => prev.map(r => r.id === id ? { ...r, status: 'REJECTED' } : r));
+    } catch (e) {
+      console.error(e);
+      alert('Error al rechazar solicitud.');
+    }
+  };
+
   const filteredUsers = users.filter(u => filter === 'all' || u.status === filter);
 
   const getStatusBadge = (status) => {
@@ -115,39 +149,58 @@ const AdminApprovals = () => {
           </button>
         </header>
 
-        <div className="approvals-filter-bar">
-          {[
-            { key: 'pending', label: 'Pendientes', count: users.filter(u => u.status === 'pending').length },
-            { key: 'active', label: 'Aprobados', count: users.filter(u => u.status === 'active').length },
-            { key: 'rejected', label: 'Rechazados', count: users.filter(u => u.status === 'rejected').length },
-            { key: 'all', label: 'Todos', count: users.length },
-          ].map(f => (
-            <button
-              key={f.key}
-              className={`filter-tab ${filter === f.key ? 'active' : ''}`}
-              onClick={() => { setFilter(f.key); setExpandedUid(null); }}
-            >
-              {f.label}
-              {f.count > 0 && <span className="filter-count">{f.count}</span>}
-            </button>
-          ))}
+        <div className="main-tabs" style={{ display: 'flex', gap: '1rem', marginBottom: '1rem', borderBottom: '1px solid var(--border)' }}>
+          <button 
+            className={`filter-tab ${activeMainTab === 'users' ? 'active' : ''}`} 
+            onClick={() => setActiveMainTab('users')}
+            style={{ padding: '0.75rem 1.5rem', background: 'transparent', border: 'none', borderBottom: activeMainTab === 'users' ? '2px solid var(--primary)' : '2px solid transparent', color: activeMainTab === 'users' ? 'var(--text-primary)' : 'var(--text-secondary)', cursor: 'pointer', fontWeight: 500 }}
+          >
+            <Users size={16} style={{ display: 'inline', marginRight: '0.5rem', verticalAlign: 'text-bottom' }} /> Usuarios
+          </button>
+          <button 
+            className={`filter-tab ${activeMainTab === 'resets' ? 'active' : ''}`} 
+            onClick={() => setActiveMainTab('resets')}
+            style={{ padding: '0.75rem 1.5rem', background: 'transparent', border: 'none', borderBottom: activeMainTab === 'resets' ? '2px solid var(--danger)' : '2px solid transparent', color: activeMainTab === 'resets' ? 'var(--danger)' : 'var(--text-secondary)', cursor: 'pointer', fontWeight: 500 }}
+          >
+            <AlertTriangle size={16} style={{ display: 'inline', marginRight: '0.5rem', verticalAlign: 'text-bottom' }} /> Reinicios de ERP
+          </button>
         </div>
 
-        <div className="approvals-list-container">
-          {loading ? (
-            <div className="table-loading">
-              <RefreshCw size={20} className="spin" />
-              Cargando solicitudes...
+        {activeMainTab === 'users' ? (
+          <>
+            <div className="approvals-filter-bar">
+              {[
+                { key: 'pending', label: 'Pendientes', count: users.filter(u => u.status === 'pending').length },
+                { key: 'active', label: 'Aprobados', count: users.filter(u => u.status === 'active').length },
+                { key: 'rejected', label: 'Rechazados', count: users.filter(u => u.status === 'rejected').length },
+                { key: 'all', label: 'Todos', count: users.length },
+              ].map(f => (
+                <button
+                  key={f.key}
+                  className={`filter-tab ${filter === f.key ? 'active' : ''}`}
+                  onClick={() => { setFilter(f.key); setExpandedUid(null); }}
+                >
+                  {f.label}
+                  {f.count > 0 && <span className="filter-count">{f.count}</span>}
+                </button>
+              ))}
             </div>
-          ) : filteredUsers.length === 0 ? (
-            <div className="table-empty">
-              <Users size={40} />
-              <p>No hay solicitudes que coincidan con el filtro</p>
-            </div>
-          ) : (
-            <div className="approvals-list">
-              {filteredUsers.map((u) => {
-                const badge = getStatusBadge(u.status);
+
+            <div className="approvals-list-container">
+              {loading ? (
+                <div className="table-loading">
+                  <RefreshCw size={20} className="spin" />
+                  Cargando solicitudes...
+                </div>
+              ) : filteredUsers.length === 0 ? (
+                <div className="table-empty">
+                  <Users size={40} />
+                  <p>No hay solicitudes que coincidan con el filtro</p>
+                </div>
+              ) : (
+                <div className="approvals-list">
+                  {filteredUsers.map((u) => {
+                    const badge = getStatusBadge(u.status);
                 const isSuperAdmin = u.role === 'super_admin';
                 const isExpanded = expandedUid === u.uid;
 
@@ -268,7 +321,60 @@ const AdminApprovals = () => {
               })}
             </div>
           )}
-        </div>
+            </div>
+          </>
+        ) : (
+          <div className="approvals-list-container">
+            {resetRequests.length === 0 ? (
+              <div className="table-empty">
+                <AlertTriangle size={40} />
+                <p>No hay solicitudes de reinicio de ERP</p>
+              </div>
+            ) : (
+              <div className="approvals-list">
+                {resetRequests.map((r) => (
+                  <div key={r.id} className="approval-row" style={{ padding: '1.5rem', cursor: 'default' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', width: '100%' }}>
+                      <div>
+                        <h3 style={{ margin: '0 0 0.5rem 0', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                          <Building2 size={18} /> {r.companyName}
+                        </h3>
+                        <p style={{ margin: '0 0 0.25rem 0', color: 'var(--text-secondary)', fontSize: '0.9rem' }}>
+                          <strong>Solicitante:</strong> {r.requestedByEmail}
+                        </p>
+                        <p style={{ margin: '0 0 0.25rem 0', color: 'var(--text-secondary)', fontSize: '0.9rem' }}>
+                          <strong>Fecha:</strong> {new Date(r.createdAt).toLocaleString('es')}
+                        </p>
+                        {r.reason && (
+                          <p style={{ margin: '0 0 0.25rem 0', color: 'var(--text-secondary)', fontSize: '0.9rem' }}>
+                            <strong>Motivo:</strong> {r.reason}
+                          </p>
+                        )}
+                      </div>
+                      <div style={{ textAlign: 'right' }}>
+                        {r.status === 'PENDING' ? (
+                          <div style={{ display: 'flex', gap: '0.5rem', marginTop: '1rem' }}>
+                            <button className="action-btn action-approve" onClick={() => handleApproveReset(r.id)} style={{ padding: '0.5rem 1rem' }}>
+                              <CheckCircle size={14} /> Aprobar Reinicio
+                            </button>
+                            <button className="action-btn action-reject" onClick={() => handleRejectReset(r.id)} style={{ padding: '0.5rem 1rem' }}>
+                              <XCircle size={14} /> Rechazar
+                            </button>
+                          </div>
+                        ) : (
+                          <span className={`badge ${r.status === 'APPROVED' ? 'status-active' : 'status-rejected'}`}>
+                            {r.status === 'APPROVED' ? <CheckCircle size={12} /> : <XCircle size={12} />} 
+                            {r.status === 'APPROVED' ? 'Aprobado' : 'Rechazado'}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
       </div>
     </Layout>
   );
