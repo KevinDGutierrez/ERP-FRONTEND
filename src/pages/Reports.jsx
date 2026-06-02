@@ -21,14 +21,14 @@ import './Reports.css';
 const formatQ = (val) => {
   const num = Number(val) || 0;
   if (num < 0) {
-    return `-Q${Math.abs(num).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+    return `-Q${Math.abs(num).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
   }
-  return `Q${num.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+  return `Q${num.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
 };
 
-/* ────────────────────────────────────────────────── */
+/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 /* DIRECT PDF EXPORT (replaces window.print)         */
-/* ────────────────────────────────────────────────── */
+/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 const handleExportPDF = (activeTab, data) => {
   if (!data) return;
   if (activeTab === 'trial') exportTrialBalancePDF(data, 'balance_comprobacion');
@@ -45,9 +45,9 @@ const handleExportExcel = (activeTab, data) => {
   else if (activeTab === 'balance') exportBalanceSheetExcel(data);
 };
 
-/* ────────────────────────────────────────────────── */
+/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 /* MAIN COMPONENT                                    */
-/* ────────────────────────────────────────────────── */
+/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 const Reports = () => {
   const [activeTab, setActiveTab] = useState('trial');
   const [data, setData] = useState(null);
@@ -67,7 +67,7 @@ const Reports = () => {
       const response = await api.get(endpoint);
       setData(response.data);
     } catch (err) {
-      setError('No se pudo generar el reporte. Verifica la conexión con el servidor.');
+      setError('No se pudo generar el reporte. Verifica la conexiÃ³n con el servidor.');
       console.error(err);
     } finally {
       setLoading(false);
@@ -112,7 +112,7 @@ const Reports = () => {
             onClick={() => setActiveTab('trial')}
           >
             <FileText size={18} />
-            <span>Balance de Comprobación</span>
+            <span>Balance de ComprobaciÃ³n</span>
           </button>
           <button 
             className={`report-tab ${activeTab === 'adjusted' ? 'active' : ''}`}
@@ -179,9 +179,9 @@ const Reports = () => {
   );
 };
 
-/* ────────────────────────────────────────────────── */
+/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 /* SUB-VIEWS                                         */
-/* ────────────────────────────────────────────────── */
+/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 const TrialBalanceView = ({ data }) => (
   <div className="report-card-premium card">
     <div className="report-card-header">
@@ -192,7 +192,7 @@ const TrialBalanceView = ({ data }) => (
       <table className="modern-table">
         <thead>
           <tr>
-            <th>CÓDIGO</th>
+            <th>CÃ“DIGO</th>
             <th>NOMBRE DE LA CUENTA</th>
             <th className="text-right">DEUDOR</th>
             <th className="text-right">ACREEDOR</th>
@@ -204,10 +204,10 @@ const TrialBalanceView = ({ data }) => (
               <td className="code-font">{acc.code}</td>
               <td className="name-cell">{acc.name}</td>
               <td className="text-right amount-cell debe">
-                {acc.balance > 0 ? `Q${acc.balance.toLocaleString(undefined, {minimumFractionDigits: 2})}` : '-'}
+                {acc.balance > 0 ? `Q${acc.balance.toLocaleString('en-US', {minimumFractionDigits: 2})}` : '-'}
               </td>
               <td className="text-right amount-cell haber">
-                {acc.balance < 0 ? `Q${Math.abs(acc.balance).toLocaleString(undefined, {minimumFractionDigits: 2})}` : '-'}
+                {acc.balance < 0 ? `Q${Math.abs(acc.balance).toLocaleString('en-US', {minimumFractionDigits: 2})}` : '-'}
               </td>
             </tr>
           ))}
@@ -215,8 +215,8 @@ const TrialBalanceView = ({ data }) => (
         <tfoot>
           <tr className="total-row">
             <td colSpan="2">TOTALES GENERALES</td>
-            <td className="text-right">Q{(data.totals?.debe || 0).toLocaleString(undefined, {minimumFractionDigits: 2})}</td>
-            <td className="text-right">Q{(data.totals?.haber || 0).toLocaleString(undefined, {minimumFractionDigits: 2})}</td>
+            <td className="text-right">Q{(data.totals?.debe || 0).toLocaleString('en-US', {minimumFractionDigits: 2})}</td>
+            <td className="text-right">Q{(data.totals?.haber || 0).toLocaleString('en-US', {minimumFractionDigits: 2})}</td>
           </tr>
         </tfoot>
       </table>
@@ -237,7 +237,7 @@ const AdjustedTrialBalanceView = ({ data }) => (
       <table className="modern-table">
         <thead>
           <tr>
-            <th>CÓDIGO</th>
+            <th>CÃ“DIGO</th>
             <th>NOMBRE DE LA CUENTA</th>
             <th className="text-right">DEUDOR</th>
             <th className="text-right">ACREEDOR</th>
@@ -249,10 +249,10 @@ const AdjustedTrialBalanceView = ({ data }) => (
               <td className="code-font">{acc.code}</td>
               <td className="name-cell">{acc.name}</td>
               <td className="text-right amount-cell debe">
-                {acc.balance > 0 ? `Q${acc.balance.toLocaleString(undefined, {minimumFractionDigits: 2})}` : '-'}
+                {acc.balance > 0 ? `Q${acc.balance.toLocaleString('en-US', {minimumFractionDigits: 2})}` : '-'}
               </td>
               <td className="text-right amount-cell haber">
-                {acc.balance < 0 ? `Q${Math.abs(acc.balance).toLocaleString(undefined, {minimumFractionDigits: 2})}` : '-'}
+                {acc.balance < 0 ? `Q${Math.abs(acc.balance).toLocaleString('en-US', {minimumFractionDigits: 2})}` : '-'}
               </td>
             </tr>
           ))}
@@ -260,8 +260,8 @@ const AdjustedTrialBalanceView = ({ data }) => (
         <tfoot>
           <tr className="total-row">
             <td colSpan="2">TOTALES GENERALES</td>
-            <td className="text-right">Q{(data.totals?.debe || 0).toLocaleString(undefined, {minimumFractionDigits: 2})}</td>
-            <td className="text-right">Q{(data.totals?.haber || 0).toLocaleString(undefined, {minimumFractionDigits: 2})}</td>
+            <td className="text-right">Q{(data.totals?.debe || 0).toLocaleString('en-US', {minimumFractionDigits: 2})}</td>
+            <td className="text-right">Q{(data.totals?.haber || 0).toLocaleString('en-US', {minimumFractionDigits: 2})}</td>
           </tr>
         </tfoot>
       </table>
@@ -274,29 +274,29 @@ const ProfitLossView = ({ data }) => (
     <div className="pnl-summary-grid">
       <div className="pnl-stat-card card">
         <span className="label">Ingresos Totales</span>
-        <span className="value positive">Q{data.resumen?.totalIngresos.toLocaleString()}</span>
+        <span className="value positive">Q{data.resumen?.totalIngresos.toLocaleString('en-US')}</span>
       </div>
       <div className="pnl-stat-card card">
         <span className="label">Costos Totales</span>
-        <span className="value negative">Q{data.resumen?.totalCostos.toLocaleString()}</span>
+        <span className="value negative">Q{data.resumen?.totalCostos.toLocaleString('en-US')}</span>
       </div>
       <div className="pnl-stat-card card highlight">
         <span className="label">Utilidad Neta</span>
-        <span className="value">Q{data.resumen?.utilidadNeta.toLocaleString()}</span>
+        <span className="value">Q{data.resumen?.utilidadNeta.toLocaleString('en-US')}</span>
       </div>
     </div>
 
     <div className="report-card-premium card">
       <div className="pnl-detail-view">
         <div className="pnl-section">
-          <div className="section-title">INGRESOS DE OPERACIÓN</div>
+          <div className="section-title">INGRESOS DE OPERACIÃ“N</div>
           <div className="pnl-line">
             <span>Ventas y Servicios</span>
-            <span>Q{data.resumen?.totalIngresos.toLocaleString()}</span>
+            <span>Q{data.resumen?.totalIngresos.toLocaleString('en-US')}</span>
           </div>
           <div className="pnl-line total">
             <span>TOTAL INGRESOS</span>
-            <span>Q{data.resumen?.totalIngresos.toLocaleString()}</span>
+            <span>Q{data.resumen?.totalIngresos.toLocaleString('en-US')}</span>
           </div>
         </div>
 
@@ -304,22 +304,22 @@ const ProfitLossView = ({ data }) => (
           <div className="section-title">COSTOS Y GASTOS</div>
           <div className="pnl-line">
             <span>Costo de Ventas</span>
-            <span className="negative">(Q{data.resumen?.totalCostos.toLocaleString()})</span>
+            <span className="negative">(Q{data.resumen?.totalCostos.toLocaleString('en-US')})</span>
           </div>
           <div className="pnl-line subtotal">
             <span>UTILIDAD BRUTA</span>
-            <span>Q{data.resumen?.utilidadBruta.toLocaleString()}</span>
+            <span>Q{data.resumen?.utilidadBruta.toLocaleString('en-US')}</span>
           </div>
           <div className="pnl-line">
-            <span>Gastos de Administración</span>
-            <span className="negative">(Q{data.resumen?.totalGastos.toLocaleString()})</span>
+            <span>Gastos de AdministraciÃ³n</span>
+            <span className="negative">(Q{data.resumen?.totalGastos.toLocaleString('en-US')})</span>
           </div>
         </div>
 
         <div className="pnl-section final">
           <div className="pnl-line result">
             <span>UTILIDAD NETA DEL EJERCICIO</span>
-            <span className="result-value">Q{data.resumen?.utilidadNeta.toLocaleString()}</span>
+            <span className="result-value">Q{data.resumen?.utilidadNeta.toLocaleString('en-US')}</span>
           </div>
         </div>
       </div>

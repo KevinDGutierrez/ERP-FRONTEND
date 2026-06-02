@@ -12,8 +12,8 @@ import './Ledger.css';
 
 const formatQ = (val) => {
   const num = Number(val) || 0;
-  if (num < 0) return `-Q${Math.abs(num).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-  return `Q${num.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+  if (num < 0) return `-Q${Math.abs(num).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+  return `Q${num.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 };
 
 const Ledger = () => {
@@ -167,10 +167,10 @@ const Ledger = () => {
                 onChange={e => setSelectedAccountId(e.target.value)}
                 disabled={loadingAccounts}
               >
-                <option value="">— Todas las cuentas (Vista General) —</option>
+                <option value="">â€” Todas las cuentas (Vista General) â€”</option>
                 {accounts.map(acc => (
                   <option key={acc.id} value={acc.id}>
-                    {acc.code} — {acc.name}
+                    {acc.code} â€” {acc.name}
                   </option>
                 ))}
               </select>
@@ -245,7 +245,7 @@ const Ledger = () => {
               <div className="empty-state-premium card">
                 <BookOpen size={48} strokeWidth={1.2} />
                 <h3>Sin cuentas</h3>
-                <p>No se encontraron cuentas con la configuración actual.</p>
+                <p>No se encontraron cuentas con la configuraciÃ³n actual.</p>
               </div>
             ) : (
               allLedgers.filter(ledger => showEmptyAccounts || ledger.movements.length > 0).map((ledger, idx) => (
@@ -263,7 +263,7 @@ const Ledger = () => {
                   >
                     <div className="account-info-grid">
                       <div className="info-item">
-                        <span className="info-label">Código</span>
+                        <span className="info-label">CÃ³digo</span>
                         <span className="info-value code">{ledger.accountInfo.code}</span>
                       </div>
                       <div className="info-item">
@@ -311,7 +311,7 @@ const Ledger = () => {
                             <tr>
                               <th>Fecha</th>
                               <th>#</th>
-                              <th>Descripción</th>
+                              <th>DescripciÃ³n</th>
                               <th>Tipo</th>
                               <th className="text-right">Debe</th>
                               <th className="text-right">Haber</th>
@@ -323,9 +323,9 @@ const Ledger = () => {
                               <tr key={mIdx}>
                                 <td className="date-cell">{m.date}</td>
                                 <td className="partida-cell">{mIdx + 1}</td>
-                                <td className="desc-cell">{m.description || '—'}</td>
+                                <td className="desc-cell">{m.description || 'â€”'}</td>
                                 <td>
-                                  <span className="type-badge">{m.type || '—'}</span>
+                                  <span className="type-badge">{m.type || 'â€”'}</span>
                                 </td>
                                 <td className="text-right amount-cell debe">
                                   {m.debit ? formatQ(m.debit) : '-'}
@@ -369,7 +369,7 @@ const Ledger = () => {
           >
             <div className="account-info-grid">
               <div className="info-item">
-                <span className="info-label">Código</span>
+                <span className="info-label">CÃ³digo</span>
                 <span className="info-value code">{accountInfo.code}</span>
               </div>
               <div className="info-item">
@@ -436,7 +436,7 @@ const Ledger = () => {
                   <tr>
                     <th>Fecha</th>
                     <th>#</th>
-                    <th>Descripción</th>
+                    <th>DescripciÃ³n</th>
                     <th>Tipo</th>
                     <th className="text-right">Debe</th>
                     <th className="text-right">Haber</th>
@@ -453,9 +453,9 @@ const Ledger = () => {
                     >
                       <td className="date-cell">{m.date}</td>
                       <td className="partida-cell">{idx + 1}</td>
-                      <td className="desc-cell">{m.description || '—'}</td>
+                      <td className="desc-cell">{m.description || 'â€”'}</td>
                       <td>
-                        <span className="type-badge">{m.type || '—'}</span>
+                        <span className="type-badge">{m.type || 'â€”'}</span>
                       </td>
                       <td className="text-right amount-cell debe">
                         {m.debit ? formatQ(m.debit) : '-'}

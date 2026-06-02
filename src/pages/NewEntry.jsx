@@ -153,15 +153,15 @@ const NewEntry = () => {
     e.preventDefault();
     const hasEmptyAccounts = formData.details.some(d => !d.accountId);
     if (hasEmptyAccounts) {
-      setError('Por favor, selecciona una cuenta válida en todas las líneas de la partida.');
+      setError('Por favor, selecciona una cuenta vÃ¡lida en todas las lÃ­neas de la partida.');
       return;
     }
     if (!isSquared) {
-      setError('La partida no está cuadrada (Debe != Haber)');
+      setError('La partida no estÃ¡ cuadrada (Debe != Haber)');
       return;
     }
     if (!formData.description.trim()) {
-      setError('La descripción es obligatoria');
+      setError('La descripciÃ³n es obligatoria');
       return;
     }
 
@@ -239,9 +239,9 @@ const NewEntry = () => {
             </div>
 
             <div className="form-group">
-              <label>Descripción / Glosa</label>
+              <label>DescripciÃ³n / Glosa</label>
               <textarea 
-                placeholder="Escribe la descripción de la operación..."
+                placeholder="Escribe la descripciÃ³n de la operaciÃ³n..."
                 value={formData.description}
                 onChange={e => setFormData({...formData, description: e.target.value})}
                 required
@@ -273,7 +273,7 @@ const NewEntry = () => {
                           value={detail.accountId}
                           onChange={val => handleDetailChange(index, 'accountId', val)}
                           options={accounts}
-                          placeholder="Buscar cuenta por nombre o código..."
+                          placeholder="Buscar cuenta por nombre o cÃ³digo..."
                           required={true}
                         />
                       </td>
@@ -314,14 +314,14 @@ const NewEntry = () => {
                   <tr className="totals-row">
                     <td>
                       <button type="button" className="btn-add-row" onClick={addRow}>
-                        <Plus size={16} /> Agregar línea
+                        <Plus size={16} /> Agregar lÃ­nea
                       </button>
                     </td>
                     <td className={`total-cell ${!isSquared ? 'error' : ''}`}>
-                      Q{totalDebe.toLocaleString(undefined, {minimumFractionDigits: 2})}
+                      Q{totalDebe.toLocaleString('en-US', {minimumFractionDigits: 2})}
                     </td>
                     <td className={`total-cell ${!isSquared ? 'error' : ''}`}>
-                      Q{totalHaber.toLocaleString(undefined, {minimumFractionDigits: 2})}
+                      Q{totalHaber.toLocaleString('en-US', {minimumFractionDigits: 2})}
                     </td>
                     <td></td>
                   </tr>

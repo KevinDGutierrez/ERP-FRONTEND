@@ -13,7 +13,7 @@ import {
 import { useNavigate } from 'react-router-dom';
 import './Dashboard.css';
 
-const formatQ = (val) => `Q${(val || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+const formatQ = (val) => `Q${(val || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 
 const StatCard = ({ title, value, icon, color, subtitle }) => (
   <motion.div whileHover={{ y: -4 }} className="stat-card">
@@ -42,10 +42,10 @@ const CustomTooltip = ({ active, payload, label }) => {
       boxShadow: '0 8px 24px rgba(0,0,0,0.3)',
       fontSize: 13
     }}>
-      <p style={{ fontWeight: 700, marginBottom: 6, color: 'var(--text-primary, #fff)' }}>Día {label}</p>
+      <p style={{ fontWeight: 700, marginBottom: 6, color: 'var(--text-primary, #fff)' }}>DÃ­a {label}</p>
       {payload.map((p, i) => (
         <p key={i} style={{ color: p.color, margin: '2px 0' }}>
-          {p.name}: Q{(p.value || 0).toLocaleString(undefined, { minimumFractionDigits: 2 })}
+          {p.name}: Q{(p.value || 0).toLocaleString('en-US', { minimumFractionDigits: 2 })}
         </p>
       ))}
     </div>
@@ -116,8 +116,8 @@ const Dashboard = () => {
               <div className="empty-icon-wrapper">
                 <BarChart3 size={56} strokeWidth={1.2} />
               </div>
-              <h2>Aún no hay movimientos registrados</h2>
-              <p>Crea tu primera partida contable para ver estadísticas reales en tu dashboard.</p>
+              <h2>AÃºn no hay movimientos registrados</h2>
+              <p>Crea tu primera partida contable para ver estadÃ­sticas reales en tu dashboard.</p>
               <button className="btn-primary" onClick={() => navigate('/new-entry')}>
                 <PlusCircle size={20} />
                 <span>Crear Primera Partida</span>
@@ -175,7 +175,7 @@ const Dashboard = () => {
                     <span className="amount">{formatQ(data.totalEquity)}</span>
                   </div>
                   <div className="summary-line highlight">
-                    <span>Utilidad / Pérdida Neta</span>
+                    <span>Utilidad / PÃ©rdida Neta</span>
                     <span className={`amount ${data.netIncome >= 0 ? 'positive' : 'negative'}`}>
                       {formatQ(data.netIncome)}
                     </span>
@@ -183,7 +183,7 @@ const Dashboard = () => {
                 </div>
               </div>
 
-              {/* Chart Area — Recharts */}
+              {/* Chart Area â€” Recharts */}
               <div className="chart-card card">
                 <div className="summary-header">
                   <h4>Ingresos vs Gastos del Mes</h4>
@@ -231,7 +231,7 @@ const Dashboard = () => {
             {/* Latest Entries */}
             <div className="recent-activity-card card">
               <div className="summary-header">
-                <h4>Últimas Partidas</h4>
+                <h4>Ãšltimas Partidas</h4>
                 <button className="btn-ghost-sm" onClick={() => navigate('/entries')}>Ver todas</button>
               </div>
               <div className="activity-list">
@@ -246,7 +246,7 @@ const Dashboard = () => {
                           {new Date(entry.date + 'T12:00:00').toLocaleDateString('es-GT', { day: 'numeric', month: 'long', year: 'numeric' })}
                         </span>
                       </div>
-                      <div className="activity-amount">Q{(entry.total || 0).toLocaleString(undefined, { minimumFractionDigits: 2 })}</div>
+                      <div className="activity-amount">Q{(entry.total || 0).toLocaleString('en-US', { minimumFractionDigits: 2 })}</div>
                     </div>
                   ))
                 ) : (

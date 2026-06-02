@@ -66,18 +66,18 @@ const JournalEntries = () => {
             </div>
             <div>
               <h1>Libro Diario</h1>
-              <p>Registro cronológico de todas las operaciones contables de la empresa.</p>
+              <p>Registro cronolÃ³gico de todas las operaciones contables de la empresa.</p>
             </div>
           </div>
           <div className="header-stats">
             <div className="stat-item">
               <span className="stat-label">Total Debe</span>
-              <span className="stat-value">Q{totalDebe.toLocaleString(undefined, {minimumFractionDigits: 2})}</span>
+              <span className="stat-value">Q{totalDebe.toLocaleString('en-US', {minimumFractionDigits: 2})}</span>
             </div>
             <div className="stat-divider"></div>
             <div className="stat-item">
               <span className="stat-label">Total Haber</span>
-              <span className="stat-value">Q{totalHaber.toLocaleString(undefined, {minimumFractionDigits: 2})}</span>
+              <span className="stat-value">Q{totalHaber.toLocaleString('en-US', {minimumFractionDigits: 2})}</span>
             </div>
           </div>
         </header>
@@ -135,7 +135,7 @@ const JournalEntries = () => {
           ) : error ? (
             <div className="error-state-premium card">
               <AlertCircle size={48} />
-              <h3>Error de Conexión</h3>
+              <h3>Error de ConexiÃ³n</h3>
               <p>{error}</p>
               <button className="btn-primary" onClick={fetchEntries}>Reintentar</button>
             </div>
@@ -149,7 +149,7 @@ const JournalEntries = () => {
               <button className="btn-glass" onClick={() => setFilters({
                 startDate: new Date(new Date().getFullYear(), 0, 1).toISOString().split('T')[0],
                 endDate: new Date().toISOString().split('T')[0]
-              })}>Ver todo el año</button>
+              })}>Ver todo el aÃ±o</button>
             </div>
           ) : (
             <div className="entries-stack">
@@ -182,7 +182,7 @@ const JournalEntries = () => {
                     <table className="modern-table">
                       <thead>
                         <tr>
-                          <th>CÓDIGO</th>
+                          <th>CÃ“DIGO</th>
                           <th>CUENTA</th>
                           <th className="text-right">DEBE</th>
                           <th className="text-right">HABER</th>
@@ -193,14 +193,14 @@ const JournalEntries = () => {
                           <tr key={dIdx} className={detail.credit > 0 ? 'row-credit' : ''}>
                             <td className="code-font">{detail.accountCode}</td>
                             <td className="name-cell">
-                              {detail.credit > 0 && <span className="indent-arrow">↳</span>}
+                              {detail.credit > 0 && <span className="indent-arrow">â†³</span>}
                               {detail.accountName}
                             </td>
                             <td className="text-right amount-cell debe">
-                              {detail.debit > 0 ? `Q${detail.debit.toLocaleString(undefined, {minimumFractionDigits: 2})}` : '-'}
+                              {detail.debit > 0 ? `Q${detail.debit.toLocaleString('en-US', {minimumFractionDigits: 2})}` : '-'}
                             </td>
                             <td className="text-right amount-cell haber">
-                              {detail.credit > 0 ? `Q${detail.credit.toLocaleString(undefined, {minimumFractionDigits: 2})}` : '-'}
+                              {detail.credit > 0 ? `Q${detail.credit.toLocaleString('en-US', {minimumFractionDigits: 2})}` : '-'}
                             </td>
                           </tr>
                         ))}

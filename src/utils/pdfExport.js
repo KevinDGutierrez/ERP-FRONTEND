@@ -3,8 +3,8 @@ import autoTable from 'jspdf-autotable';
 
 const formatQ = (val) => {
   const num = Number(val) || 0;
-  if (num < 0) return `-Q${Math.abs(num).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-  return `Q${num.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+  if (num < 0) return `-Q${Math.abs(num).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+  return `Q${num.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 };
 
 const dateStr = () => new Date().toLocaleDateString('es-GT', { day: 'numeric', month: 'long', year: 'numeric' });
@@ -17,19 +17,19 @@ const addHeader = (doc, title) => {
   doc.setFontSize(9);
   doc.setFont('helvetica', 'normal');
   doc.setTextColor(100);
-  doc.text(`Generado el ${dateStr()} — Street Ledger ERP`, doc.internal.pageSize.getWidth() / 2, 30, { align: 'center' });
+  doc.text(`Generado el ${dateStr()} â€” Street Ledger ERP`, doc.internal.pageSize.getWidth() / 2, 30, { align: 'center' });
   doc.setTextColor(0);
   doc.setDrawColor(30);
   doc.setLineWidth(0.5);
   doc.line(20, 34, doc.internal.pageSize.getWidth() - 20, 34);
 };
 
-/* ────────────────────────────────────────────────── */
-/* BALANCE DE COMPROBACIÓN / SALDOS AJUSTADO         */
-/* ────────────────────────────────────────────────── */
+/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* BALANCE DE COMPROBACIÃ“N / SALDOS AJUSTADO         */
+/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 export const exportTrialBalancePDF = (data, filename = 'balance_comprobacion') => {
   const doc = new jsPDF();
-  const title = filename.includes('ajustado') ? 'Balance de Saldos Ajustado' : 'Balance de Comprobación';
+  const title = filename.includes('ajustado') ? 'Balance de Saldos Ajustado' : 'Balance de ComprobaciÃ³n';
   addHeader(doc, title);
 
   const rows = (data.accounts || []).map(acc => [
@@ -41,7 +41,7 @@ export const exportTrialBalancePDF = (data, filename = 'balance_comprobacion') =
 
   autoTable(doc, {
     startY: 40,
-    head: [['Código', 'Nombre de la Cuenta', 'Deudor', 'Acreedor']],
+    head: [['CÃ³digo', 'Nombre de la Cuenta', 'Deudor', 'Acreedor']],
     body: rows,
     foot: [['', 'TOTALES GENERALES', formatQ(data.totals?.debe), formatQ(data.totals?.haber)]],
     styles: { fontSize: 9, cellPadding: 4 },
@@ -55,9 +55,9 @@ export const exportTrialBalancePDF = (data, filename = 'balance_comprobacion') =
   doc.save(`${filename}_${fileDate()}.pdf`);
 };
 
-/* ────────────────────────────────────────────────── */
+/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 /* ESTADO DE RESULTADOS                              */
-/* ────────────────────────────────────────────────── */
+/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 export const exportProfitLossPDF = (data) => {
   const doc = new jsPDF();
   addHeader(doc, 'Estado de Resultados');
@@ -79,7 +79,7 @@ export const exportProfitLossPDF = (data) => {
   const separator = () => { doc.setDrawColor(200); doc.line(25, y - 2, 185, y - 2); y += 2; };
 
   doc.setFontSize(9); doc.setTextColor(59, 130, 246); doc.setFont('helvetica', 'bold');
-  doc.text('INGRESOS DE OPERACIÓN', 25, y); y += 8;
+  doc.text('INGRESOS DE OPERACIÃ“N', 25, y); y += 8;
   line('Ventas y Servicios', formatQ(r.totalIngresos));
   separator();
   line('TOTAL INGRESOS', formatQ(r.totalIngresos), { bold: true });
@@ -90,7 +90,7 @@ export const exportProfitLossPDF = (data) => {
   line('Costo de Ventas', `(${formatQ(r.totalCostos)})`, { color: [220, 38, 38] });
   separator();
   line('UTILIDAD BRUTA', formatQ(r.utilidadBruta), { bold: true, color: [59, 130, 246] });
-  line('Gastos de Administración', `(${formatQ(r.totalGastos)})`, { color: [220, 38, 38] });
+  line('Gastos de AdministraciÃ³n', `(${formatQ(r.totalGastos)})`, { color: [220, 38, 38] });
   y += 6;
 
   doc.setFillColor(240, 253, 244);
@@ -102,9 +102,9 @@ export const exportProfitLossPDF = (data) => {
   doc.save(`estado_resultados_${fileDate()}.pdf`);
 };
 
-/* ────────────────────────────────────────────────── */
+/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 /* BALANCE GENERAL                                   */
-/* ────────────────────────────────────────────────── */
+/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 export const exportBalanceSheetPDF = (data) => {
   const doc = new jsPDF();
   addHeader(doc, 'Balance General');
@@ -167,9 +167,9 @@ export const exportBalanceSheetPDF = (data) => {
   doc.save(`balance_general_${fileDate()}.pdf`);
 };
 
-/* ────────────────────────────────────────────────── */
+/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 /* LIBRO DIARIO                                      */
-/* ────────────────────────────────────────────────── */
+/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 export const exportJournalPDF = (entries) => {
   if (!entries || entries.length === 0) return;
   const doc = new jsPDF('landscape');
@@ -193,7 +193,7 @@ export const exportJournalPDF = (entries) => {
 
   autoTable(doc, {
     startY: 40,
-    head: [['#', 'Fecha', 'Tipo', 'Descripción', 'Código', 'Cuenta', 'Debe', 'Haber']],
+    head: [['#', 'Fecha', 'Tipo', 'DescripciÃ³n', 'CÃ³digo', 'Cuenta', 'Debe', 'Haber']],
     body: rows,
     styles: { fontSize: 8, cellPadding: 3 },
     headStyles: { fillColor: [30, 30, 30], textColor: 255, fontStyle: 'bold' },
@@ -205,9 +205,9 @@ export const exportJournalPDF = (entries) => {
   doc.save(`libro_diario_${fileDate()}.pdf`);
 };
 
-/* ────────────────────────────────────────────────── */
+/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 /* LIBRO MAYOR                                       */
-/* ────────────────────────────────────────────────── */
+/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 export const exportLedgerPDF = (account, movements) => {
   if (!movements || movements.length === 0) return;
   const doc = new jsPDF();
@@ -215,7 +215,7 @@ export const exportLedgerPDF = (account, movements) => {
 
   let y = 40;
   doc.setFontSize(11); doc.setFont('helvetica', 'bold');
-  doc.text(`Cuenta: ${account.code} — ${account.name}`, 25, y);
+  doc.text(`Cuenta: ${account.code} â€” ${account.name}`, 25, y);
   y += 6;
   doc.setFontSize(9); doc.setFont('helvetica', 'normal'); doc.setTextColor(100);
   doc.text(`Naturaleza: ${account.nature}`, 25, y);
@@ -234,7 +234,7 @@ export const exportLedgerPDF = (account, movements) => {
 
   autoTable(doc, {
     startY: y + 6,
-    head: [['Fecha', '#', 'Descripción', 'Tipo', 'Debe', 'Haber', 'Saldo']],
+    head: [['Fecha', '#', 'DescripciÃ³n', 'Tipo', 'Debe', 'Haber', 'Saldo']],
     body: rows,
     foot: [['', '', '', 'TOTALES', formatQ(totalDebit), formatQ(totalCredit), formatQ(finalBalance)]],
     styles: { fontSize: 9, cellPadding: 4 },
@@ -249,9 +249,9 @@ export const exportLedgerPDF = (account, movements) => {
   doc.save(`libro_mayor_${safeName}_${fileDate()}.pdf`);
 };
 
-/* ────────────────────────────────────────────────── */
+/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 /* LIBRO MAYOR COMPLETO                              */
-/* ────────────────────────────────────────────────── */
+/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 export const exportFullLedgerPDF = (allLedgers, dateStrSuffix) => {
   if (!allLedgers || allLedgers.length === 0) return;
   const doc = new jsPDF();
@@ -269,7 +269,7 @@ export const exportFullLedgerPDF = (allLedgers, dateStrSuffix) => {
     }
     
     doc.setFontSize(11); doc.setFont('helvetica', 'bold');
-    doc.text(`Cuenta: ${account.code} — ${account.name}`, 25, y);
+    doc.text(`Cuenta: ${account.code} â€” ${account.name}`, 25, y);
     y += 6;
     doc.setFontSize(9); doc.setFont('helvetica', 'normal'); doc.setTextColor(100);
     doc.text(`Naturaleza: ${account.nature}`, 25, y);
@@ -297,7 +297,7 @@ export const exportFullLedgerPDF = (allLedgers, dateStrSuffix) => {
 
     autoTable(doc, {
       startY: y + 6,
-      head: [['Fecha', '#', 'Descripción', 'Tipo', 'Debe', 'Haber', 'Saldo']],
+      head: [['Fecha', '#', 'DescripciÃ³n', 'Tipo', 'Debe', 'Haber', 'Saldo']],
       body: rows,
       foot: [['', '', '', 'TOTALES', formatQ(totalDebit), formatQ(totalCredit), formatQ(finalBalance)]],
       styles: { fontSize: 9, cellPadding: 4 },
