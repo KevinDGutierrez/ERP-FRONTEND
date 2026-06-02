@@ -153,15 +153,15 @@ const NewEntry = () => {
     e.preventDefault();
     const hasEmptyAccounts = formData.details.some(d => !d.accountId);
     if (hasEmptyAccounts) {
-      setError('Por favor, selecciona una cuenta vÃ¡lida en todas las lÃ­neas de la partida.');
+      setError('Por favor, selecciona una cuenta válida en todas las líneas de la partida.');
       return;
     }
     if (!isSquared) {
-      setError('La partida no estÃ¡ cuadrada (Debe != Haber)');
+      setError('La partida no está cuadrada (Debe != Haber)');
       return;
     }
     if (!formData.description.trim()) {
-      setError('La descripciÃ³n es obligatoria');
+      setError('La descripción es obligatoria');
       return;
     }
 
@@ -239,9 +239,9 @@ const NewEntry = () => {
             </div>
 
             <div className="form-group">
-              <label>DescripciÃ³n / Glosa</label>
+              <label>Descripción / Glosa</label>
               <textarea 
-                placeholder="Escribe la descripciÃ³n de la operaciÃ³n..."
+                placeholder="Escribe la descripción de la operación..."
                 value={formData.description}
                 onChange={e => setFormData({...formData, description: e.target.value})}
                 required
@@ -273,7 +273,7 @@ const NewEntry = () => {
                           value={detail.accountId}
                           onChange={val => handleDetailChange(index, 'accountId', val)}
                           options={accounts}
-                          placeholder="Buscar cuenta por nombre o cÃ³digo..."
+                          placeholder="Buscar cuenta por nombre o código..."
                           required={true}
                         />
                       </td>
@@ -314,7 +314,7 @@ const NewEntry = () => {
                   <tr className="totals-row">
                     <td>
                       <button type="button" className="btn-add-row" onClick={addRow}>
-                        <Plus size={16} /> Agregar lÃ­nea
+                        <Plus size={16} /> Agregar línea
                       </button>
                     </td>
                     <td className={`total-cell ${!isSquared ? 'error' : ''}`}>

@@ -245,7 +245,7 @@ const Ledger = () => {
               <div className="empty-state-premium card">
                 <BookOpen size={48} strokeWidth={1.2} />
                 <h3>Sin cuentas</h3>
-                <p>No se encontraron cuentas con la configuraciÃ³n actual.</p>
+                <p>No se encontraron cuentas con la configuración actual.</p>
               </div>
             ) : (
               allLedgers.filter(ledger => showEmptyAccounts || ledger.movements.length > 0).map((ledger, idx) => (
@@ -263,7 +263,7 @@ const Ledger = () => {
                   >
                     <div className="account-info-grid">
                       <div className="info-item">
-                        <span className="info-label">CÃ³digo</span>
+                        <span className="info-label">Código</span>
                         <span className="info-value code">{ledger.accountInfo.code}</span>
                       </div>
                       <div className="info-item">
@@ -311,7 +311,7 @@ const Ledger = () => {
                             <tr>
                               <th>Fecha</th>
                               <th>#</th>
-                              <th>DescripciÃ³n</th>
+                              <th>Descripción</th>
                               <th>Tipo</th>
                               <th className="text-right">Debe</th>
                               <th className="text-right">Haber</th>
@@ -369,7 +369,7 @@ const Ledger = () => {
           >
             <div className="account-info-grid">
               <div className="info-item">
-                <span className="info-label">CÃ³digo</span>
+                <span className="info-label">Código</span>
                 <span className="info-value code">{accountInfo.code}</span>
               </div>
               <div className="info-item">
@@ -436,7 +436,7 @@ const Ledger = () => {
                   <tr>
                     <th>Fecha</th>
                     <th>#</th>
-                    <th>DescripciÃ³n</th>
+                    <th>Descripción</th>
                     <th>Tipo</th>
                     <th className="text-right">Debe</th>
                     <th className="text-right">Haber</th>

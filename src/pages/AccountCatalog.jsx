@@ -101,7 +101,7 @@ const AccountCatalog = () => {
 
     const BOM = '\uFEFF';
     let csv = BOM + `Libro Mayor - ${acc.code || ''} ${acc.name || ''}\n`;
-    csv += 'Fecha,DescripciÃ³n,Ref.,Debe,Haber,Saldo\n';
+    csv += 'Fecha,Descripción,Ref.,Debe,Haber,Saldo\n';
 
     ledgerData.movements.forEach(m => {
       const desc = (m.description || '').replace(/"/g, '""');
@@ -155,7 +155,7 @@ const AccountCatalog = () => {
       <div className="catalog-container">
         <header className="page-header">
           <div>
-            <h1>CatÃ¡logo de Cuentas</h1>
+            <h1>Catálogo de Cuentas</h1>
             <p>Gestiona el plan de cuentas de la empresa.</p>
           </div>
           <button className="add-btn" onClick={() => setIsModalOpen(true)}>
@@ -168,7 +168,7 @@ const AccountCatalog = () => {
           <div className="search-bar">
             <Search size={18} />
             <input 
-              placeholder="Buscar por nombre o cÃ³digo..." 
+              placeholder="Buscar por nombre o código..." 
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
@@ -229,14 +229,14 @@ const AccountCatalog = () => {
           {loading ? (
             <div className="table-loading">
               <div className="spinner"></div>
-              Cargando catÃ¡logo...
+              Cargando catálogo...
             </div>
           ) : (
             <div className="table-scroll-container">
               <table className="account-table">
                 <thead>
                   <tr>
-                    <th>CÃ³digo <ArrowUpDown size={14} /></th>
+                    <th>Código <ArrowUpDown size={14} /></th>
                     <th>Nombre de la Cuenta</th>
                     <th>Tipo</th>
                     <th>Naturaleza</th>
@@ -308,7 +308,7 @@ const AccountCatalog = () => {
                 }
               }}
             >
-              <option value="">-- Sin cuenta superior (RaÃ­z) --</option>
+              <option value="">-- Sin cuenta superior (Raíz) --</option>
               {potentialParents.map(parent => (
                 <option key={parent.id} value={parent.id}>
                   {parent.code} - {parent.name}
@@ -316,7 +316,7 @@ const AccountCatalog = () => {
               ))}
             </select>
             <small style={{ color: '#94a3b8', fontSize: '11px', marginTop: '4px' }}>
-              El cÃ³digo se generarÃ¡ automÃ¡ticamente segÃºn la cuenta seleccionada.
+              El código se generará automáticamente según la cuenta seleccionada.
             </small>
           </div>
           <div className="form-group">
@@ -447,7 +447,7 @@ const AccountCatalog = () => {
                     <thead>
                       <tr>
                         <th>FECHA</th>
-                        <th>DESCRIPCIÃ“N</th>
+                        <th>DESCRIPCIÓN</th>
                         <th className="text-right">DEBE</th>
                         <th className="text-right">HABER</th>
                         <th className="text-right">SALDO</th>

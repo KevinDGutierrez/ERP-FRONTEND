@@ -42,7 +42,7 @@ const CustomTooltip = ({ active, payload, label }) => {
       boxShadow: '0 8px 24px rgba(0,0,0,0.3)',
       fontSize: 13
     }}>
-      <p style={{ fontWeight: 700, marginBottom: 6, color: 'var(--text-primary, #fff)' }}>DÃ­a {label}</p>
+      <p style={{ fontWeight: 700, marginBottom: 6, color: 'var(--text-primary, #fff)' }}>Día {label}</p>
       {payload.map((p, i) => (
         <p key={i} style={{ color: p.color, margin: '2px 0' }}>
           {p.name}: Q{(p.value || 0).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
@@ -116,8 +116,8 @@ const Dashboard = () => {
               <div className="empty-icon-wrapper">
                 <BarChart3 size={56} strokeWidth={1.2} />
               </div>
-              <h2>AÃºn no hay movimientos registrados</h2>
-              <p>Crea tu primera partida contable para ver estadÃ­sticas reales en tu dashboard.</p>
+              <h2>Aún no hay movimientos registrados</h2>
+              <p>Crea tu primera partida contable para ver estadísticas reales en tu dashboard.</p>
               <button className="btn-primary" onClick={() => navigate('/new-entry')}>
                 <PlusCircle size={20} />
                 <span>Crear Primera Partida</span>
@@ -231,7 +231,7 @@ const Dashboard = () => {
             {/* Latest Entries */}
             <div className="recent-activity-card card">
               <div className="summary-header">
-                <h4>Ãšltimas Partidas</h4>
+                <h4>Últimas Partidas</h4>
                 <button className="btn-ghost-sm" onClick={() => navigate('/entries')}>Ver todas</button>
               </div>
               <div className="activity-list">

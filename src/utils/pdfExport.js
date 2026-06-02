@@ -25,11 +25,11 @@ const addHeader = (doc, title) => {
 };
 
 /* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
-/* BALANCE DE COMPROBACIÃ“N / SALDOS AJUSTADO         */
+/* BALANCE DE COMPROBACIÓN / SALDOS AJUSTADO         */
 /* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 export const exportTrialBalancePDF = (data, filename = 'balance_comprobacion') => {
   const doc = new jsPDF();
-  const title = filename.includes('ajustado') ? 'Balance de Saldos Ajustado' : 'Balance de ComprobaciÃ³n';
+  const title = filename.includes('ajustado') ? 'Balance de Saldos Ajustado' : 'Balance de Comprobación';
   addHeader(doc, title);
 
   const rows = (data.accounts || []).map(acc => [
@@ -41,7 +41,7 @@ export const exportTrialBalancePDF = (data, filename = 'balance_comprobacion') =
 
   autoTable(doc, {
     startY: 40,
-    head: [['CÃ³digo', 'Nombre de la Cuenta', 'Deudor', 'Acreedor']],
+    head: [['Código', 'Nombre de la Cuenta', 'Deudor', 'Acreedor']],
     body: rows,
     foot: [['', 'TOTALES GENERALES', formatQ(data.totals?.debe), formatQ(data.totals?.haber)]],
     styles: { fontSize: 9, cellPadding: 4 },
@@ -79,7 +79,7 @@ export const exportProfitLossPDF = (data) => {
   const separator = () => { doc.setDrawColor(200); doc.line(25, y - 2, 185, y - 2); y += 2; };
 
   doc.setFontSize(9); doc.setTextColor(59, 130, 246); doc.setFont('helvetica', 'bold');
-  doc.text('INGRESOS DE OPERACIÃ“N', 25, y); y += 8;
+  doc.text('INGRESOS DE OPERACIÓN', 25, y); y += 8;
   line('Ventas y Servicios', formatQ(r.totalIngresos));
   separator();
   line('TOTAL INGRESOS', formatQ(r.totalIngresos), { bold: true });
@@ -90,7 +90,7 @@ export const exportProfitLossPDF = (data) => {
   line('Costo de Ventas', `(${formatQ(r.totalCostos)})`, { color: [220, 38, 38] });
   separator();
   line('UTILIDAD BRUTA', formatQ(r.utilidadBruta), { bold: true, color: [59, 130, 246] });
-  line('Gastos de AdministraciÃ³n', `(${formatQ(r.totalGastos)})`, { color: [220, 38, 38] });
+  line('Gastos de Administración', `(${formatQ(r.totalGastos)})`, { color: [220, 38, 38] });
   y += 6;
 
   doc.setFillColor(240, 253, 244);
@@ -193,7 +193,7 @@ export const exportJournalPDF = (entries) => {
 
   autoTable(doc, {
     startY: 40,
-    head: [['#', 'Fecha', 'Tipo', 'DescripciÃ³n', 'CÃ³digo', 'Cuenta', 'Debe', 'Haber']],
+    head: [['#', 'Fecha', 'Tipo', 'Descripción', 'Código', 'Cuenta', 'Debe', 'Haber']],
     body: rows,
     styles: { fontSize: 8, cellPadding: 3 },
     headStyles: { fillColor: [30, 30, 30], textColor: 255, fontStyle: 'bold' },
@@ -234,7 +234,7 @@ export const exportLedgerPDF = (account, movements) => {
 
   autoTable(doc, {
     startY: y + 6,
-    head: [['Fecha', '#', 'DescripciÃ³n', 'Tipo', 'Debe', 'Haber', 'Saldo']],
+    head: [['Fecha', '#', 'Descripción', 'Tipo', 'Debe', 'Haber', 'Saldo']],
     body: rows,
     foot: [['', '', '', 'TOTALES', formatQ(totalDebit), formatQ(totalCredit), formatQ(finalBalance)]],
     styles: { fontSize: 9, cellPadding: 4 },
@@ -297,7 +297,7 @@ export const exportFullLedgerPDF = (allLedgers, dateStrSuffix) => {
 
     autoTable(doc, {
       startY: y + 6,
-      head: [['Fecha', '#', 'DescripciÃ³n', 'Tipo', 'Debe', 'Haber', 'Saldo']],
+      head: [['Fecha', '#', 'Descripción', 'Tipo', 'Debe', 'Haber', 'Saldo']],
       body: rows,
       foot: [['', '', '', 'TOTALES', formatQ(totalDebit), formatQ(totalCredit), formatQ(finalBalance)]],
       styles: { fontSize: 9, cellPadding: 4 },

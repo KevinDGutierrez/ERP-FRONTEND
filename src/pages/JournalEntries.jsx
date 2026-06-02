@@ -66,7 +66,7 @@ const JournalEntries = () => {
             </div>
             <div>
               <h1>Libro Diario</h1>
-              <p>Registro cronolÃ³gico de todas las operaciones contables de la empresa.</p>
+              <p>Registro cronológico de todas las operaciones contables de la empresa.</p>
             </div>
           </div>
           <div className="header-stats">
@@ -135,7 +135,7 @@ const JournalEntries = () => {
           ) : error ? (
             <div className="error-state-premium card">
               <AlertCircle size={48} />
-              <h3>Error de ConexiÃ³n</h3>
+              <h3>Error de Conexión</h3>
               <p>{error}</p>
               <button className="btn-primary" onClick={fetchEntries}>Reintentar</button>
             </div>
@@ -149,7 +149,7 @@ const JournalEntries = () => {
               <button className="btn-glass" onClick={() => setFilters({
                 startDate: new Date(new Date().getFullYear(), 0, 1).toISOString().split('T')[0],
                 endDate: new Date().toISOString().split('T')[0]
-              })}>Ver todo el aÃ±o</button>
+              })}>Ver todo el año</button>
             </div>
           ) : (
             <div className="entries-stack">
@@ -182,7 +182,7 @@ const JournalEntries = () => {
                     <table className="modern-table">
                       <thead>
                         <tr>
-                          <th>CÃ“DIGO</th>
+                          <th>CÓDIGO</th>
                           <th>CUENTA</th>
                           <th className="text-right">DEBE</th>
                           <th className="text-right">HABER</th>

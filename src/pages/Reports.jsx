@@ -67,7 +67,7 @@ const Reports = () => {
       const response = await api.get(endpoint);
       setData(response.data);
     } catch (err) {
-      setError('No se pudo generar el reporte. Verifica la conexiÃ³n con el servidor.');
+      setError('No se pudo generar el reporte. Verifica la conexión con el servidor.');
       console.error(err);
     } finally {
       setLoading(false);
@@ -112,7 +112,7 @@ const Reports = () => {
             onClick={() => setActiveTab('trial')}
           >
             <FileText size={18} />
-            <span>Balance de ComprobaciÃ³n</span>
+            <span>Balance de Comprobación</span>
           </button>
           <button 
             className={`report-tab ${activeTab === 'adjusted' ? 'active' : ''}`}
@@ -192,7 +192,7 @@ const TrialBalanceView = ({ data }) => (
       <table className="modern-table">
         <thead>
           <tr>
-            <th>CÃ“DIGO</th>
+            <th>CÓDIGO</th>
             <th>NOMBRE DE LA CUENTA</th>
             <th className="text-right">DEUDOR</th>
             <th className="text-right">ACREEDOR</th>
@@ -237,7 +237,7 @@ const AdjustedTrialBalanceView = ({ data }) => (
       <table className="modern-table">
         <thead>
           <tr>
-            <th>CÃ“DIGO</th>
+            <th>CÓDIGO</th>
             <th>NOMBRE DE LA CUENTA</th>
             <th className="text-right">DEUDOR</th>
             <th className="text-right">ACREEDOR</th>
@@ -289,7 +289,7 @@ const ProfitLossView = ({ data }) => (
     <div className="report-card-premium card">
       <div className="pnl-detail-view">
         <div className="pnl-section">
-          <div className="section-title">INGRESOS DE OPERACIÃ“N</div>
+          <div className="section-title">INGRESOS DE OPERACIÓN</div>
           <div className="pnl-line">
             <span>Ventas y Servicios</span>
             <span>Q{data.resumen?.totalIngresos.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',')}</span>
@@ -311,7 +311,7 @@ const ProfitLossView = ({ data }) => (
             <span>Q{data.resumen?.utilidadBruta.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',')}</span>
           </div>
           <div className="pnl-line">
-            <span>Gastos de AdministraciÃ³n</span>
+            <span>Gastos de Administración</span>
             <span className="negative">(Q{data.resumen?.totalGastos.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',')})</span>
           </div>
         </div>
