@@ -337,12 +337,18 @@ const BalanceSheetView = ({ data }) => (
         </div>
       </div>
       <div className="bs-lines">
-        {data.activos?.map(a => (
-          <div key={a.id || a.code} className="pnl-line">
-            <span>{a.name}</span>
-            <span>{formatQ(a.balance)}</span>
-          </div>
-        ))}
+        {data.activos?.map(a => {
+          let val = Math.abs(a.balance);
+          if (a.nature === 'ACREEDORA') {
+            val = -val;
+          }
+          return (
+            <div key={a.id || a.code} className="pnl-line">
+              <span>{a.name}</span>
+              <span className={val < 0 ? 'negative' : ''}>{formatQ(val)}</span>
+            </div>
+          );
+        })}
         <div className="pnl-line total">
           <span>TOTAL ACTIVO</span>
           <span>{formatQ(data.totales?.activo)}</span>
@@ -369,11 +375,18 @@ const BalanceSheetView = ({ data }) => (
         <div className="bs-group-label" style={{ marginTop: '1.5rem' }}>Patrimonio</div>
         {data.patrimonio?.map(p => {
           const isResult = p.code === '3.2.01.01' || p.id === '_resultado_ejercicio' || p.name.toLowerCase() === 'resultado del ejercicio';
-          const val = isResult ? p.balance : Math.abs(p.balance);
+          let val = p.balance;
+          if (isResult) {
+            val = p.balance;
+          } else if (p.nature === 'DEUDORA') {
+            val = -Math.abs(p.balance);
+          } else {
+            val = Math.abs(p.balance);
+          }
           return (
             <div key={p.id || p.code} className="pnl-line">
               <span>{p.name}</span>
-              <span className={isResult && val < 0 ? 'negative' : ''}>{formatQ(val)}</span>
+              <span className={val < 0 ? 'negative' : ''}>{formatQ(val)}</span>
             </div>
           );
         })}

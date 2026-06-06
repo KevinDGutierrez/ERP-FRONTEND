@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 :root {
   /* Dark Theme Tokens (Default) */
   --bg: #070708;

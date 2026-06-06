@@ -11,6 +11,7 @@ import {
   CheckCircle2,
   PlusCircle
 } from 'lucide-react';
+import { smartSearchAccounts } from '../utils/search';
 import './NewEntry.css';
 
 const SearchableSelect = ({ value, onChange, options, placeholder, required }) => {
@@ -39,10 +40,7 @@ const SearchableSelect = ({ value, onChange, options, placeholder, required }) =
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [value, options]);
 
-  const filteredOptions = options.filter(o => 
-    o.name.toLowerCase().includes(search.toLowerCase()) || 
-    o.code.includes(search)
-  );
+  const filteredOptions = smartSearchAccounts(options, search);
 
   return (
     <div className="searchable-select" ref={wrapperRef} style={{ position: 'relative' }}>

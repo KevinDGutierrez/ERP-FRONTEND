@@ -3,6 +3,7 @@ import Layout from '../components/layout/Layout';
 import Modal from '../components/common/Modal';
 import api from '../api/client';
 import { Search, Plus, Filter, ArrowUpDown, AlertTriangle, CheckCircle2, BookOpen, X, Download } from 'lucide-react';
+import { smartSearchAccounts } from '../utils/search';
 import './AccountCatalog.css';
 
 const AccountCatalog = () => {
@@ -119,16 +120,11 @@ const AccountCatalog = () => {
     URL.revokeObjectURL(url);
   };
 
-  const filteredAccounts = accounts.filter(acc => {
+  const baseFilteredAccounts = accounts.filter(acc => {
     // Defensive checks to prevent crashes if data is missing
-    const name = acc.name || '';
-    const code = acc.code || '';
     const type = acc.type || '';
     const nature = acc.nature || '';
 
-    const matchesSearch = name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         code.includes(searchTerm);
-    
     // Support both singular and plural (e.g., INGRESO vs INGRESOS) and case-insensitive matching
     const matchesType = activeFilters.type === 'ALL' || 
                         type.toUpperCase() === activeFilters.type ||
@@ -140,8 +136,10 @@ const AccountCatalog = () => {
     const matchesNature = activeFilters.nature === 'ALL' || 
                           nature.toUpperCase() === activeFilters.nature;
     
-    return matchesSearch && matchesType && matchesNature;
+    return matchesType && matchesNature;
   });
+
+  const filteredAccounts = smartSearchAccounts(baseFilteredAccounts, searchTerm);
 
   // Filter potential parent accounts based on selected type
   const potentialParents = accounts.filter(acc => {
