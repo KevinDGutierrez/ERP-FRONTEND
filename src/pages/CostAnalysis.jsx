@@ -78,19 +78,19 @@ const EXAMPLE_DATA = {
 const PIE_COLORS = ['#3b82f6', '#10b981', '#f59e0b', '#8b5cf6'];
 
 const CostAnalysis = () => {
-  const [activeTab, setActiveTab] = useState('data'); // 'data' | 'engine' | 'dashboard' | 'whatif'
+  const [activeTab, setActiveTab] = useState('dashboard'); // 'dashboard' | 'data' | 'engine' | 'whatif'
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [simulating, setSimulating] = useState(false);
   const [feedback, setFeedback] = useState(null); // { type: 'success'|'error'|'info', message: '' }
 
   // Inputs guardados en la base de datos (línea base)
-  const [baseInputs, setBaseInputs] = useState(EXAMPLE_DATA);
+  const [baseInputs, setBaseInputs] = useState(null);
   // Resultados del cálculo de la línea base
   const [baseResults, setBaseResults] = useState(null);
 
   // Formulario editable para Pestaña 1
-  const [formData, setFormData] = useState(EXAMPLE_DATA);
+  const [formData, setFormData] = useState(null);
 
   // Estado para Pestaña 4: Simulación What-If
   const [simulationPercentages, setSimulationPercentages] = useState({
@@ -117,6 +117,9 @@ const CostAnalysis = () => {
       }
     } catch (err) {
       console.error('Error al cargar análisis de costos:', err);
+      // En caso de fallo de red, fallback para permitir interactuar
+      setBaseInputs(EXAMPLE_DATA);
+      setFormData(EXAMPLE_DATA);
       setFeedback({
         type: 'error',
         message: err.response?.data?.message || 'Error al conectar con el servidor para cargar los datos.'
@@ -416,25 +419,25 @@ const CostAnalysis = () => {
         {/* NAVEGACIÓN POR PESTAÑAS */}
         <div className="cost-nav-tabs">
           <button 
+            className={`cost-tab-button ${activeTab === 'dashboard' ? 'active' : ''}`}
+            onClick={() => setActiveTab('dashboard')}
+          >
+            <BarChart3 size={18} />
+            <span>1. Dashboard</span>
+          </button>
+          <button 
             className={`cost-tab-button ${activeTab === 'data' ? 'active' : ''}`}
             onClick={() => setActiveTab('data')}
           >
             <Settings2 size={18} />
-            <span>1. Datos</span>
+            <span>2. Datos</span>
           </button>
           <button 
             className={`cost-tab-button ${activeTab === 'engine' ? 'active' : ''}`}
             onClick={() => setActiveTab('engine')}
           >
             <Cpu size={18} />
-            <span>2. Motor de Cálculo</span>
-          </button>
-          <button 
-            className={`cost-tab-button ${activeTab === 'dashboard' ? 'active' : ''}`}
-            onClick={() => setActiveTab('dashboard')}
-          >
-            <BarChart3 size={18} />
-            <span>3. Dashboard</span>
+            <span>3. Motor de Cálculo</span>
           </button>
           <button 
             className={`cost-tab-button ${activeTab === 'whatif' ? 'active' : ''}`}
@@ -445,10 +448,65 @@ const CostAnalysis = () => {
           </button>
         </div>
 
+        {/* ESTADO DE CARGA INICIAL (SKELETON) */}
+        {loading && !formData && (
+          <div className="cost-loading-skeleton">
+            <div className="cost-loading-banner">
+              <div className="cost-loading-spinner" />
+              <span>Cargando parámetros de costos...</span>
+            </div>
+            <div className="cost-form-grid">
+              <div className="skeleton-card">
+                <div className="skeleton-box skeleton-title" />
+                <div>
+                  <div className="skeleton-box skeleton-label" />
+                  <div className="skeleton-box skeleton-input" />
+                </div>
+                <div>
+                  <div className="skeleton-box skeleton-label" />
+                  <div className="skeleton-box skeleton-input" />
+                </div>
+                <div>
+                  <div className="skeleton-box skeleton-label" />
+                  <div className="skeleton-box skeleton-input" />
+                </div>
+              </div>
+
+              <div className="skeleton-card">
+                <div className="skeleton-box skeleton-title" />
+                <div>
+                  <div className="skeleton-box skeleton-label" />
+                  <div className="skeleton-box skeleton-input" />
+                </div>
+                <div>
+                  <div className="skeleton-box skeleton-label" />
+                  <div className="skeleton-box skeleton-input" />
+                </div>
+                <div>
+                  <div className="skeleton-box skeleton-label" />
+                  <div className="skeleton-box skeleton-input" />
+                </div>
+              </div>
+
+              <div className="skeleton-card">
+                <div className="skeleton-box skeleton-title" />
+                <div>
+                  <div className="skeleton-box skeleton-label" />
+                  <div className="skeleton-box skeleton-input" />
+                </div>
+                <div>
+                  <div className="skeleton-box skeleton-label" />
+                  <div className="skeleton-box skeleton-input" />
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* ======================================================== */}
-        {/* PESTAÑA 1: DATOS / PARÁMETROS DINÁMICOS */}
+        {/* PESTAÑA 2: DATOS / PARÁMETROS DINÁMICOS */}
         {/* ======================================================== */}
-        {activeTab === 'data' && (
+        {formData && activeTab === 'data' && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
             <form onSubmit={handleSaveAndCalculate}>
               <div className="cost-form-grid">
@@ -680,9 +738,9 @@ const CostAnalysis = () => {
         )}
 
         {/* ======================================================== */}
-        {/* PESTAÑA 2: MOTOR DE CÁLCULO */}
+        {/* PESTAÑA 3: MOTOR DE CÁLCULO */}
         {/* ======================================================== */}
-        {activeTab === 'engine' && (
+        {formData && activeTab === 'engine' && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
             {!baseResults ? (
               <div className="card text-center" style={{ padding: '40px' }}>
@@ -746,7 +804,7 @@ const CostAnalysis = () => {
                     <table className="statement-table">
                       <tbody>
                         <tr>
-                          <td>Ventas ({formatUnits(baseResults.inventory.unitsSold)} u × {formatQ(baseInputs.unitSalePrice)})</td>
+                          <td>Ventas ({formatUnits(baseResults.inventory.unitsSold)} u × {formatQ(baseInputs?.unitSalePrice ?? 0)})</td>
                           <td className="amount">{formatQ(baseResults.absorption.revenue)}</td>
                         </tr>
                         <tr>
@@ -794,7 +852,7 @@ const CostAnalysis = () => {
                     <table className="statement-table">
                       <tbody>
                         <tr>
-                          <td>Ventas ({formatUnits(baseResults.inventory.unitsSold)} u × {formatQ(baseInputs.unitSalePrice)})</td>
+                          <td>Ventas ({formatUnits(baseResults.inventory.unitsSold)} u × {formatQ(baseInputs?.unitSalePrice ?? 0)})</td>
                           <td className="amount">{formatQ(baseResults.direct.revenue)}</td>
                         </tr>
                         <tr>
@@ -905,9 +963,9 @@ const CostAnalysis = () => {
         )}
 
         {/* ======================================================== */}
-        {/* PESTAÑA 3: DASHBOARD VISUAL */}
+        {/* PESTAÑA 1: DASHBOARD VISUAL */}
         {/* ======================================================== */}
-        {activeTab === 'dashboard' && (
+        {formData && activeTab === 'dashboard' && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
             {!baseResults ? (
               <div className="card text-center" style={{ padding: '40px' }}>
@@ -1058,7 +1116,7 @@ const CostAnalysis = () => {
         {/* ======================================================== */}
         {/* PESTAÑA 4: SIMULACIÓN WHAT-IF */}
         {/* ======================================================== */}
-        {activeTab === 'whatif' && (
+        {formData && activeTab === 'whatif' && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
             <div className="what-if-control-panel">
               <div className="what-if-header">
