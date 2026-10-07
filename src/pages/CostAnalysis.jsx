@@ -214,18 +214,27 @@ const CostAnalysis = () => {
   // -------------------------------------------------------------
   // SIMULACIÓN WHAT-IF (Pestaña 4)
   // -------------------------------------------------------------
-  const runSimulation = async (newPercentages, overrideInputs = null) => {
-    setSimulationPercentages(newPercentages);
+  const runSimulation = async (newPercentages = null, overrideInputs = null) => {
+    const percentages = newPercentages || simulationPercentages || {
+      production: 0,
+      sales: 0,
+      price: 0,
+      variableCosts: 0,
+      fixedMfg: 0
+    };
+    if (newPercentages) {
+      setSimulationPercentages(newPercentages);
+    }
     let targetInputs;
 
     if (overrideInputs) {
       targetInputs = overrideInputs;
     } else {
-      const prodMult = 1 + (newPercentages.production / 100);
-      const salesMult = 1 + (newPercentages.sales / 100);
-      const priceMult = 1 + (newPercentages.price / 100);
-      const varCostMult = 1 + (newPercentages.variableCosts / 100);
-      const fixedMfgMult = 1 + (newPercentages.fixedMfg / 100);
+      const prodMult = 1 + ((percentages.production || 0) / 100);
+      const salesMult = 1 + ((percentages.sales || 0) / 100);
+      const priceMult = 1 + ((percentages.price || 0) / 100);
+      const varCostMult = 1 + ((percentages.variableCosts || 0) / 100);
+      const fixedMfgMult = 1 + ((percentages.fixedMfg || 0) / 100);
 
       targetInputs = {
         normalCapacity: baseInputs.normalCapacity,
@@ -279,14 +288,15 @@ const CostAnalysis = () => {
       // Ventas se mantienen exactamente iguales
       unitsSold: baseInputs.unitsSold
     };
-    setSimulationPercentages({
+    const nextPercentages = {
       production: 20,
       sales: 0,
       price: 0,
       variableCosts: 0,
       fixedMfg: 0
-    });
-    runSimulation(null, updatedInputs);
+    };
+    setSimulationPercentages(nextPercentages);
+    runSimulation(nextPercentages, updatedInputs);
   };
 
   // Restablecer simulación
@@ -965,7 +975,7 @@ const CostAnalysis = () => {
                       <span className="badge badge-info">Absorbente vs Directo</span>
                     </div>
                     <div className="chart-container">
-                      <ResponsiveContainer width="100%" height="100%">
+                      <ResponsiveContainer width="100%" height={280} minWidth={0}>
                         <BarChart data={profitChartData} margin={{ top: 20, right: 20, left: 20, bottom: 20 }}>
                           <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" vertical={false} />
                           <XAxis dataKey="name" stroke="var(--text-secondary)" tick={{ fill: 'var(--text-secondary)' }} />
@@ -995,7 +1005,7 @@ const CostAnalysis = () => {
                       <span className="badge badge-muted">Estructura de Costos</span>
                     </div>
                     <div className="chart-container">
-                      <ResponsiveContainer width="100%" height="100%">
+                      <ResponsiveContainer width="100%" height={280} minWidth={0}>
                         <PieChart>
                           <Pie
                             data={costsStructureData}
@@ -1024,7 +1034,7 @@ const CostAnalysis = () => {
                       <span className="badge badge-success">Total: {formatQ(baseResults.rates.unitAbsorptionCost)} / unidad</span>
                     </div>
                     <div className="chart-container" style={{ height: '220px' }}>
-                      <ResponsiveContainer width="100%" height="100%">
+                      <ResponsiveContainer width="100%" height={220} minWidth={0}>
                         <BarChart layout="vertical" data={unitCostCompositionData} margin={{ top: 10, right: 30, left: 100, bottom: 10 }}>
                           <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" horizontal={false} />
                           <XAxis type="number" stroke="var(--text-secondary)" tickFormatter={(v) => `Q${v}`} />
