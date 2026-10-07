@@ -1078,7 +1078,7 @@ const CostAnalysis = () => {
                 <div className="simulation-control">
                   <div className="sim-control-top">
                     <span className="sim-control-label">Producción Real</span>
-                    <span className="sim-control-val">{simulationPercentages.production > 0 ? `+${simulationPercentages.production}` : simulationPercentages.production}%</span>
+                    <span className="sim-control-val">{(simulationPercentages?.production || 0) > 0 ? `+${simulationPercentages?.production}` : (simulationPercentages?.production || 0)}%</span>
                   </div>
                   <input 
                     type="range" 
@@ -1086,9 +1086,9 @@ const CostAnalysis = () => {
                     max="100" 
                     step="5"
                     className="sim-slider"
-                    value={simulationPercentages.production}
+                    value={simulationPercentages?.production ?? 0}
                     onChange={(e) => {
-                      const newP = { ...simulationPercentages, production: parseFloat(e.target.value) };
+                      const newP = { ...(simulationPercentages || {}), production: parseFloat(e.target.value) || 0 };
                       runSimulation(newP);
                     }}
                   />
@@ -1097,7 +1097,7 @@ const CostAnalysis = () => {
                 <div className="simulation-control">
                   <div className="sim-control-top">
                     <span className="sim-control-label">Ventas (Unidades)</span>
-                    <span className="sim-control-val">{simulationPercentages.sales > 0 ? `+${simulationPercentages.sales}` : simulationPercentages.sales}%</span>
+                    <span className="sim-control-val">{(simulationPercentages?.sales || 0) > 0 ? `+${simulationPercentages?.sales}` : (simulationPercentages?.sales || 0)}%</span>
                   </div>
                   <input 
                     type="range" 
@@ -1105,9 +1105,9 @@ const CostAnalysis = () => {
                     max="100" 
                     step="5"
                     className="sim-slider"
-                    value={simulationPercentages.sales}
+                    value={simulationPercentages?.sales ?? 0}
                     onChange={(e) => {
-                      const newP = { ...simulationPercentages, sales: parseFloat(e.target.value) };
+                      const newP = { ...(simulationPercentages || {}), sales: parseFloat(e.target.value) || 0 };
                       runSimulation(newP);
                     }}
                   />
@@ -1116,7 +1116,7 @@ const CostAnalysis = () => {
                 <div className="simulation-control">
                   <div className="sim-control-top">
                     <span className="sim-control-label">Precio de Venta</span>
-                    <span className="sim-control-val">{simulationPercentages.price > 0 ? `+${simulationPercentages.price}` : simulationPercentages.price}%</span>
+                    <span className="sim-control-val">{(simulationPercentages?.price || 0) > 0 ? `+${simulationPercentages?.price}` : (simulationPercentages?.price || 0)}%</span>
                   </div>
                   <input 
                     type="range" 
@@ -1124,9 +1124,9 @@ const CostAnalysis = () => {
                     max="50" 
                     step="5"
                     className="sim-slider"
-                    value={simulationPercentages.price}
+                    value={simulationPercentages?.price ?? 0}
                     onChange={(e) => {
-                      const newP = { ...simulationPercentages, price: parseFloat(e.target.value) };
+                      const newP = { ...(simulationPercentages || {}), price: parseFloat(e.target.value) || 0 };
                       runSimulation(newP);
                     }}
                   />
@@ -1135,7 +1135,7 @@ const CostAnalysis = () => {
                 <div className="simulation-control">
                   <div className="sim-control-top">
                     <span className="sim-control-label">Costos Variables</span>
-                    <span className="sim-control-val">{simulationPercentages.variableCosts > 0 ? `+${simulationPercentages.variableCosts}` : simulationPercentages.variableCosts}%</span>
+                    <span className="sim-control-val">{(simulationPercentages?.variableCosts || 0) > 0 ? `+${simulationPercentages?.variableCosts}` : (simulationPercentages?.variableCosts || 0)}%</span>
                   </div>
                   <input 
                     type="range" 
@@ -1143,9 +1143,9 @@ const CostAnalysis = () => {
                     max="50" 
                     step="5"
                     className="sim-slider"
-                    value={simulationPercentages.variableCosts}
+                    value={simulationPercentages?.variableCosts ?? 0}
                     onChange={(e) => {
-                      const newP = { ...simulationPercentages, variableCosts: parseFloat(e.target.value) };
+                      const newP = { ...(simulationPercentages || {}), variableCosts: parseFloat(e.target.value) || 0 };
                       runSimulation(newP);
                     }}
                   />
@@ -1154,7 +1154,7 @@ const CostAnalysis = () => {
                 <div className="simulation-control">
                   <div className="sim-control-top">
                     <span className="sim-control-label">Costos Fijos de Fab.</span>
-                    <span className="sim-control-val">{simulationPercentages.fixedMfg > 0 ? `+${simulationPercentages.fixedMfg}` : simulationPercentages.fixedMfg}%</span>
+                    <span className="sim-control-val">{(simulationPercentages?.fixedMfg || 0) > 0 ? `+${simulationPercentages?.fixedMfg}` : (simulationPercentages?.fixedMfg || 0)}%</span>
                   </div>
                   <input 
                     type="range" 
@@ -1162,9 +1162,9 @@ const CostAnalysis = () => {
                     max="50" 
                     step="5"
                     className="sim-slider"
-                    value={simulationPercentages.fixedMfg}
+                    value={simulationPercentages?.fixedMfg ?? 0}
                     onChange={(e) => {
-                      const newP = { ...simulationPercentages, fixedMfg: parseFloat(e.target.value) };
+                      const newP = { ...(simulationPercentages || {}), fixedMfg: parseFloat(e.target.value) || 0 };
                       runSimulation(newP);
                     }}
                   />
