@@ -19,7 +19,8 @@ import {
   Moon,
   Building,
   Users,
-  BookOpenCheck
+  BookOpenCheck,
+  Calculator
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import './Layout.css';
@@ -46,6 +47,7 @@ const getMenuItems = (role) => {
     { name: 'Libro Diario', icon: <History size={22} />, path: '/entries' },
     { name: 'Libro Mayor', icon: <BookOpenCheck size={22} />, path: '/ledger' },
     { name: 'Reportes', icon: <PieChart size={22} />, path: '/reports' },
+    { name: 'Costos y Margen', icon: <Calculator size={22} />, path: '/cost-analysis' },
   ];
 
   if (role === 'admin_empresa') {

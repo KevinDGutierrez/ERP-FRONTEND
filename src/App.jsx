@@ -19,6 +19,7 @@ const NewEntry = lazy(() => import('./pages/NewEntry'));
 const Ledger = lazy(() => import('./pages/Ledger'));
 const Reports = lazy(() => import('./pages/Reports'));
 const Settings = lazy(() => import('./pages/Settings'));
+const CostAnalysis = lazy(() => import('./pages/CostAnalysis'));
 
 // Admin Pages (super_admin)
 const AdminApprovals = lazy(() => import('./pages/AdminApprovals'));
@@ -130,6 +131,11 @@ const AppContent = () => {
         <Route path="/reports" element={
           <ProtectedRoute requireERP>
             <Reports />
+          </ProtectedRoute>
+        } />
+        <Route path="/cost-analysis" element={
+          <ProtectedRoute requireERP>
+            <CostAnalysis />
           </ProtectedRoute>
         } />
         <Route path="/ledger" element={
